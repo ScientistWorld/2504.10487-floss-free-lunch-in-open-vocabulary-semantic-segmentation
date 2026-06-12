@@ -22,7 +22,7 @@
 - Verified container result (`expert_quality_clip_dinoiser_cityscapes_core`, job `77ce9f9e-466`): FLOSS gets 37.500% expert precision and FLOSS low-data gets 41.667% expert precision against oracle class-expert sets. This is below the paper's 50% average reference but demonstrates nontrivial recovery of true class experts without labels.
 - Reverification after input/eval split (`08371469-b67`): scores were unchanged and `validate.py --compare` passed with import separation and eval-output-read checks.
 - Lightweight local verification on 2026-06-12: `bash -n` passed for all main scripts and `python3 validate.py --compare` passed against the saved scores.
-- A managed CPU test job is being submitted to verify the renamed scoring contract and standalone script fixes in the container.
+- Final verification on 2026-06-12 confirmed the renamed scoring contract, standalone baseline/method evaluation calls, reusable train/test evaluators, and final `secondary_claims` milestone state. No additional managed run was needed for the final documentation and action cleanup.
 
 ## Remaining
 

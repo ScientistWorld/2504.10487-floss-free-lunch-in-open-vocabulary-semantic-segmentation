@@ -4,6 +4,11 @@
 
 ## Progress Log
 
+### [2026-06-12 08:22] - secondary_claims
+- Completed final verification after the scoring-key and script cleanup.
+- Re-ran `python3 validate.py --compare` and shell syntax checks; both pass.
+- Removed a stale ignored generated data artifact and confirmed `action.yaml` is being finalized with `secondary_claims`.
+
 ### [2026-06-12 08:16] - secondary_claims
 - Made `scripts/reproduce.sh` call `scripts/evaluate.sh` explicitly at the end, so the top-level reproduction script always refreshes `scoring/scores.json`.
 - Ran lightweight local checks: shell syntax validation for all main scripts and `python3 validate.py --compare`, both passing.

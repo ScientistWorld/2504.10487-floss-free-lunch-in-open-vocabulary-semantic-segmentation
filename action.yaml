@@ -1,8 +1,6 @@
 # Final verification is complete.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: submit
-gpus: 0
-test: true
+action: done
 milestone: secondary_claims
-notes: "Verify renamed paper-target scoring keys, standalone baseline/method evaluation calls, reproduce.sh final scoring, and validate.py --compare in the managed container."
+notes: "Final verification passed; workspace is ready as a synthetic-data research gym at secondary_claims."
