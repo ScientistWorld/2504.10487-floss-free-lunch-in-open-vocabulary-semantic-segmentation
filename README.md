@@ -122,7 +122,7 @@ For fair comparison, hold the base OVSS model, CLIP backbone, image resolution, 
 
 # Reproduction Milestones
 
-**Current: core_claim_plus**
+**Current: core_claim**
 
 ## Stop Justification
-- Completed at milestone `core_claim_plus`.
+- Completed at milestone `core_claim`.
