@@ -6,6 +6,7 @@
 - Implemented a template-averaging baseline and reusable evaluator that reads saved predictions from `outputs/`.
 - Added an expert-quality diagnostic evaluator that reads `outputs/<method>/experts.npy` and compares selected class experts to oracle class-specific template sets stored in the benchmark data.
 - `bash scripts/reproduce.sh && python validate.py --compare` runs in the managed container; the login-node Python lacks NumPy, so local reruns are intentionally left to the container setup.
+- Verified that the official code release exists at `https://github.com/yasserben/FLOSS`. The committed reproduction remains the compact, reusable implementation in `method/floss.py`; the upstream repository is treated as an external reference rather than a vendored dependency.
 
 ## Results
 
@@ -18,6 +19,7 @@
 
 - Port the benchmark to real Cityscapes/CLIP-DINOiser outputs if the gated dataset and backbone artifacts become available.
 - Add shifted-domain real-data evaluation for ACDC/BDD/Mapillary if those datasets become available.
+- Vendor or submodule the official repository only if a future iteration targets full real-dataset reproduction.
 
 ## Issues
 
