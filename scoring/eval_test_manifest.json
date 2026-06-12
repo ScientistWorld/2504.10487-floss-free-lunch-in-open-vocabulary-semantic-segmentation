@@ -1,0 +1,23 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_ovss": {
+      "runs": {
+        "floss": "outputs/floss",
+        "floss_low_data": "outputs/floss_low_data",
+        "template_average": "outputs/template_average"
+      }
+    },
+    "low_data_synthetic_ovss": {
+      "runs": {
+        "floss_low_data": "outputs/floss_low_data"
+      }
+    },
+    "expert_quality_synthetic_ovss": {
+      "runs": {
+        "floss": "outputs/floss",
+        "floss_low_data": "outputs/floss_low_data"
+      }
+    }
+  }
+}
