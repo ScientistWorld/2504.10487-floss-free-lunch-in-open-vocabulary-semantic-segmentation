@@ -1,9 +1,8 @@
-# This iteration writes files only — do NOT submit compute jobs.
-# Once you set action to 'done', STOP immediately.
+# This iteration runs the train/test split scoring job.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: done
+action: submit
 gpus: 0
 test: false
 milestone: secondary_claims
-notes: "Improvements: split expert-quality train/test classes; added rare-class and boundary triangulation metrics; completed metric metadata. Notes: runner should verify new metrics are non-saturated."
+notes: "Run evaluate_train.sh then evaluate_test.sh against saved final outputs; populate scores_train.json and scores_test.json."
