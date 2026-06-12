@@ -32,7 +32,7 @@ def run(dataset_path: Path, output_dir: Path, temperature: float = 12.0) -> None
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", type=Path, default=Path("data/downloads/floss_synthetic.npz"))
+    parser.add_argument("--dataset", type=Path, default=Path("data/downloads/floss_synthetic_inputs.npz"))
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/template_average"))
     parser.add_argument("--temperature", type=float, default=12.0)
     args = parser.parse_args()

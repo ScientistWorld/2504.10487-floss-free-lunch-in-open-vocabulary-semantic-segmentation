@@ -129,7 +129,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", type=Path, default=Path("data/downloads/floss_synthetic.npz"))
+    parser.add_argument("--dataset", type=Path, default=Path("data/downloads/floss_synthetic_inputs.npz"))
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/floss"))
     parser.add_argument("--top-n", type=int, default=4)
     parser.add_argument("--temperature", type=float, default=12.0)

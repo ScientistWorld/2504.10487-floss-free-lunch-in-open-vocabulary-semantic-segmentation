@@ -19,6 +19,6 @@ cd /home/user
 
 bash scripts/download.sh
 python baseline/template_average.py \
-  --dataset data/downloads/floss_synthetic.npz \
+  --dataset data/downloads/floss_synthetic_inputs.npz \
   --output-dir outputs/template_average \
   --temperature 12.0

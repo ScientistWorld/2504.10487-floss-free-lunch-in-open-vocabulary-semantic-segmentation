@@ -26,9 +26,10 @@ def pixel_accuracy(pred: np.ndarray, target: np.ndarray) -> float:
     return float((pred == target).mean() * 100.0)
 
 
-def evaluate_run(dataset_path: Path, output_dir: Path) -> dict[str, float]:
+def evaluate_run(dataset_path: Path, labels_path: Path, output_dir: Path) -> dict[str, float]:
     data = np.load(dataset_path, allow_pickle=False)
-    labels = data["val_labels"]
+    labels_data = np.load(labels_path, allow_pickle=False)
+    labels = labels_data["val_labels"]
     num_classes = len(data["class_names"])
     pred = np.load(output_dir / "predictions.npy")
     if pred.shape != labels.shape:
@@ -41,14 +42,15 @@ def evaluate_run(dataset_path: Path, output_dir: Path) -> dict[str, float]:
     }
 
 
-def evaluate_expert_quality(dataset_path: Path, output_dir: Path) -> dict[str, float]:
+def evaluate_expert_quality(dataset_path: Path, labels_path: Path, output_dir: Path) -> dict[str, float]:
     data = np.load(dataset_path, allow_pickle=False)
+    labels_data = np.load(labels_path, allow_pickle=False)
     predicted_path = output_dir / "experts.npy"
     if not predicted_path.exists():
         raise ValueError(f"{output_dir} does not contain experts.npy")
 
     predicted = np.load(predicted_path)
-    oracle = data["expert_templates"]
+    oracle = labels_data["expert_templates"]
     if predicted.shape != oracle.shape:
         raise ValueError(f"Expert shape {predicted.shape} does not match oracle shape {oracle.shape}")
 
@@ -74,7 +76,8 @@ def _num_experts(output_dir: Path) -> int:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", type=Path, default=Path("data/downloads/floss_synthetic.npz"))
+    parser.add_argument("--dataset", type=Path, default=Path("data/downloads/floss_synthetic_inputs.npz"))
+    parser.add_argument("--labels", type=Path, default=Path("data/downloads/floss_synthetic_eval.npz"))
     parser.add_argument("--runs", nargs="+", default=["template_average=outputs/template_average", "floss=outputs/floss"])
     parser.add_argument("--low-data-runs", nargs="*", default=[])
     parser.add_argument("--expert-quality-runs", nargs="*", default=[])
@@ -84,21 +87,21 @@ def main() -> None:
     results: dict[str, dict[str, dict[str, float]]] = {"experiments": {"synthetic_ovss": {"results": {}}}}
     for spec in args.runs:
         name, path = spec.split("=", 1)
-        metrics = evaluate_run(args.dataset, Path(path))
+        metrics = evaluate_run(args.dataset, args.labels, Path(path))
         results["experiments"]["synthetic_ovss"]["results"][name] = metrics
 
     if args.low_data_runs:
         results["experiments"]["low_data_synthetic_ovss"] = {"results": {}}
         for spec in args.low_data_runs:
             name, path = spec.split("=", 1)
-            metrics = evaluate_run(args.dataset, Path(path))
+            metrics = evaluate_run(args.dataset, args.labels, Path(path))
             results["experiments"]["low_data_synthetic_ovss"]["results"][name] = metrics
 
     if args.expert_quality_runs:
         results["experiments"]["expert_quality_synthetic_ovss"] = {"results": {}}
         for spec in args.expert_quality_runs:
             name, path = spec.split("=", 1)
-            metrics = evaluate_expert_quality(args.dataset, Path(path))
+            metrics = evaluate_expert_quality(args.dataset, args.labels, Path(path))
             results["experiments"]["expert_quality_synthetic_ovss"]["results"][name] = metrics
 
     args.output.parent.mkdir(parents=True, exist_ok=True)

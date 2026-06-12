@@ -46,7 +46,13 @@ def _smooth_mask(labels: np.ndarray, rng: np.random.Generator) -> np.ndarray:
     return labels
 
 
-def build_dataset(output: Path, train_images: int = 48, val_images: int = 36, seed: int = 7) -> None:
+def build_dataset(
+    output: Path,
+    labels_output: Path,
+    train_images: int = 48,
+    val_images: int = 36,
+    seed: int = 7,
+) -> None:
     rng = np.random.default_rng(seed)
     num_classes = len(CLASS_NAMES)
 
@@ -94,18 +100,23 @@ def build_dataset(output: Path, train_images: int = 48, val_images: int = 36, se
             feats[i] = _normalize(per_pixel + scene_shift + noise)
         return feats, labels
 
-    train_features, train_labels = make_split(train_images, seed + 100)
+    train_features, _train_labels = make_split(train_images, seed + 100)
     val_features, val_labels = make_split(val_images, seed + 200)
 
     output.parent.mkdir(parents=True, exist_ok=True)
+    labels_output.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
         output,
         class_names=np.array(CLASS_NAMES),
         templates=np.arange(NUM_TEMPLATES, dtype=np.int64),
         text_embeddings=text,
         train_features=train_features,
-        train_labels=train_labels,
         val_features=val_features,
+    )
+    np.savez_compressed(
+        labels_output,
+        class_names=np.array(CLASS_NAMES),
+        templates=np.arange(NUM_TEMPLATES, dtype=np.int64),
         val_labels=val_labels,
         expert_templates=expert_templates,
     )
@@ -113,13 +124,14 @@ def build_dataset(output: Path, train_images: int = 48, val_images: int = 36, se
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, default=Path("data/downloads/floss_synthetic.npz"))
+    parser.add_argument("--output", type=Path, default=Path("data/downloads/floss_synthetic_inputs.npz"))
+    parser.add_argument("--labels-output", type=Path, default=Path("data/downloads/floss_synthetic_eval.npz"))
     parser.add_argument("--train-images", type=int, default=48)
     parser.add_argument("--val-images", type=int, default=36)
     parser.add_argument("--seed", type=int, default=7)
     args = parser.parse_args()
-    build_dataset(args.output, args.train_images, args.val_images, args.seed)
-    print(f"Wrote {args.output}")
+    build_dataset(args.output, args.labels_output, args.train_images, args.val_images, args.seed)
+    print(f"Wrote {args.output} and {args.labels_output}")
 
 
 if __name__ == "__main__":

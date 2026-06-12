@@ -1,8 +1,14 @@
 # Reproduction Milestones
 
-**Current: secondary_claims**
+**Current: core_claim_plus**
 
 ## Progress Log
+
+### [2026-06-12 08:00] - core_claim_plus
+- Continued-agent audit reviewed the previous `secondary_claims` claim by checking `method/`, `eval/`, scripts, scoring files, and prior managed job logs.
+- Confirmed the committed method is not a surrogate: it implements FLOSS single-template predictions, entropy-based expert selection, top-4 class experts, and highest-confidence fusion.
+- Fixed audit issues before restoring `secondary_claims`: split method-visible inputs from eval-only labels/oracle experts and generalized `scripts/evaluate.sh` for arbitrary future method outputs.
+- Current unverified code changes are submitted from milestone `core_claim_plus`; restore to `secondary_claims` after the managed job confirms the patched pipeline.
 
 ### [2026-06-12 07:29] - secondary_claims
 - Implemented the paper's FLOSS computation: averaged-template baseline, entropy-based top-4 class-expert selection from unlabeled features, and highest-confidence expert fusion with default fallback.
@@ -11,4 +17,4 @@
 - Added expert-selection quality diagnostics: selected experts overlap nontrivially with oracle class experts without using labels during selection.
 
 ## Stop Justification
-- Completed at milestone `secondary_claims`. Real Cityscapes/ACDC/BDD/Mapillary reproduction remains out of scope because the required segmentation datasets are gated or unavailable in the shared cache, but the packaged benchmark preserves the FLOSS computational procedure and evaluates the core and low-data claims on fixed dense OVSS-style features.
+- Not stopped. A CPU test job is being submitted to verify the continuation-audit fixes in the managed container before restoring the previous `secondary_claims` milestone.

@@ -7,6 +7,7 @@
 - Added an expert-quality diagnostic evaluator that reads `outputs/<method>/experts.npy` and compares selected class experts to oracle class-specific template sets stored in the benchmark data.
 - `bash scripts/reproduce.sh && python validate.py --compare` runs in the managed container; the login-node Python lacks NumPy, so local reruns are intentionally left to the container setup.
 - Verified that the official code release exists at `https://github.com/yasserben/FLOSS`. The committed reproduction remains the compact, reusable implementation in `method/floss.py`; the upstream repository is treated as an external reference rather than a vendored dependency.
+- Continuation audit on 2026-06-12 re-read `method/`, `eval/`, scripts, scoring docs, and prior job logs. The audit confirmed the method is not a surrogate, then fixed two packaging weaknesses: method inputs are now split from eval-only labels/oracle experts, and `scripts/evaluate.sh` accepts arbitrary `name=outputs/path` run specs while preserving default reproduction scoring.
 
 ## Results
 
@@ -25,6 +26,7 @@
 
 - Cityscapes is gated and was not present in shared datasets, so the exact main benchmark cannot be downloaded automatically.
 - The workspace root `README.md` is a root-owned character device and git reports it as modified; it is unrelated to this reproduction and is not staged.
+- Direct host execution of `scripts/reproduce.sh` fails because the login Python environment does not have NumPy. The managed container path is the supported execution route and completed successfully in job `77ce9f9e-466`; the current audit fixes are being rechecked through a new CPU test submission.
 
 ## Deviations from Paper
 

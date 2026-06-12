@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: done
+action: submit
 gpus: 0
-test: false
-milestone: secondary_claims
-notes: "FLOSS reproduction is packaged and verified in prior managed jobs. Core, low-data, and expert-quality claims are evaluated on a portable dense-feature OVSS benchmark; real gated datasets remain documented as future work."
+test: true
+milestone: core_claim_plus
+notes: "Verify continuation audit fixes in the managed container: split method-visible inputs from eval-only labels, rerun reproduce.sh, and validate scoring output."

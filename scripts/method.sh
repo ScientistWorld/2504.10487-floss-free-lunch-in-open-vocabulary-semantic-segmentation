@@ -12,13 +12,13 @@ cd /home/user
 
 bash scripts/download.sh
 python method/floss.py \
-  --dataset data/downloads/floss_synthetic.npz \
+  --dataset data/downloads/floss_synthetic_inputs.npz \
   --output-dir outputs/floss \
   --top-n 4 \
   --temperature 12.0
 
 python method/floss.py \
-  --dataset data/downloads/floss_synthetic.npz \
+  --dataset data/downloads/floss_synthetic_inputs.npz \
   --output-dir outputs/floss_low_data \
   --top-n 4 \
   --temperature 12.0 \

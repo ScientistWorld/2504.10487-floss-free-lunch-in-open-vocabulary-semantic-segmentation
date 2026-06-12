@@ -18,6 +18,8 @@ cd "$(dirname "$0")/.."
 
 mkdir -p data/downloads
 
-if [ ! -e data/downloads/floss_synthetic.npz ]; then
-  python data/floss_benchmark.py --output data/downloads/floss_synthetic.npz
+if [ ! -e data/downloads/floss_synthetic_inputs.npz ] || [ ! -e data/downloads/floss_synthetic_eval.npz ]; then
+  python data/floss_benchmark.py \
+    --output data/downloads/floss_synthetic_inputs.npz \
+    --labels-output data/downloads/floss_synthetic_eval.npz
 fi
