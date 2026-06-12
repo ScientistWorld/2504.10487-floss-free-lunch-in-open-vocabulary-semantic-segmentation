@@ -10,7 +10,8 @@
     },
     "low_data_synthetic_ovss": {
       "runs": {
-        "floss_low_data": "outputs/floss_low_data"
+        "floss_low_data": "outputs/floss_low_data",
+        "template_average": "outputs/template_average"
       }
     },
     "expert_quality_synthetic_ovss": {
