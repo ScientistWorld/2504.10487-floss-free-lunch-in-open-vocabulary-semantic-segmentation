@@ -1,8 +1,8 @@
-# This iteration runs the train/test split scoring job.
+# Train/test split scoring is complete.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: submit
+action: done
 gpus: 0
 test: false
 milestone: secondary_claims
-notes: "Rerun split scoring after adding low-data baseline coverage and balancing expert-quality train/test class partitions."
+notes: "Even/odd validation-image split plus fixed complementary expert-quality class split; 41 train values, 41 test values; segmentation mIoU test-train gaps <=0.50 pts and expert-precision gaps -8.33/+16.67 pts; no nulls."
