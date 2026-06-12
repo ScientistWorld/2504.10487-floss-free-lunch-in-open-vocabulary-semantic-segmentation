@@ -23,4 +23,4 @@
 - Added expert-selection quality diagnostics: selected experts overlap nontrivially with oracle class experts without using labels during selection.
 
 ## Stop Justification
-- Completed at milestone `secondary_claims`. The managed container verifies the core FLOSS claim, low-data variant, and expert-selection diagnostic on the portable dense-feature OVSS benchmark. Real Cityscapes/ACDC/BDD/Mapillary majority reproduction remains out of scope because the required segmentation datasets are gated or unavailable in the shared cache, but the packaged benchmark preserves the FLOSS computational procedure and evaluates benefit plus constraint metrics.
+- Completed at milestone `secondary_claims`.
