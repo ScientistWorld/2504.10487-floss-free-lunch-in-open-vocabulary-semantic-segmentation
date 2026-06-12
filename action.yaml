@@ -1,8 +1,8 @@
 # Train/test split scoring is complete.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: done
+action: submit
 gpus: 0
-test: false
+test: true
 milestone: secondary_claims
-notes: "Fixed data/downloads ignore rules so generated artifacts stay ignored while the fresh-clone placeholder is tracked; download paths and shared-path audit pass."
+notes: "CPU container smoke test: regenerate baseline and FLOSS outputs, write full default scores.json metrics, run train/test split scoring, and validate comparisons."
