@@ -5,4 +5,4 @@ action: done
 gpus: 0
 test: false
 milestone: secondary_claims
-notes: "Even/odd validation-image split plus fixed complementary expert-quality class split; 34 train values, 34 test values; segmentation mIoU test-train gaps <=0.50 pts and expert-precision gaps -8.33/+16.67 pts; no nulls; validate.py passes."
+notes: "Fixed data/downloads ignore rules so generated artifacts stay ignored while the fresh-clone placeholder is tracked; download paths and shared-path audit pass."
