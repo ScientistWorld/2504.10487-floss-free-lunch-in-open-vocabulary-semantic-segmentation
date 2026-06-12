@@ -41,6 +41,29 @@ def evaluate_run(dataset_path: Path, output_dir: Path) -> dict[str, float]:
     }
 
 
+def evaluate_expert_quality(dataset_path: Path, output_dir: Path) -> dict[str, float]:
+    data = np.load(dataset_path, allow_pickle=False)
+    predicted_path = output_dir / "experts.npy"
+    if not predicted_path.exists():
+        raise ValueError(f"{output_dir} does not contain experts.npy")
+
+    predicted = np.load(predicted_path)
+    oracle = data["expert_templates"]
+    if predicted.shape != oracle.shape:
+        raise ValueError(f"Expert shape {predicted.shape} does not match oracle shape {oracle.shape}")
+
+    per_class = []
+    for pred_row, oracle_row in zip(predicted, oracle):
+        overlap = len(set(int(x) for x in pred_row) & set(int(x) for x in oracle_row))
+        per_class.append(overlap / len(pred_row))
+
+    return {
+        "expert_precision_pct": float(np.mean(per_class) * 100.0),
+        "num_experts_per_class": float(predicted.shape[1]),
+        "num_templates": float(len(data["templates"])),
+    }
+
+
 def _num_experts(output_dir: Path) -> int:
     experts = output_dir / "experts.npy"
     if not experts.exists():
@@ -54,6 +77,7 @@ def main() -> None:
     parser.add_argument("--dataset", type=Path, default=Path("data/downloads/floss_synthetic.npz"))
     parser.add_argument("--runs", nargs="+", default=["template_average=outputs/template_average", "floss=outputs/floss"])
     parser.add_argument("--low-data-runs", nargs="*", default=[])
+    parser.add_argument("--expert-quality-runs", nargs="*", default=[])
     parser.add_argument("--output", type=Path, default=Path("scoring/scores.json"))
     args = parser.parse_args()
 
@@ -69,6 +93,13 @@ def main() -> None:
             name, path = spec.split("=", 1)
             metrics = evaluate_run(args.dataset, Path(path))
             results["experiments"]["low_data_synthetic_ovss"]["results"][name] = metrics
+
+    if args.expert_quality_runs:
+        results["experiments"]["expert_quality_synthetic_ovss"] = {"results": {}}
+        for spec in args.expert_quality_runs:
+            name, path = spec.split("=", 1)
+            metrics = evaluate_expert_quality(args.dataset, Path(path))
+            results["experiments"]["expert_quality_synthetic_ovss"]["results"][name] = metrics
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(results, indent=2) + "\n")

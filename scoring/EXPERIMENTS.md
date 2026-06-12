@@ -7,3 +7,7 @@ Tests whether the reproduced system improves dense open-vocabulary-style segment
 ## low_data_synthetic_ovss
 
 Tests whether the reproduced system still improves held-out dense segmentation quality when adaptation is restricted to a very small unlabeled selection subset. This mirrors the paper's low-data question without exposing the internal mechanism used to adapt.
+
+## expert_quality_synthetic_ovss
+
+Tests whether the adaptation artifacts align with known class-specific oracle template sets in the benchmark. The experiment is diagnostic: it helps future agents understand whether gains come from meaningful class-specific selection rather than only from downstream fusion behavior.

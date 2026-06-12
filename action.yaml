@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: core_claim
-notes: "CPU smoke test: rerun scripts/reproduce.sh and python validate.py --compare inside the managed container to verify the packaged FLOSS reproduction."
+notes: "CPU test: rerun scripts/reproduce.sh and python validate.py --compare inside the managed container after adding expert-quality scoring for the secondary FLOSS claim."

@@ -20,3 +20,10 @@ Tests whether the same segmentation improvement remains when the adaptation step
 
 - **Metric**: mIoU (higher is better)
 - **How to run evaluation**: run `bash scripts/reproduce.sh`, then inspect the `low_data_synthetic_ovss` entry written by `scripts/evaluate.sh`.
+
+## Diagnostic: expert_quality_synthetic_ovss
+
+Tests whether the selected class-specific template sets overlap with oracle class-specific template sets in the benchmark. This is a diagnostic target for the paper's expert-identification claim, not a permission to use validation labels during adaptation.
+
+- **Metric**: expert_precision_pct (higher is better)
+- **How to run evaluation**: run `bash scripts/reproduce.sh`, then inspect the `expert_quality_synthetic_ovss` entry written by `scripts/evaluate.sh`.

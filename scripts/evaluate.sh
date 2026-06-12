@@ -30,4 +30,5 @@ python eval/segmentation_metrics.py \
   --dataset data/downloads/floss_synthetic.npz \
   --runs template_average=outputs/template_average floss=outputs/floss \
   --low-data-runs template_average=outputs/template_average floss_low_data=outputs/floss_low_data \
+  --expert-quality-runs floss=outputs/floss floss_low_data=outputs/floss_low_data \
   --output scoring/scores.json

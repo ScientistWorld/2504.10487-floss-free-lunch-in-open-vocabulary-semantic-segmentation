@@ -4,13 +4,15 @@
 
 - Implemented FLOSS on dense OVSS-style cached features: default averaged-template classifier, per-template entropy ranking on unlabeled training features, top-4 class expert selection, per-class expert classifier construction, and expert fusion with default fallback.
 - Implemented a template-averaging baseline and reusable evaluator that reads saved predictions from `outputs/`.
-- `bash scripts/reproduce.sh && python validate.py --compare` runs locally.
+- Added an expert-quality diagnostic evaluator that reads `outputs/<method>/experts.npy` and compares selected class experts to oracle class-specific template sets stored in the benchmark data.
+- `bash scripts/reproduce.sh && python validate.py --compare` runs in the managed container; the login-node Python lacks NumPy, so local reruns are intentionally left to the container setup.
 
 ## Results
 
 - Paper reference used for the core claim: CLIP-DINOiser on Cityscapes improves from 31.3 to 34.6 mIoU with FLOSS and uses 4 experts per class from the 80-template pool.
 - Verified container result (`synthetic_ovss`, job `a289cd39-9cc`): template averaging gets 33.073 mIoU; FLOSS gets 37.596 mIoU with 4 experts per class. This supports the core claim on a synthetic dense-feature substitute.
 - Verified container result (`low_data_synthetic_ovss`, job `b820d820-557`): template averaging gets 33.073 mIoU; FLOSS with expert selection from only 4 unlabeled images gets 38.249 mIoU. This supports the low-data secondary claim.
+- Pending: CPU container smoke test will regenerate scores with the new `expert_quality_synthetic_ovss` diagnostic experiment.
 
 ## Remaining
 
