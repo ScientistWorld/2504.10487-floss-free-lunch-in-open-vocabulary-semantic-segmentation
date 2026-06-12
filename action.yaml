@@ -2,8 +2,8 @@
 # Once you set action to 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: done
+action: pending
 gpus: 0
 test: false
 milestone: secondary_claims
-notes: "Even/odd held-out validation image split; train/test both score mIoU plus pixel accuracy, mean class accuracy, and template-budget constraints where applicable; scripts written and scores produced later."
+notes: ""
