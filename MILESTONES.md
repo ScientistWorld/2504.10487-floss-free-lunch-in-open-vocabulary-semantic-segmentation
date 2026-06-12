@@ -4,6 +4,11 @@
 
 ## Progress Log
 
+### [2026-06-12 08:06] - secondary_claims
+- Audited the default evaluator against `scoring/reference.json`.
+- Added the full benefit and constraint metric set to `eval/segmentation_metrics.py` so `scoring/scores.json` includes mIoU, pixel accuracy, mean class accuracy, rare-class mIoU, boundary accuracy, and template-budget metrics.
+- Updated `scripts/run.sh` to regenerate baseline and FLOSS outputs with `scripts/reproduce.sh` before running validation and split scoring in the managed container.
+
 ### [2026-06-12 07:42] - secondary_claims
 - Managed CPU test job `08371469-b67` completed with exit code 0 after the continuation-audit fixes.
 - The job regenerated split method-input and eval-label bundles, reran `scripts/reproduce.sh`, and passed `python validate.py --compare`.

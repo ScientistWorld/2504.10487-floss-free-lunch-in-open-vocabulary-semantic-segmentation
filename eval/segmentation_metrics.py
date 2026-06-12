@@ -26,6 +26,36 @@ def pixel_accuracy(pred: np.ndarray, target: np.ndarray) -> float:
     return float((pred == target).mean() * 100.0)
 
 
+def mean_class_accuracy(pred: np.ndarray, target: np.ndarray, num_classes: int) -> float:
+    recalls: list[float] = []
+    for cls in range(num_classes):
+        mask = target == cls
+        if mask.any():
+            recalls.append(float((pred[mask] == cls).mean()))
+    return float(np.mean(recalls) * 100.0)
+
+
+def rare_class_iou(pred: np.ndarray, target: np.ndarray, per_class_iou: list[float], num_classes: int) -> float:
+    counts = np.array([(target == cls).sum() for cls in range(num_classes)], dtype=np.int64)
+    present = np.flatnonzero(counts > 0)
+    if len(present) == 0:
+        return 0.0
+    cutoff = float(np.median(counts[present]))
+    rare = [cls for cls in present if counts[cls] <= cutoff]
+    return float(np.mean([per_class_iou[int(cls)] for cls in rare]))
+
+
+def boundary_pixel_accuracy(pred: np.ndarray, target: np.ndarray) -> float:
+    boundary = np.zeros(target.shape, dtype=bool)
+    boundary[:, 1:, :] |= target[:, 1:, :] != target[:, :-1, :]
+    boundary[:, :-1, :] |= target[:, :-1, :] != target[:, 1:, :]
+    boundary[:, :, 1:] |= target[:, :, 1:] != target[:, :, :-1]
+    boundary[:, :, :-1] |= target[:, :, :-1] != target[:, :, 1:]
+    if not boundary.any():
+        return pixel_accuracy(pred, target)
+    return float((pred[boundary] == target[boundary]).mean() * 100.0)
+
+
 def evaluate_run(dataset_path: Path, labels_path: Path, output_dir: Path) -> dict[str, float]:
     data = np.load(dataset_path, allow_pickle=False)
     labels_data = np.load(labels_path, allow_pickle=False)
@@ -37,6 +67,10 @@ def evaluate_run(dataset_path: Path, labels_path: Path, output_dir: Path) -> dic
     miou, per_class = mean_iou(pred, labels, num_classes)
     return {
         "mIoU": miou,
+        "pixel_accuracy": pixel_accuracy(pred, labels),
+        "mean_class_accuracy": mean_class_accuracy(pred, labels, num_classes),
+        "rare_class_mIoU": rare_class_iou(pred, labels, per_class, num_classes),
+        "boundary_pixel_accuracy": boundary_pixel_accuracy(pred, labels),
         "num_templates": float(len(data["templates"])),
         "num_experts_per_class": float(_num_experts(output_dir)),
     }
