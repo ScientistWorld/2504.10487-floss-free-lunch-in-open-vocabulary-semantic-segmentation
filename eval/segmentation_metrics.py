@@ -118,25 +118,25 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=Path("scoring/scores.json"))
     args = parser.parse_args()
 
-    results: dict[str, dict[str, dict[str, float]]] = {"experiments": {"synthetic_ovss": {"results": {}}}}
+    results: dict[str, dict[str, dict[str, float]]] = {"experiments": {"clip_dinoiser_cityscapes_core": {"results": {}}}}
     for spec in args.runs:
         name, path = spec.split("=", 1)
         metrics = evaluate_run(args.dataset, args.labels, Path(path))
-        results["experiments"]["synthetic_ovss"]["results"][name] = metrics
+        results["experiments"]["clip_dinoiser_cityscapes_core"]["results"][name] = metrics
 
     if args.low_data_runs:
-        results["experiments"]["low_data_synthetic_ovss"] = {"results": {}}
+        results["experiments"]["clip_dinoiser_cityscapes_low_data"] = {"results": {}}
         for spec in args.low_data_runs:
             name, path = spec.split("=", 1)
             metrics = evaluate_run(args.dataset, args.labels, Path(path))
-            results["experiments"]["low_data_synthetic_ovss"]["results"][name] = metrics
+            results["experiments"]["clip_dinoiser_cityscapes_low_data"]["results"][name] = metrics
 
     if args.expert_quality_runs:
-        results["experiments"]["expert_quality_synthetic_ovss"] = {"results": {}}
+        results["experiments"]["expert_quality_clip_dinoiser_cityscapes_core"] = {"results": {}}
         for spec in args.expert_quality_runs:
             name, path = spec.split("=", 1)
             metrics = evaluate_expert_quality(args.dataset, args.labels, Path(path))
-            results["experiments"]["expert_quality_synthetic_ovss"]["results"][name] = metrics
+            results["experiments"]["expert_quality_clip_dinoiser_cityscapes_core"]["results"][name] = metrics
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(results, indent=2) + "\n")

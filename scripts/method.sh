@@ -24,4 +24,7 @@ python method/floss.py \
   --temperature 12.0 \
   --train-limit 4
 
-bash scripts/evaluate.sh
+bash scripts/evaluate.sh \
+  floss=outputs/floss \
+  --low-data-runs floss_low_data=outputs/floss_low_data \
+  --expert-quality-runs floss=outputs/floss floss_low_data=outputs/floss_low_data

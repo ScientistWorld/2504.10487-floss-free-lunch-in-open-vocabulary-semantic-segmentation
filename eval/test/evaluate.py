@@ -143,25 +143,25 @@ def main() -> None:
     args = parser.parse_args()
 
     results: dict[str, dict[str, dict[str, dict[str, float]]]] = {"experiments": {}}
-    _add_experiment(results, "synthetic_ovss")
+    _add_experiment(results, "clip_dinoiser_cityscapes_core")
     for spec in args.runs:
         name, path = spec.split("=", 1)
         metrics = evaluate_run(args.dataset, args.labels, Path(path))
-        results["experiments"]["synthetic_ovss"]["results"][name] = metrics
+        results["experiments"]["clip_dinoiser_cityscapes_core"]["results"][name] = metrics
 
     if args.low_data_runs:
-        _add_experiment(results, "low_data_synthetic_ovss")
+        _add_experiment(results, "clip_dinoiser_cityscapes_low_data")
         for spec in args.low_data_runs:
             name, path = spec.split("=", 1)
             metrics = evaluate_run(args.dataset, args.labels, Path(path))
-            results["experiments"]["low_data_synthetic_ovss"]["results"][name] = metrics
+            results["experiments"]["clip_dinoiser_cityscapes_low_data"]["results"][name] = metrics
 
     if args.expert_quality_runs:
-        _add_experiment(results, "expert_quality_synthetic_ovss")
+        _add_experiment(results, "expert_quality_clip_dinoiser_cityscapes_core")
         for spec in args.expert_quality_runs:
             name, path = spec.split("=", 1)
             metrics = evaluate_expert_quality(args.dataset, args.labels, Path(path))
-            results["experiments"]["expert_quality_synthetic_ovss"]["results"][name] = metrics
+            results["experiments"]["expert_quality_clip_dinoiser_cityscapes_core"]["results"][name] = metrics
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(results, indent=2) + "\n")

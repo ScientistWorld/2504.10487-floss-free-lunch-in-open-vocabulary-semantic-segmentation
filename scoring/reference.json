@@ -1,7 +1,7 @@
 {
   "experiments": {
-    "synthetic_ovss": {
-      "description": "Core claim on a portable dense-feature OVSS benchmark: an adapted system should improve mIoU over the default text-classifier baseline while staying within the fixed template budget.",
+    "clip_dinoiser_cityscapes_core": {
+      "description": "Paper target: CLIP-DINOiser on Cityscapes improves mIoU over the default averaged-template classifier while using top-4 class experts from the fixed 80-template pool. This workspace reports a synthetic dense-feature substitute under the same target.",
       "weight": 0.55,
       "primary_metric": "mIoU",
       "metrics": {
@@ -56,8 +56,8 @@
         }
       }
     },
-    "low_data_synthetic_ovss": {
-      "description": "Low-data claim on the portable dense-feature benchmark: adaptation from only a few unlabeled images should still improve mIoU over the default text-classifier baseline.",
+    "clip_dinoiser_cityscapes_low_data": {
+      "description": "Paper target: CLIP-DINOiser on Cityscapes with very few unlabeled expert-selection images still improves over the default averaged-template classifier. This workspace reports a synthetic dense-feature substitute under the same target.",
       "weight": 0.25,
       "primary_metric": "mIoU",
       "metrics": {
@@ -112,8 +112,8 @@
         }
       }
     },
-    "expert_quality_synthetic_ovss": {
-      "description": "Secondary diagnostic claim: optional class-specific adaptation artifacts should substantially overlap with hidden oracle artifact sets.",
+    "expert_quality_clip_dinoiser_cityscapes_core": {
+      "description": "Paper target: entropy-selected CLIP-DINOiser top-4 class experts substantially overlap with oracle class experts. This workspace reports the analogous diagnostic on hidden synthetic oracle expert sets.",
       "weight": 0.2,
       "primary_metric": "expert_precision_pct",
       "metrics": {

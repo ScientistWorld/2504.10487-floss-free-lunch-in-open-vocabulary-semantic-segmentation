@@ -1,8 +1,8 @@
 # Evaluation Targets
 
-## Primary: synthetic_ovss
+## Primary: clip_dinoiser_cityscapes_core
 
-Tests whether a text-driven dense segmentation system improves over the default text-classifier baseline on a held-out dense-feature benchmark.
+Tests the paper's CLIP-DINOiser Cityscapes improvement target using this workspace's held-out synthetic dense-feature substitute.
 
 - **Metric**: mIoU (higher is better)
 - **How to run evaluation**: run `bash scripts/reproduce.sh`, then `bash scripts/evaluate.sh`.
@@ -14,16 +14,16 @@ Tests whether the adapted system preserves the benchmark constraint: it uses onl
 - **Metrics**: num_experts_per_class and num_templates (lower is better subject to maintaining mIoU)
 - **How to run evaluation**: the evaluator reads the saved selected-artifact file and the dataset pool size.
 
-## Primary: low_data_synthetic_ovss
+## Primary: clip_dinoiser_cityscapes_low_data
 
-Tests whether the same segmentation improvement remains when the adaptation step has access to only a few unlabeled selection images.
+Tests the paper's low-data CLIP-DINOiser Cityscapes target using this workspace's synthetic dense-feature substitute with only a few unlabeled selection images.
 
 - **Metric**: mIoU (higher is better)
-- **How to run evaluation**: run `bash scripts/reproduce.sh`, then inspect the `low_data_synthetic_ovss` entry written by `scripts/evaluate.sh`.
+- **How to run evaluation**: run `bash scripts/reproduce.sh`, then inspect the `clip_dinoiser_cityscapes_low_data` entry written by `scripts/evaluate.sh`.
 
-## Diagnostic: expert_quality_synthetic_ovss
+## Diagnostic: expert_quality_clip_dinoiser_cityscapes_core
 
-Tests whether the selected class-specific artifact sets overlap with hidden oracle artifact sets in the benchmark. This is a diagnostic target for class-specific artifact quality, not a permission to use validation labels during adaptation.
+Tests the paper's expert-quality target using hidden oracle artifact sets in the synthetic substitute. This is a diagnostic target for class-specific artifact quality, not a permission to use validation labels during adaptation.
 
 - **Metric**: expert_precision_pct (higher is better)
-- **How to run evaluation**: run `bash scripts/reproduce.sh`, then inspect the `expert_quality_synthetic_ovss` entry written by `scripts/evaluate.sh`.
+- **How to run evaluation**: run `bash scripts/reproduce.sh`, then inspect the `expert_quality_clip_dinoiser_cityscapes_core` entry written by `scripts/evaluate.sh`.

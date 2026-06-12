@@ -10,14 +10,19 @@
 - Continuation audit on 2026-06-12 re-read `method/`, `eval/`, scripts, scoring docs, and prior job logs. The audit confirmed the method is not a surrogate, then fixed two packaging weaknesses: method inputs are now split from eval-only labels/oracle experts, and `scripts/evaluate.sh` accepts arbitrary `name=outputs/path` run specs while preserving default reproduction scoring.
 - Managed CPU test job `08371469-b67` verified the patched pipeline end to end in the container after those audit fixes.
 - Default scoring was tightened after a follow-up audit: `scripts/evaluate.sh` now writes the complete metric set described in `scoring/reference.json`, including class-balance, rare-class, boundary, and template-budget metrics, not only mIoU.
+- `scripts/reproduce.sh` now explicitly calls `scripts/evaluate.sh` after running the baseline and FLOSS method, so the top-level reproduction entry point always refreshes `scoring/scores.json`.
+- After a read-only subagent audit, scoring experiment keys were renamed to the actual paper targets (`clip_dinoiser_cityscapes_core`, `clip_dinoiser_cityscapes_low_data`, and `expert_quality_clip_dinoiser_cityscapes_core`) while the descriptions explicitly state that this workspace reports synthetic dense-feature substitute scores under those paper references.
+- `scripts/baseline.sh` and `scripts/method.sh` now each invoke `scripts/evaluate.sh` with the outputs they produce, so they are usable standalone as well as through `scripts/reproduce.sh`.
 
 ## Results
 
 - Paper reference used for the core claim: CLIP-DINOiser on Cityscapes improves from 31.3 to 34.6 mIoU with FLOSS and uses 4 experts per class from the 80-template pool.
-- Verified container result (`synthetic_ovss`, job `a289cd39-9cc`): template averaging gets 33.073 mIoU; FLOSS gets 37.596 mIoU with 4 experts per class. This supports the core claim on a synthetic dense-feature substitute.
-- Verified container result (`low_data_synthetic_ovss`, job `77ce9f9e-466`): template averaging gets 33.073 mIoU; FLOSS with expert selection from only 4 unlabeled images gets 38.249 mIoU. This supports the low-data secondary claim.
-- Verified container result (`expert_quality_synthetic_ovss`, job `77ce9f9e-466`): FLOSS gets 37.500% expert precision and FLOSS low-data gets 41.667% expert precision against oracle class-expert sets. This is below the paper's 50% average reference but demonstrates nontrivial recovery of true class experts without labels.
+- Verified container result (`clip_dinoiser_cityscapes_core`, job `a289cd39-9cc`): template averaging gets 33.073 mIoU; FLOSS gets 37.596 mIoU with 4 experts per class. This supports the core claim on a synthetic dense-feature substitute.
+- Verified container result (`clip_dinoiser_cityscapes_low_data`, job `77ce9f9e-466`): template averaging gets 33.073 mIoU; FLOSS with expert selection from only 4 unlabeled images gets 38.249 mIoU. This supports the low-data secondary claim.
+- Verified container result (`expert_quality_clip_dinoiser_cityscapes_core`, job `77ce9f9e-466`): FLOSS gets 37.500% expert precision and FLOSS low-data gets 41.667% expert precision against oracle class-expert sets. This is below the paper's 50% average reference but demonstrates nontrivial recovery of true class experts without labels.
 - Reverification after input/eval split (`08371469-b67`): scores were unchanged and `validate.py --compare` passed with import separation and eval-output-read checks.
+- Lightweight local verification on 2026-06-12: `bash -n` passed for all main scripts and `python3 validate.py --compare` passed against the saved scores.
+- A managed CPU test job is being submitted to verify the renamed scoring contract and standalone script fixes in the container.
 
 ## Remaining
 
@@ -30,7 +35,6 @@
 - Cityscapes is gated and was not present in shared datasets, so the exact main benchmark cannot be downloaded automatically.
 - The workspace root `README.md` is a root-owned character device and git reports it as modified; it is unrelated to this reproduction and is not staged.
 - Direct host execution of `scripts/reproduce.sh` fails because the login Python environment does not have NumPy. The managed container path is the supported execution route and completed successfully in jobs `77ce9f9e-466` and `08371469-b67`.
-- A managed CPU test job is being submitted to verify the fuller default `scores.json` metrics after the evaluator patch.
 
 ## Deviations from Paper
 

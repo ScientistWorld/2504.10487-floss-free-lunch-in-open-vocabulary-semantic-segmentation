@@ -4,6 +4,16 @@
 
 ## Progress Log
 
+### [2026-06-12 08:16] - secondary_claims
+- Made `scripts/reproduce.sh` call `scripts/evaluate.sh` explicitly at the end, so the top-level reproduction script always refreshes `scoring/scores.json`.
+- Ran lightweight local checks: shell syntax validation for all main scripts and `python3 validate.py --compare`, both passing.
+- Kept milestone at `secondary_claims`; real-dataset majority coverage remains blocked by gated or unavailable benchmark datasets.
+
+### [2026-06-12 08:16] - secondary_claims
+- Addressed read-only audit findings before final signoff: renamed scoring experiment keys to the paper targets they reference and documented the synthetic dense-feature substitute in the target descriptions.
+- Made `scripts/baseline.sh` and `scripts/method.sh` score their own outputs without depending on each other.
+- Submitted a CPU test job to verify the renamed scoring contract and standalone script changes in the managed container.
+
 ### [2026-06-12 08:11] - secondary_claims
 - Completed final verification of workspace structure, scoring files, method/problem separation, and reusable evaluation scripts.
 - Refreshed `scoring/scores.json` from saved method outputs so the reproduced scores include all benefit and constraint metrics declared in `scoring/reference.json`.

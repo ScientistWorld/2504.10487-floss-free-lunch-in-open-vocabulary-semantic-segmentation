@@ -1,6 +1,6 @@
 {
   "experiments": {
-    "synthetic_ovss": {
+    "clip_dinoiser_cityscapes_core": {
       "results": {
         "template_average": {
           "mIoU": 33.073355335925804,
@@ -22,7 +22,7 @@
         }
       }
     },
-    "low_data_synthetic_ovss": {
+    "clip_dinoiser_cityscapes_low_data": {
       "results": {
         "template_average": {
           "mIoU": 33.073355335925804,
@@ -44,7 +44,7 @@
         }
       }
     },
-    "expert_quality_synthetic_ovss": {
+    "expert_quality_clip_dinoiser_cityscapes_core": {
       "results": {
         "floss": {
           "expert_precision_pct": 37.5,

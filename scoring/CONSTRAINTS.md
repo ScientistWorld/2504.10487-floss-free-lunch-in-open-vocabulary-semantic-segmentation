@@ -2,7 +2,7 @@
 
 ## Model and Features
 
-Use the provided dense visual embeddings and 80-template text embedding pool for `synthetic_ovss`. The benchmark tests text-side adaptation on fixed OVSS-style features. Recomputing features with a stronger image model, adding learned segmentation heads, or replacing the fixed embeddings with a supervised segmenter changes the problem.
+Use the provided dense visual embeddings and 80-template text embedding pool for `clip_dinoiser_cityscapes_core`. The benchmark tests text-side adaptation on fixed OVSS-style features. Recomputing features with a stronger image model, adding learned segmentation heads, or replacing the fixed embeddings with a supervised segmenter changes the problem.
 
 ## Data
 

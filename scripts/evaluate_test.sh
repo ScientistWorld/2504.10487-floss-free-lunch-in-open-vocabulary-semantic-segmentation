@@ -45,9 +45,9 @@ manifest_exps = manifest.get("experiments", {})
 experiments = scores.get("experiments", scores)
 
 sections = [
-    ("runs", "synthetic_ovss"),
-    ("low_data", "low_data_synthetic_ovss"),
-    ("expert_quality", "expert_quality_synthetic_ovss"),
+    ("runs", "clip_dinoiser_cityscapes_core"),
+    ("low_data", "clip_dinoiser_cityscapes_low_data"),
+    ("expert_quality", "expert_quality_clip_dinoiser_cityscapes_core"),
 ]
 
 for section, exp_name in sections:
@@ -94,9 +94,9 @@ args = parser.parse_args()
 manifest = {
     "slice": args.slice,
     "experiments": {
-        "synthetic_ovss": {"runs": parse_specs(args.runs)},
-        "low_data_synthetic_ovss": {"runs": parse_specs(args.low_data_runs)},
-        "expert_quality_synthetic_ovss": {"runs": parse_specs(args.expert_quality_runs)},
+        "clip_dinoiser_cityscapes_core": {"runs": parse_specs(args.runs)},
+        "clip_dinoiser_cityscapes_low_data": {"runs": parse_specs(args.low_data_runs)},
+        "expert_quality_clip_dinoiser_cityscapes_core": {"runs": parse_specs(args.expert_quality_runs)},
     },
 }
 path = Path(args.output)
