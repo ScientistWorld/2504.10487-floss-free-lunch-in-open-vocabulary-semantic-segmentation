@@ -35,6 +35,7 @@ discover_low_data_runs() {
     dir="${pred%/predictions.npy}"
     name="${dir#outputs/}"
     case "$name" in
+      template_average) printf '%s=%s\n' "$name" "$dir" ;;
       *low_data*) printf '%s=%s\n' "$name" "$dir" ;;
     esac
   done | sort

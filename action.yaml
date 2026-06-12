@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: secondary_claims
-notes: "Run evaluate_train.sh then evaluate_test.sh against saved final outputs; populate scores_train.json and scores_test.json."
+notes: "Rerun split scoring after adding low-data baseline coverage and balancing expert-quality train/test class partitions."

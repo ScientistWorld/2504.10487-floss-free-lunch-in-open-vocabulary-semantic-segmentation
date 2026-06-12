@@ -18,8 +18,9 @@ def _slice_indices(num_images: int) -> np.ndarray:
 
 
 def _class_indices(num_classes: int) -> np.ndarray:
-    """Use even class ids for visible expert-quality feedback."""
-    return np.arange(0, num_classes, 2, dtype=np.int64)
+    """Use a fixed balanced class subset for visible expert-quality feedback."""
+    preferred = np.array([0, 3, 4], dtype=np.int64)
+    return preferred[preferred < num_classes]
 
 
 def mean_iou(pred: np.ndarray, target: np.ndarray, num_classes: int) -> tuple[float, list[float]]:

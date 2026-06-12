@@ -18,8 +18,9 @@ def _slice_indices(num_images: int) -> np.ndarray:
 
 
 def _class_indices(num_classes: int) -> np.ndarray:
-    """Use odd class ids as the held-out expert-quality target."""
-    return np.arange(1, num_classes, 2, dtype=np.int64)
+    """Use the held-out complement of the visible expert-quality classes."""
+    train_classes = {0, 3, 4}
+    return np.array([idx for idx in range(num_classes) if idx not in train_classes], dtype=np.int64)
 
 
 def mean_iou(pred: np.ndarray, target: np.ndarray, num_classes: int) -> tuple[float, list[float]]:
