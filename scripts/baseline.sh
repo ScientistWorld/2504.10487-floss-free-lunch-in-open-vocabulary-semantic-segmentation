@@ -17,4 +17,8 @@ set -e
 
 cd /home/user
 
-# TODO: run baseline
+bash scripts/download.sh
+python baseline/template_average.py \
+  --dataset data/downloads/floss_synthetic.npz \
+  --output-dir outputs/template_average \
+  --temperature 12.0

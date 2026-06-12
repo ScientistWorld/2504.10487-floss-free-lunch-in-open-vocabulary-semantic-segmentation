@@ -26,5 +26,7 @@ cd /home/user
 
 mkdir -p scoring
 
-# TODO: implement evaluation using code in eval/
-# Must write scoring/scores.json at the end
+python eval/segmentation_metrics.py \
+  --dataset data/downloads/floss_synthetic.npz \
+  --runs template_average=outputs/template_average floss=outputs/floss \
+  --output scoring/scores.json

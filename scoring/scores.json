@@ -1,0 +1,18 @@
+{
+  "experiments": {
+    "synthetic_ovss": {
+      "results": {
+        "template_average": {
+          "mIoU": 33.073355335925804,
+          "num_templates": 80.0,
+          "num_experts_per_class": 80.0
+        },
+        "floss": {
+          "mIoU": 37.59606279589484,
+          "num_templates": 80.0,
+          "num_experts_per_class": 4.0
+        }
+      }
+    }
+  }
+}

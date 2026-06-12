@@ -1,0 +1,28 @@
+{
+  "experiments": {
+    "synthetic_ovss": {
+      "description": "Core FLOSS claim on a portable dense-feature OVSS benchmark: entropy-selected class experts should improve mIoU over the default averaged-template classifier while using fewer templates per class.",
+      "weight": 1.0,
+      "primary_metric": "mIoU",
+      "metrics": {
+        "mIoU": {"higher_is_better": true, "coefficient": 1.0},
+        "num_experts_per_class": {"higher_is_better": false, "coefficient": -0.1},
+        "num_templates": {"higher_is_better": false, "coefficient": -0.05}
+      },
+      "results": {
+        "template_average": {
+          "type": "baseline",
+          "mIoU": 31.3,
+          "num_experts_per_class": 80,
+          "num_templates": 80
+        },
+        "floss": {
+          "type": "proposed",
+          "mIoU": 34.6,
+          "num_experts_per_class": 4,
+          "num_templates": 80
+        }
+      }
+    }
+  }
+}

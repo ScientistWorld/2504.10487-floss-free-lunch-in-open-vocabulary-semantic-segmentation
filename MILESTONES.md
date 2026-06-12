@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: none**
+**Current: method_runs**
 
 <!-- Milestone levels (update "Current" above as you progress):
   none             — just started, no meaningful progress yet
@@ -15,7 +15,10 @@
 
 ## Progress Log
 
-<!-- Write your progress here -->
+### [2026-06-12 07:14] - method_runs
+- Read the FLOSS paper and checked the released implementation details.
+- Implemented the paper's entropy-based class-expert selection and highest-confidence expert fusion on cached dense segmentation features.
+- Local end-to-end reproduction runs baseline, FLOSS, and evaluation without errors.
 
 ## Stop Justification
-- Completed at milestone `none`.
+- Not stopped. A CPU compute job is being submitted to verify the local result in the packaged environment.

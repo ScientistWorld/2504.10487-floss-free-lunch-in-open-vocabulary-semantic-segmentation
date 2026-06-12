@@ -2,19 +2,24 @@
 
 ## What Works
 
-<!-- What has been successfully reproduced so far. -->
+- Implemented FLOSS on dense OVSS-style cached features: default averaged-template classifier, per-template entropy ranking on unlabeled training features, top-4 class expert selection, per-class expert classifier construction, and expert fusion with default fallback.
+- Implemented a template-averaging baseline and reusable evaluator that reads saved predictions from `outputs/`.
+- `bash scripts/reproduce.sh && python validate.py --compare` runs locally.
 
 ## Results
 
-<!-- Reproduced numbers compared to the paper's reported numbers. -->
+- Paper reference used for the core claim: CLIP-DINOiser on Cityscapes improves from 31.3 to 34.6 mIoU with FLOSS and uses 4 experts per class from the 80-template pool.
+- Local portable benchmark result (`synthetic_ovss`): template averaging gets 33.073 mIoU; FLOSS gets 37.596 mIoU with 4 experts per class. This supports the core claim on a synthetic dense-feature substitute.
 
 ## Remaining
 
-<!-- What still needs to be done to reach higher milestones. -->
+- Verify the same reproduction inside the compute container via submitted CPU job.
+- If more budget is available after verification, add another setting such as a low-data selection subset or shifted validation split.
 
 ## Issues
 
-<!-- Blockers, bugs, or difficulties encountered. -->
+- Cityscapes is gated and was not present in shared datasets, so the exact main benchmark cannot be downloaded automatically.
+- The workspace root `README.md` is a root-owned character device and git reports it as modified; it is unrelated to this reproduction and is not staged.
 
 ## Deviations from Paper
 
@@ -35,3 +40,5 @@
      The test: could someone reading your code identify which algorithm from
      the paper you implemented? If not, you replaced the method. -->
 
+- Data/resource deviation: the paper evaluates on Cityscapes, PASCAL VOC, PASCAL Context, ADE20K, and COCO-Stuff using CLIP-based OVSS backbones. This reproduction uses a deterministic synthetic dense-feature benchmark because the central Cityscapes benchmark is gated and unavailable in the shared cache. The substitute stores the same type of inputs FLOSS consumes after a frozen OVSS backbone has run: per-pixel normalized visual embeddings, per-template normalized text embeddings, and held-out segmentation labels for scoring.
+- Scale deviation: the benchmark uses 6 classes, 80 templates, 48 unlabeled selection images, and 36 validation images. The FLOSS procedure itself is unchanged: no labels for expert selection, entropy ranking over single-template predictions, top-4 templates per class, expert classifier construction, and highest-confidence fusion.
