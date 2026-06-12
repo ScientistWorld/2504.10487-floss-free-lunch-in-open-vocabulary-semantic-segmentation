@@ -4,6 +4,11 @@
 
 ## Progress Log
 
+### [2026-06-12 08:11] - secondary_claims
+- Completed final verification of workspace structure, scoring files, method/problem separation, and reusable evaluation scripts.
+- Refreshed `scoring/scores.json` from saved method outputs so the reproduced scores include all benefit and constraint metrics declared in `scoring/reference.json`.
+- Cleaned method-agnostic and high-level scoring documentation to avoid leaking solution-specific implementation details.
+
 ### [2026-06-12 08:06] - secondary_claims
 - Audited the default evaluator against `scoring/reference.json`.
 - Added the full benefit and constraint metric set to `eval/segmentation_metrics.py` so `scoring/scores.json` includes mIoU, pixel accuracy, mean class accuracy, rare-class mIoU, boundary accuracy, and template-budget metrics.

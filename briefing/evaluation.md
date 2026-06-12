@@ -1,22 +1,20 @@
 # Evaluation
 
-How success is measured. Describe only the metrics, targets, and evaluation procedure -- do NOT describe the paper's method or how they achieved these results. Think of this as a general evaluation protocal for other scientists trying to solve the same problem, where they should not see this paper's solution.
-
 ## Metrics
 
 The primary task metric is mean Intersection over Union (mIoU) over the evaluated semantic classes; higher is better. Per-class IoU is useful for diagnosing whether gains are broad or concentrated in a few categories.
 
-Constraint metrics should report whether the adaptation used ground-truth masks, whether model parameters were trained, the number of unlabeled images used for adaptation, and inference overhead relative to the corresponding baseline. For the paper's own mechanism analyses, expert-selection quality is measured as the overlap between estimated class experts and oracle class experts, but that requires labels and should be treated as diagnostic rather than the main benchmark score.
+Constraint metrics should report whether the adaptation used ground-truth masks, whether model parameters were trained, the number of unlabeled images used for adaptation, and any model-independent resource budget the benchmark fixes. Diagnostic artifact-quality metrics may be reported when the benchmark defines hidden oracle artifacts, but those labels or oracle artifacts are for evaluation only and must not be used during adaptation.
 
 ## Baselines and Targets
 
-Main reported baselines are MaskCLIP, NACLIP, and CLIP-DINOiser with the standard averaged CLIP prompt-template classifier. FLOSS is reported as an add-on to each baseline.
+Main reported baselines are MaskCLIP, NACLIP, and CLIP-DINOiser using their standard zero-shot text classifiers. The paper reports adapted versions of each baseline under the same validation protocol.
 
 Headline validation-set mIoU targets from the paper include:
 
-- MaskCLIP to MaskCLIP+FLOSS average across Cityscapes, VOC20, PC59, ADE20K, and COCO-Stuff: 28.7 to 29.3.
-- NACLIP to NACLIP+FLOSS average across those datasets: 38.2 to 39.0.
-- CLIP-DINOiser to CLIP-DINOiser+FLOSS average across those datasets: 38.5 to 39.7.
+- MaskCLIP baseline to adapted MaskCLIP average across Cityscapes, VOC20, PC59, ADE20K, and COCO-Stuff: 28.7 to 29.3.
+- NACLIP baseline to adapted NACLIP average across those datasets: 38.2 to 39.0.
+- CLIP-DINOiser baseline to adapted CLIP-DINOiser average across those datasets: 38.5 to 39.7.
 - On Cityscapes with CLIP-DINOiser, the main reported gain is 31.3 to 34.6 mIoU.
 
 Robustness targets include Cityscapes-selected adaptation evaluated on ACDC night/fog/rain/snow, BDD-100K, and Mapillary with the Cityscapes label set. Low-data targets vary the number of unlabeled selection images and evaluate on held-out validation images.

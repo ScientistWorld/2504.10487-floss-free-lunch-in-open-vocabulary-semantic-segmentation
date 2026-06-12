@@ -1,8 +1,8 @@
-# Train/test split scoring is complete.
+# Final verification is complete.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: submit
+action: done
 gpus: 0
-test: true
+test: false
 milestone: secondary_claims
-notes: "CPU container smoke test: regenerate baseline and FLOSS outputs, write full default scores.json metrics, run train/test split scoring, and validate comparisons."
+notes: "Final verification passed after refreshing scores.json metrics and cleaning scientist-facing documentation; ready for gym use with synthetic-data limitation."
