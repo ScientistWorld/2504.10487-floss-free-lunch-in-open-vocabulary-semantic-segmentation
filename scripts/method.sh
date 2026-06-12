@@ -17,4 +17,11 @@ python method/floss.py \
   --top-n 4 \
   --temperature 12.0
 
+python method/floss.py \
+  --dataset data/downloads/floss_synthetic.npz \
+  --output-dir outputs/floss_low_data \
+  --top-n 4 \
+  --temperature 12.0 \
+  --train-limit 4
+
 bash scripts/evaluate.sh

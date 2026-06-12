@@ -13,3 +13,10 @@ Tests whether the adapted system preserves the paper's text-side constraint: it 
 
 - **Metrics**: num_experts_per_class and num_templates (lower is better subject to maintaining mIoU)
 - **How to run evaluation**: the evaluator reads the saved expert-index artifact and the dataset template count.
+
+## Primary: low_data_synthetic_ovss
+
+Tests whether the same segmentation improvement remains when the adaptation step has access to only a few unlabeled selection images.
+
+- **Metric**: mIoU (higher is better)
+- **How to run evaluation**: run `bash scripts/reproduce.sh`, then inspect the `low_data_synthetic_ovss` entry written by `scripts/evaluate.sh`.

@@ -94,10 +94,18 @@ def floss_fusion(
     return fused, default_probs
 
 
-def run(dataset_path: Path, output_dir: Path, top_n: int = 4, temperature: float = 12.0) -> None:
+def run(
+    dataset_path: Path,
+    output_dir: Path,
+    top_n: int = 4,
+    temperature: float = 12.0,
+    train_limit: int | None = None,
+) -> None:
     data = np.load(dataset_path, allow_pickle=False)
     text = data["text_embeddings"].astype(np.float32)
     train_features = data["train_features"].astype(np.float32)
+    if train_limit is not None:
+        train_features = train_features[:train_limit]
     val_features = data["val_features"].astype(np.float32)
 
     experts, entropies = select_experts(train_features, text, top_n=top_n, temperature=temperature)
@@ -114,6 +122,7 @@ def run(dataset_path: Path, output_dir: Path, top_n: int = 4, temperature: float
         "dataset": str(dataset_path),
         "top_n": top_n,
         "temperature": temperature,
+        "train_limit": train_limit,
     }
     (output_dir / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
 
@@ -124,8 +133,9 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/floss"))
     parser.add_argument("--top-n", type=int, default=4)
     parser.add_argument("--temperature", type=float, default=12.0)
+    parser.add_argument("--train-limit", type=int, default=None)
     args = parser.parse_args()
-    run(args.dataset, args.output_dir, args.top_n, args.temperature)
+    run(args.dataset, args.output_dir, args.top_n, args.temperature, args.train_limit)
 
 
 if __name__ == "__main__":

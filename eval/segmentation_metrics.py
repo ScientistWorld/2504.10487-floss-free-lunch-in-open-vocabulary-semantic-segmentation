@@ -53,6 +53,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=Path, default=Path("data/downloads/floss_synthetic.npz"))
     parser.add_argument("--runs", nargs="+", default=["template_average=outputs/template_average", "floss=outputs/floss"])
+    parser.add_argument("--low-data-runs", nargs="*", default=[])
     parser.add_argument("--output", type=Path, default=Path("scoring/scores.json"))
     args = parser.parse_args()
 
@@ -61,6 +62,13 @@ def main() -> None:
         name, path = spec.split("=", 1)
         metrics = evaluate_run(args.dataset, Path(path))
         results["experiments"]["synthetic_ovss"]["results"][name] = metrics
+
+    if args.low_data_runs:
+        results["experiments"]["low_data_synthetic_ovss"] = {"results": {}}
+        for spec in args.low_data_runs:
+            name, path = spec.split("=", 1)
+            metrics = evaluate_run(args.dataset, Path(path))
+            results["experiments"]["low_data_synthetic_ovss"]["results"][name] = metrics
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(results, indent=2) + "\n")

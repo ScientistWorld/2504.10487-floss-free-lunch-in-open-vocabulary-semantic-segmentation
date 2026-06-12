@@ -9,12 +9,13 @@
 ## Results
 
 - Paper reference used for the core claim: CLIP-DINOiser on Cityscapes improves from 31.3 to 34.6 mIoU with FLOSS and uses 4 experts per class from the 80-template pool.
-- Local portable benchmark result (`synthetic_ovss`): template averaging gets 33.073 mIoU; FLOSS gets 37.596 mIoU with 4 experts per class. This supports the core claim on a synthetic dense-feature substitute.
+- Verified container result (`synthetic_ovss`, job `a289cd39-9cc`): template averaging gets 33.073 mIoU; FLOSS gets 37.596 mIoU with 4 experts per class. This supports the core claim on a synthetic dense-feature substitute.
+- Local expanded result (`low_data_synthetic_ovss`): template averaging gets 33.073 mIoU; FLOSS with expert selection from only 4 unlabeled images gets 38.249 mIoU.
 
 ## Remaining
 
-- Verify the same reproduction inside the compute container via submitted CPU job.
-- If more budget is available after verification, add another setting such as a low-data selection subset or shifted validation split.
+- Verify the expanded low-data experiment inside the compute container via submitted CPU job.
+- If more budget is available after verification, add a shifted validation split.
 
 ## Issues
 
