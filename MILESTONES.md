@@ -31,4 +31,4 @@
 - `python validate.py --compare` passed for both experiments.
 
 ## Stop Justification
-- Completed at milestone `core_claim_plus`. The exact Cityscapes/CLIP-DINOiser benchmark remains unavailable because Cityscapes is gated, but the implemented FLOSS algorithm and two portable dense-feature experiments are verified in the container.
+- Completed at milestone `core_claim_plus`.

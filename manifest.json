@@ -1,0 +1,130 @@
+{
+  "paper": {
+    "arxiv_id": "2504.10487",
+    "title": "FLOSS: Free Lunch in Open-vocabulary Semantic Segmentation",
+    "date": null,
+    "topics": null
+  },
+  "reproduction": {
+    "milestone": "core_claim_plus",
+    "status": "done",
+    "error": null,
+    "scaffold": "codex",
+    "model": "gpt-5.5",
+    "profile": "gpt-5.5-medium",
+    "effort": "medium",
+    "gpu_hours_used": 0.0,
+    "current_iteration_gpu_budget": 30,
+    "current_iteration_gpu_hours_used": 0.0,
+    "total_gpu_hours_used": 0.0,
+    "current_iteration_cpu_hours_used": 0.007,
+    "total_cpu_hours_used": 0.007,
+    "gpu_budget": 30,
+    "duration_sec": 827.8,
+    "cost_usd": null,
+    "input_tokens": 4532239,
+    "output_tokens": 26840,
+    "cached_input_tokens": 4253440,
+    "cache_creation_tokens": null,
+    "reasoning_tokens": 0,
+    "total_input_tokens": 4532239,
+    "num_turns": 76,
+    "duration_api_ms": null,
+    "num_runs": 1,
+    "iteration_count": 0,
+    "workflow": "standard",
+    "workflow_step": 0,
+    "total_gpu_jobs": 2,
+    "time_breakdown": {
+      "working": 721.8921248912811,
+      "building": 0.2863173484802246,
+      "installing": 3.9069128036499023,
+      "waiting": 33.10148906707764
+    }
+  },
+  "agents": [
+    {
+      "scaffold": "codex",
+      "model": "gpt-5.5",
+      "profile": "gpt-5.5-medium",
+      "effort": "medium",
+      "role": "reproducer",
+      "is_iteration": false,
+      "iteration": 1,
+      "workflow": "standard",
+      "workflow_step": 0,
+      "started_at": 1781248019.237585,
+      "finished_at": 1781248847.0223525,
+      "duration_sec": 827.8,
+      "blocked_sec": 0.0,
+      "status": "done",
+      "error": null,
+      "milestone": "core_claim_plus",
+      "gpu_budget": 30,
+      "gpu_hours_used": 0.0,
+      "total_gpu_hours_used": 0.0,
+      "cpu_hours_used": 0.007,
+      "time_breakdown": {
+        "working": 721.8921248912811,
+        "building": 0.2863173484802246,
+        "installing": 3.9069128036499023,
+        "waiting": 33.10148906707764
+      },
+      "cost_usd": null,
+      "input_tokens": 4532239,
+      "output_tokens": 26840,
+      "cached_input_tokens": 4253440,
+      "cache_creation_tokens": null,
+      "reasoning_tokens": 0,
+      "total_input_tokens": 4532239,
+      "num_turns": 76,
+      "duration_api_ms": null,
+      "tool_uses": {
+        "shell": 62,
+        "file_edit": 14
+      },
+      "gpu_jobs": [
+        {
+          "run_id": "a289cd39-9cc",
+          "command": "bash /home/user/scripts/run.sh",
+          "num_gpus": 0,
+          "num_cpus": 1,
+          "resource": "gpu-cpu",
+          "hive_job_id": "655f4cec",
+          "status": "completed",
+          "returncode": 0,
+          "duration_sec": 10.6,
+          "submitted_at": 1781248589.0872831,
+          "started_at": 1781248592.2850013,
+          "completed_at": 1781248602.9048386
+        },
+        {
+          "run_id": "b820d820-557",
+          "command": "bash /home/user/scripts/run.sh",
+          "num_gpus": 0,
+          "num_cpus": 1,
+          "resource": "gpu-cpu",
+          "hive_job_id": "b9fbdc72",
+          "status": "completed",
+          "returncode": 0,
+          "duration_sec": 14.9,
+          "submitted_at": 1781248765.6937923,
+          "started_at": 1781248768.054004,
+          "completed_at": 1781248782.984506
+        }
+      ],
+      "progress_log": "### [2026-06-12 07:14] - method_runs\n- Read the FLOSS paper and checked the released implementation details.\n- Implemented the paper's entropy-based class-expert selection and highest-confidence expert fusion on cached dense segmentation features.\n- Local end-to-end reproduction runs baseline, FLOSS, and evaluation without errors.\n\n### [2026-06-12 07:18] - core_claim\n- CPU compute job `a289cd39-9cc` completed successfully in the container.\n- Verified the core FLOSS claim on `synthetic_ovss`: template averaging scored 33.073 mIoU and FLOSS scored 37.596 mIoU with 4 experts per class.\n- Added a local low-data variant for the next submitted job to verify.\n\n### [2026-06-12 07:20] - core_claim_plus\n- CPU compute job `b820d820-557` completed successfully in the container.\n- Verified the expanded low-data claim on `low_data_synthetic_ovss`: template averaging scored 33.073 mIoU and FLOSS selected from 4 unlabeled images scored 38.249 mIoU.\n- `python validate.py --compare` passed for both experiments."
+    }
+  ],
+  "components": {
+    "has_container": true,
+    "has_method_code": true,
+    "has_evaluation": true,
+    "has_download_script": true,
+    "has_reproduce_script": true,
+    "has_method_script": true,
+    "has_baseline": true,
+    "has_reference": true,
+    "has_data": true
+  }
+}
