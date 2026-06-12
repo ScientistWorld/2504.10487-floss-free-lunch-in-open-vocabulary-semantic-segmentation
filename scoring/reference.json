@@ -5,11 +5,13 @@
       "weight": 0.55,
       "primary_metric": "mIoU",
       "metrics": {
-        "mIoU": {"higher_is_better": true, "coefficient": 1.0},
+        "mIoU": {"higher_is_better": true, "coefficient": 1.0, "description": "Mean intersection-over-union on the slice, matching the paper's headline dense segmentation metric."},
         "pixel_accuracy": {"higher_is_better": true, "coefficient": 0.2, "description": "Overall held-out pixel classification accuracy, included to catch broad segmentation regressions not fully reflected by IoU."},
         "mean_class_accuracy": {"higher_is_better": true, "coefficient": 0.4, "description": "Unweighted mean per-class recall, included to catch shortcuts that improve common regions while neglecting smaller classes."},
-        "num_experts_per_class": {"higher_is_better": false, "coefficient": -0.1},
-        "num_templates": {"higher_is_better": false, "coefficient": -0.05}
+        "rare_class_mIoU": {"higher_is_better": true, "coefficient": 0.35, "description": "Mean IoU over below-median-frequency classes in the slice, included to penalize background- or layout-biased segmenters."},
+        "boundary_pixel_accuracy": {"higher_is_better": true, "coefficient": 0.15, "description": "Pixel accuracy restricted to ground-truth class-boundary pixels, included to catch coarse mask shortcuts."},
+        "num_experts_per_class": {"higher_is_better": false, "coefficient": -0.1, "description": "Number of selected class experts per class; lower is better because the claim preserves a small-template constraint."},
+        "num_templates": {"higher_is_better": false, "coefficient": -0.05, "description": "Total template pool size used by the method; lower is better to discourage hiding gains in a larger prompt ensemble."}
       },
       "results": {
         "template_average": {
@@ -31,11 +33,13 @@
       "weight": 0.25,
       "primary_metric": "mIoU",
       "metrics": {
-        "mIoU": {"higher_is_better": true, "coefficient": 1.0},
+        "mIoU": {"higher_is_better": true, "coefficient": 1.0, "description": "Mean intersection-over-union on the low-data slice, matching the paper's headline dense segmentation metric."},
         "pixel_accuracy": {"higher_is_better": true, "coefficient": 0.2, "description": "Overall held-out pixel classification accuracy, included to catch broad segmentation regressions not fully reflected by IoU."},
         "mean_class_accuracy": {"higher_is_better": true, "coefficient": 0.4, "description": "Unweighted mean per-class recall, included to catch shortcuts that improve common regions while neglecting smaller classes."},
-        "num_experts_per_class": {"higher_is_better": false, "coefficient": -0.1},
-        "num_templates": {"higher_is_better": false, "coefficient": -0.05}
+        "rare_class_mIoU": {"higher_is_better": true, "coefficient": 0.35, "description": "Mean IoU over below-median-frequency classes in the low-data slice, included to penalize background- or layout-biased segmenters."},
+        "boundary_pixel_accuracy": {"higher_is_better": true, "coefficient": 0.15, "description": "Pixel accuracy restricted to ground-truth class-boundary pixels, included to catch coarse mask shortcuts."},
+        "num_experts_per_class": {"higher_is_better": false, "coefficient": -0.1, "description": "Number of selected class experts per class; lower is better because the claim preserves a small-template constraint."},
+        "num_templates": {"higher_is_better": false, "coefficient": -0.05, "description": "Total template pool size used by the method; lower is better to discourage hiding gains in a larger prompt ensemble."}
       },
       "results": {
         "template_average": {
@@ -57,9 +61,9 @@
       "weight": 0.2,
       "primary_metric": "expert_precision_pct",
       "metrics": {
-        "expert_precision_pct": {"higher_is_better": true, "coefficient": 1.0},
-        "num_experts_per_class": {"higher_is_better": false, "coefficient": -0.1},
-        "num_templates": {"higher_is_better": false, "coefficient": -0.05}
+        "expert_precision_pct": {"higher_is_better": true, "coefficient": 1.0, "description": "Percent overlap between selected and oracle class-specific experts on the slice's class subset."},
+        "num_experts_per_class": {"higher_is_better": false, "coefficient": -0.1, "description": "Number of selected class experts per class; lower is better because the claim preserves a small-template constraint."},
+        "num_templates": {"higher_is_better": false, "coefficient": -0.05, "description": "Total template pool size used by the method; lower is better to discourage hiding gains in a larger prompt ensemble."}
       },
       "results": {
         "floss": {

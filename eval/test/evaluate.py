@@ -17,6 +17,11 @@ def _slice_indices(num_images: int) -> np.ndarray:
     return np.arange(1, num_images, 2, dtype=np.int64)
 
 
+def _class_indices(num_classes: int) -> np.ndarray:
+    """Use odd class ids as the held-out expert-quality target."""
+    return np.arange(1, num_classes, 2, dtype=np.int64)
+
+
 def mean_iou(pred: np.ndarray, target: np.ndarray, num_classes: int) -> tuple[float, list[float]]:
     ious: list[float] = []
     for cls in range(num_classes):
@@ -24,10 +29,11 @@ def mean_iou(pred: np.ndarray, target: np.ndarray, num_classes: int) -> tuple[fl
         target_mask = target == cls
         union = np.logical_or(pred_mask, target_mask).sum()
         if union == 0:
+            ious.append(float("nan"))
             continue
         inter = np.logical_and(pred_mask, target_mask).sum()
         ious.append(float(inter / union))
-    return float(np.mean(ious) * 100.0), [x * 100.0 for x in ious]
+    return float(np.nanmean(ious) * 100.0), [x * 100.0 for x in ious]
 
 
 def pixel_accuracy(pred: np.ndarray, target: np.ndarray) -> float:
@@ -43,6 +49,27 @@ def mean_class_accuracy(pred: np.ndarray, target: np.ndarray, num_classes: int) 
     return float(np.mean(recalls) * 100.0)
 
 
+def rare_class_iou(pred: np.ndarray, target: np.ndarray, per_class_iou: list[float], num_classes: int) -> float:
+    counts = np.array([(target == cls).sum() for cls in range(num_classes)], dtype=np.int64)
+    present = np.flatnonzero(counts > 0)
+    if len(present) == 0:
+        return 0.0
+    cutoff = float(np.median(counts[present]))
+    rare = [cls for cls in present if counts[cls] <= cutoff]
+    return float(np.mean([per_class_iou[int(cls)] for cls in rare]))
+
+
+def boundary_pixel_accuracy(pred: np.ndarray, target: np.ndarray) -> float:
+    boundary = np.zeros(target.shape, dtype=bool)
+    boundary[:, 1:, :] |= target[:, 1:, :] != target[:, :-1, :]
+    boundary[:, :-1, :] |= target[:, :-1, :] != target[:, 1:, :]
+    boundary[:, :, 1:] |= target[:, :, 1:] != target[:, :, :-1]
+    boundary[:, :, :-1] |= target[:, :, :-1] != target[:, :, 1:]
+    if not boundary.any():
+        return pixel_accuracy(pred, target)
+    return float((pred[boundary] == target[boundary]).mean() * 100.0)
+
+
 def evaluate_run(dataset_path: Path, labels_path: Path, output_dir: Path) -> dict[str, float]:
     data = np.load(dataset_path, allow_pickle=False)
     labels_data = np.load(labels_path, allow_pickle=False)
@@ -56,11 +83,13 @@ def evaluate_run(dataset_path: Path, labels_path: Path, output_dir: Path) -> dic
 
     pred_slice = pred[indices]
     label_slice = labels[indices]
-    miou, _per_class = mean_iou(pred_slice, label_slice, num_classes)
+    miou, per_class = mean_iou(pred_slice, label_slice, num_classes)
     return {
         "mIoU": miou,
         "pixel_accuracy": pixel_accuracy(pred_slice, label_slice),
         "mean_class_accuracy": mean_class_accuracy(pred_slice, label_slice, num_classes),
+        "rare_class_mIoU": rare_class_iou(pred_slice, label_slice, per_class, num_classes),
+        "boundary_pixel_accuracy": boundary_pixel_accuracy(pred_slice, label_slice),
         "num_templates": float(len(data["templates"])),
         "num_experts_per_class": float(_num_experts(output_dir)),
     }
@@ -77,8 +106,9 @@ def evaluate_expert_quality(dataset_path: Path, labels_path: Path, output_dir: P
     if predicted.shape != oracle.shape:
         raise ValueError(f"Expert shape {predicted.shape} does not match oracle shape {oracle.shape}")
 
+    class_indices = _class_indices(oracle.shape[0])
     per_class = []
-    for pred_row, oracle_row in zip(predicted, oracle):
+    for pred_row, oracle_row in zip(predicted[class_indices], oracle[class_indices]):
         overlap = len(set(int(x) for x in pred_row) & set(int(x) for x in oracle_row))
         per_class.append(overlap / len(pred_row))
 
