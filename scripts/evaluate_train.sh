@@ -24,7 +24,10 @@ discover_runs() {
     [ -f "$pred" ] || continue
     dir="${pred%/predictions.npy}"
     name="${dir#outputs/}"
-    printf '%s=%s\n' "$name" "$dir"
+    case "$name" in
+      *low_data*) ;;
+      *) printf '%s=%s\n' "$name" "$dir" ;;
+    esac
   done | sort
 }
 
