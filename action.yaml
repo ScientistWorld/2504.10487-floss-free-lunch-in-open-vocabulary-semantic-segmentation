@@ -30,5 +30,5 @@
 action: submit
 gpus: 0
 test: true
-milestone: method_runs
-notes: "CPU smoke test for the FLOSS reproduction: regenerate the portable dense-feature benchmark, run template averaging and FLOSS, then validate scores.json against reference.json."
+milestone: core_claim
+notes: "CPU smoke test for the expanded FLOSS suite: regenerate the benchmark, run full-data and low-data FLOSS experiments, then validate scores.json against reference.json."
