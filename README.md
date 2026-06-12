@@ -19,10 +19,6 @@ The paper studies a common OVSS practice: representing each class by averaging C
 
 # Problem Definition
 
-What problem does this paper address? Write this so that someone with no knowledge of the paper can understand what needs to be solved and how success is measured.
-
-Do NOT describe the paper's method or solution here -- only the problem itself. Think about if a future scientist agent try to solve this problem from scratch without knowing what approach the paper took. If you leak the solution, you compromise the benchmark.
-
 ## Research Question
 
 Can a frozen, text-driven open-vocabulary semantic segmentation system be improved for a target class set using only unlabeled images from that target domain, while preserving the ability to evaluate on unseen images and without adding supervised training?
@@ -61,23 +57,21 @@ Secondary claims: the selected experts generalize to related shifted domains, th
 
 # Evaluation
 
-How success is measured. Describe only the metrics, targets, and evaluation procedure -- do NOT describe the paper's method or how they achieved these results. Think of this as a general evaluation protocal for other scientists trying to solve the same problem, where they should not see this paper's solution.
-
 ## Metrics
 
 The primary task metric is mean Intersection over Union (mIoU) over the evaluated semantic classes; higher is better. Per-class IoU is useful for diagnosing whether gains are broad or concentrated in a few categories.
 
-Constraint metrics should report whether the adaptation used ground-truth masks, whether model parameters were trained, the number of unlabeled images used for adaptation, and inference overhead relative to the corresponding baseline. For the paper's own mechanism analyses, expert-selection quality is measured as the overlap between estimated class experts and oracle class experts, but that requires labels and should be treated as diagnostic rather than the main benchmark score.
+Constraint metrics should report whether the adaptation used ground-truth masks, whether model parameters were trained, the number of unlabeled images used for adaptation, and any model-independent resource budget the benchmark fixes. Diagnostic artifact-quality metrics may be reported when the benchmark defines hidden oracle artifacts, but those labels or oracle artifacts are for evaluation only and must not be used during adaptation.
 
 ## Baselines and Targets
 
-Main reported baselines are MaskCLIP, NACLIP, and CLIP-DINOiser with the standard averaged CLIP prompt-template classifier. FLOSS is reported as an add-on to each baseline.
+Main reported baselines are MaskCLIP, NACLIP, and CLIP-DINOiser using their standard zero-shot text classifiers. The paper reports adapted versions of each baseline under the same validation protocol.
 
 Headline validation-set mIoU targets from the paper include:
 
-- MaskCLIP to MaskCLIP+FLOSS average across Cityscapes, VOC20, PC59, ADE20K, and COCO-Stuff: 28.7 to 29.3.
-- NACLIP to NACLIP+FLOSS average across those datasets: 38.2 to 39.0.
-- CLIP-DINOiser to CLIP-DINOiser+FLOSS average across those datasets: 38.5 to 39.7.
+- MaskCLIP baseline to adapted MaskCLIP average across Cityscapes, VOC20, PC59, ADE20K, and COCO-Stuff: 28.7 to 29.3.
+- NACLIP baseline to adapted NACLIP average across those datasets: 38.2 to 39.0.
+- CLIP-DINOiser baseline to adapted CLIP-DINOiser average across those datasets: 38.5 to 39.7.
 - On Cityscapes with CLIP-DINOiser, the main reported gain is 31.3 to 34.6 mIoU.
 
 Robustness targets include Cityscapes-selected adaptation evaluated on ACDC night/fog/rain/snow, BDD-100K, and Mapillary with the Cityscapes label set. Low-data targets vary the number of unlabeled selection images and evaluate on held-out validation images.
@@ -258,6 +252,44 @@ For fair comparison, hold the base OVSS model, CLIP backbone, image resolution, 
 
 <details>
 <summary>Progress Log</summary>
+
+### [2026-06-12 07:42] - secondary_claims
+- Managed CPU test job `08371469-b67` completed with exit code 0 after the continuation-audit fixes.
+- The job regenerated split method-input and eval-label bundles, reran `scripts/reproduce.sh`, and passed `python validate.py --compare`.
+- Verified reproduced scores remained stable: template averaging 33.073 mIoU, FLOSS 37.596 mIoU, low-data FLOSS 38.249 mIoU, and expert precision 37.500% / 41.667%.
+- Restored `secondary_claims`; real-dataset majority coverage remains blocked by gated or unavailable benchmark datasets.
+
+### [2026-06-12 07:35] - core_claim_plus
+- Continued-agent audit reviewed the previous `secondary_claims` claim by checking `method/`, `eval/`, scripts, scoring files, and prior managed job logs.
+- Confirmed the committed method is not a surrogate: it implements FLOSS single-template predictions, entropy-based expert selection, top-4 class experts, and highest-confidence fusion.
+- Fixed audit issues before restoring `secondary_claims`: split method-visible inputs from eval-only labels/oracle experts and generalized `scripts/evaluate.sh` for arbitrary future method outputs.
+- Submitted those fixes from milestone `core_claim_plus` for managed-container verification before restoring `secondary_claims`.
+
+### [2026-06-12 07:29] - secondary_claims
+- Implemented the paper's FLOSS computation: averaged-template baseline, entropy-based top-4 class-expert selection from unlabeled features, and highest-confidence expert fusion with default fallback.
+- Verified the reusable environment in a managed container job. On the synthetic dense-feature OVSS benchmark, template averaging reached 33.073 mIoU and FLOSS reached 37.596 mIoU.
+- Verified the low-data variant using only 4 unlabeled selection images: FLOSS reached 38.249 mIoU.
+- Added expert-selection quality diagnostics: selected experts overlap nontrivially with oracle class experts without using labels during selection.
+
+</details>
+
+### Iteration 8: gpt-5.5 (verifier)
+- **Milestone**: `secondary_claims` | **Status**: done
+- **Working time**: 9m | **GPU**: 0.0h
+- **Jobs**: 6 total (6 completed, 0 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-06-12 08:11] - secondary_claims
+- Completed final verification of workspace structure, scoring files, method/problem separation, and reusable evaluation scripts.
+- Refreshed `scoring/scores.json` from saved method outputs so the reproduced scores include all benefit and constraint metrics declared in `scoring/reference.json`.
+- Cleaned method-agnostic and high-level scoring documentation to avoid leaking solution-specific implementation details.
+
+### [2026-06-12 08:06] - secondary_claims
+- Audited the default evaluator against `scoring/reference.json`.
+- Added the full benefit and constraint metric set to `eval/segmentation_metrics.py` so `scoring/scores.json` includes mIoU, pixel accuracy, mean class accuracy, rare-class mIoU, boundary accuracy, and template-budget metrics.
+- Updated `scripts/run.sh` to regenerate baseline and FLOSS outputs with `scripts/reproduce.sh` before running validation and split scoring in the managed container.
 
 ### [2026-06-12 07:42] - secondary_claims
 - Managed CPU test job `08371469-b67` completed with exit code 0 after the continuation-audit fixes.
