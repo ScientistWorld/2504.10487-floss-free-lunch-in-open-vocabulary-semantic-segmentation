@@ -11,8 +11,8 @@
 
 - Paper reference used for the core claim: CLIP-DINOiser on Cityscapes improves from 31.3 to 34.6 mIoU with FLOSS and uses 4 experts per class from the 80-template pool.
 - Verified container result (`synthetic_ovss`, job `a289cd39-9cc`): template averaging gets 33.073 mIoU; FLOSS gets 37.596 mIoU with 4 experts per class. This supports the core claim on a synthetic dense-feature substitute.
-- Verified container result (`low_data_synthetic_ovss`, job `b820d820-557`): template averaging gets 33.073 mIoU; FLOSS with expert selection from only 4 unlabeled images gets 38.249 mIoU. This supports the low-data secondary claim.
-- Pending: CPU container smoke test will regenerate scores with the new `expert_quality_synthetic_ovss` diagnostic experiment.
+- Verified container result (`low_data_synthetic_ovss`, job `77ce9f9e-466`): template averaging gets 33.073 mIoU; FLOSS with expert selection from only 4 unlabeled images gets 38.249 mIoU. This supports the low-data secondary claim.
+- Verified container result (`expert_quality_synthetic_ovss`, job `77ce9f9e-466`): FLOSS gets 37.500% expert precision and FLOSS low-data gets 41.667% expert precision against oracle class-expert sets. This is below the paper's 50% average reference but demonstrates nontrivial recovery of true class experts without labels.
 
 ## Remaining
 

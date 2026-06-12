@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: submit
+action: done
 gpus: 0
 test: true
-milestone: core_claim
-notes: "CPU test: rerun scripts/reproduce.sh and python validate.py --compare inside the managed container after adding expert-quality scoring for the secondary FLOSS claim."
+milestone: secondary_claims
+notes: "Job 77ce9f9e-466 passed. Reproduced core FLOSS mIoU improvement, low-data improvement, and expert-quality diagnostic on the packaged dense-feature benchmark."
