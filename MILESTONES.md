@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: core_claim_plus**
 
 <!-- Milestone levels (update "Current" above as you progress):
   none             — just started, no meaningful progress yet
@@ -25,5 +25,10 @@
 - Verified the core FLOSS claim on `synthetic_ovss`: template averaging scored 33.073 mIoU and FLOSS scored 37.596 mIoU with 4 experts per class.
 - Added a local low-data variant for the next submitted job to verify.
 
+### [2026-06-12 07:20] - core_claim_plus
+- CPU compute job `b820d820-557` completed successfully in the container.
+- Verified the expanded low-data claim on `low_data_synthetic_ovss`: template averaging scored 33.073 mIoU and FLOSS selected from 4 unlabeled images scored 38.249 mIoU.
+- `python validate.py --compare` passed for both experiments.
+
 ## Stop Justification
-- Not stopped. A CPU compute job is being submitted to verify the expanded low-data experiment.
+- Completed at milestone `core_claim_plus`. The exact Cityscapes/CLIP-DINOiser benchmark remains unavailable because Cityscapes is gated, but the implemented FLOSS algorithm and two portable dense-feature experiments are verified in the container.

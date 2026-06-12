@@ -10,12 +10,12 @@
 
 - Paper reference used for the core claim: CLIP-DINOiser on Cityscapes improves from 31.3 to 34.6 mIoU with FLOSS and uses 4 experts per class from the 80-template pool.
 - Verified container result (`synthetic_ovss`, job `a289cd39-9cc`): template averaging gets 33.073 mIoU; FLOSS gets 37.596 mIoU with 4 experts per class. This supports the core claim on a synthetic dense-feature substitute.
-- Local expanded result (`low_data_synthetic_ovss`): template averaging gets 33.073 mIoU; FLOSS with expert selection from only 4 unlabeled images gets 38.249 mIoU.
+- Verified container result (`low_data_synthetic_ovss`, job `b820d820-557`): template averaging gets 33.073 mIoU; FLOSS with expert selection from only 4 unlabeled images gets 38.249 mIoU. This supports the low-data secondary claim.
 
 ## Remaining
 
-- Verify the expanded low-data experiment inside the compute container via submitted CPU job.
-- If more budget is available after verification, add a shifted validation split.
+- Port the benchmark to real Cityscapes/CLIP-DINOiser outputs if the gated dataset and backbone artifacts become available.
+- Add shifted-domain real-data evaluation for ACDC/BDD/Mapillary if those datasets become available.
 
 ## Issues
 

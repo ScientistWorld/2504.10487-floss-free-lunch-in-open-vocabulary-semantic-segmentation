@@ -27,8 +27,8 @@
 #   milestone: core_claim
 #   notes: "Reproduced the core claim. Environment packaged."
 
-action: submit
+action: done
 gpus: 0
 test: true
-milestone: core_claim
-notes: "CPU smoke test for the expanded FLOSS suite: regenerate the benchmark, run full-data and low-data FLOSS experiments, then validate scores.json against reference.json."
+milestone: core_claim_plus
+notes: "Verified FLOSS core and low-data claims in the compute container on the portable dense-feature benchmark. Exact real-data Cityscapes reproduction is blocked by gated dataset availability."
