@@ -1,0 +1,405 @@
+{
+  "paper_id": "2504.10487",
+  "phase": "train",
+  "cohort": [
+    "claude-opus-4-8-xhigh",
+    "claude-opus-xhigh",
+    "gpt-5.6-sol-xhigh",
+    "gpt-5.6-terra-xhigh",
+    "gpt-5.6-luna-xhigh",
+    "gpt-5.5-xhigh",
+    "glm-5-xhigh",
+    "minimax-xhigh",
+    "grok-4.3-xhigh",
+    "gemini-3-pro-preview",
+    "gemini-3.1-flash-lite-preview",
+    "kimi-k2.6-thinking",
+    "mimo-pro-xhigh",
+    "deepseek-v4-pro-xhigh"
+  ],
+  "models_present": [
+    "gpt-5.5-xhigh",
+    "gpt-5.6-luna-xhigh",
+    "gpt-5.6-sol-xhigh",
+    "gpt-5.6-terra-xhigh"
+  ],
+  "n_models": 4,
+  "n_cells": 20,
+  "last_updated": "2026-08-12T23:16:15.739583+00:00",
+  "excluded": false,
+  "typical_spread": 10.566934505813569,
+  "paper_baseline": 1.2168342822011378,
+  "cohort_raw": {
+    "gpt-5.5-xhigh": 0.3883087565924701,
+    "gpt-5.6-luna-xhigh": 0.8682111735285536,
+    "gpt-5.6-sol-xhigh": 1.251403714731924,
+    "gpt-5.6-terra-xhigh": 2.359413483951603
+  },
+  "cells": [
+    {
+      "experiment": "clip_dinoiser_cityscapes_core",
+      "method": "floss",
+      "metric": "mIoU",
+      "source": 37.38383094148929,
+      "higher_is_better": true,
+      "coefficient": 0.017696523395249988,
+      "prior_weight": 0.55,
+      "spread": 11.6564458723053,
+      "normalizer": 11.6564458723053,
+      "effective_weight": 0.2510068321120095,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 15.856539607018341,
+        "gpt-5.6-terra-xhigh": 28.187923794211272,
+        "gpt-5.6-luna-xhigh": 4.656252358354465,
+        "gpt-5.5-xhigh": 3.040888048765808
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_core",
+      "method": "floss",
+      "metric": "pixel_accuracy",
+      "source": 60.61921296296296,
+      "higher_is_better": true,
+      "coefficient": 0.00401067608787196,
+      "prior_weight": 0.11000000000000001,
+      "spread": 9.868874339362636,
+      "normalizer": 9.868874339362636,
+      "effective_weight": 0.04816334533135547,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 17.554012345679013,
+        "gpt-5.6-terra-xhigh": 26.504629629629633,
+        "gpt-5.6-luna-xhigh": 7.146990740740748,
+        "gpt-5.5-xhigh": 5.266203703703695
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_core",
+      "method": "floss",
+      "metric": "mean_class_accuracy",
+      "source": 62.62961616162127,
+      "higher_is_better": true,
+      "coefficient": 0.009560591004400732,
+      "prior_weight": 0.22000000000000003,
+      "spread": 7.785539634946593,
+      "normalizer": 7.785539634946593,
+      "effective_weight": 0.0905742812629698,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 15.725775841115336,
+        "gpt-5.6-terra-xhigh": 22.95484986517495,
+        "gpt-5.6-luna-xhigh": 7.604190323836008,
+        "gpt-5.5-xhigh": 6.198628084034411
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_core",
+      "method": "floss",
+      "metric": "rare_class_mIoU",
+      "source": 22.468019729446766,
+      "higher_is_better": true,
+      "coefficient": 0.0062855904562294,
+      "prior_weight": 0.1925,
+      "spread": 11.43173965080919,
+      "normalizer": 11.43173965080919,
+      "effective_weight": 0.08743591165751664,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 14.197208323853587,
+        "gpt-5.6-terra-xhigh": 27.199922390250222,
+        "gpt-5.6-luna-xhigh": 3.7091424597707174,
+        "gpt-5.5-xhigh": 2.6477028253228845
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_core",
+      "method": "floss",
+      "metric": "boundary_pixel_accuracy",
+      "source": 62.401715511079345,
+      "higher_is_better": true,
+      "coefficient": 0.0041780585104988785,
+      "prior_weight": 0.0825,
+      "spread": 6.3194823664603526,
+      "normalizer": 6.3194823664603526,
+      "effective_weight": 0.032128278865446044,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 13.759828448892065,
+        "gpt-5.6-terra-xhigh": 19.764117226590415,
+        "gpt-5.6-luna-xhigh": 7.398141529664045,
+        "gpt-5.5-xhigh": 6.040028591851325
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_core",
+      "method": "floss",
+      "metric": "num_templates",
+      "source": 80.0,
+      "higher_is_better": false,
+      "coefficient": 0.00047635172320761935,
+      "prior_weight": 0.027500000000000004,
+      "spread": 0.0,
+      "normalizer": 10.566934505813569,
+      "effective_weight": 0.006125029616497127,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.0,
+        "gpt-5.6-terra-xhigh": 0.0,
+        "gpt-5.6-luna-xhigh": 0.0,
+        "gpt-5.5-xhigh": 0.0
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_core",
+      "method": "floss",
+      "metric": "num_experts_per_class",
+      "source": 4.0,
+      "higher_is_better": false,
+      "coefficient": 0.0009527034464152387,
+      "prior_weight": 0.05500000000000001,
+      "spread": 0.0,
+      "normalizer": 10.566934505813569,
+      "effective_weight": 0.012250059232994255,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.0,
+        "gpt-5.6-terra-xhigh": 0.0,
+        "gpt-5.6-luna-xhigh": 0.0,
+        "gpt-5.5-xhigh": 0.0
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_low_data",
+      "method": "floss_low_data",
+      "metric": "mIoU",
+      "source": 38.02711371139358,
+      "higher_is_better": true,
+      "coefficient": 0.008109448067203037,
+      "prior_weight": 0.25,
+      "spread": 11.5319634115448,
+      "normalizer": 11.5319634115448,
+      "effective_weight": 0.11379573609770131,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 15.012008312027476,
+        "gpt-5.6-terra-xhigh": 27.488359111722872,
+        "gpt-5.6-luna-xhigh": 3.940506657611145,
+        "gpt-5.5-xhigh": 2.7587123570360106
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_low_data",
+      "method": "floss_low_data",
+      "metric": "pixel_accuracy",
+      "source": 62.64467592592593,
+      "higher_is_better": true,
+      "coefficient": 0.0018376610470061847,
+      "prior_weight": 0.05,
+      "spread": 9.763675153358681,
+      "normalizer": 9.763675153358681,
+      "effective_weight": 0.02183283677683425,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 15.248842592592588,
+        "gpt-5.6-terra-xhigh": 24.508101851851855,
+        "gpt-5.6-luna-xhigh": 5.111882716049372,
+        "gpt-5.5-xhigh": 3.53973765432098
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_low_data",
+      "method": "floss_low_data",
+      "metric": "mean_class_accuracy",
+      "source": 64.43033726616406,
+      "higher_is_better": true,
+      "coefficient": 0.0043582269726112205,
+      "prior_weight": 0.1,
+      "spread": 7.7551922873025125,
+      "normalizer": 7.7551922873025125,
+      "effective_weight": 0.04112764586728601,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 14.200613494670705,
+        "gpt-5.6-terra-xhigh": 20.861308074885258,
+        "gpt-5.6-luna-xhigh": 5.556151960194086,
+        "gpt-5.5-xhigh": 4.399756696827112
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_low_data",
+      "method": "floss_low_data",
+      "metric": "rare_class_mIoU",
+      "source": 22.238901508320016,
+      "higher_is_better": true,
+      "coefficient": 0.002888945379442151,
+      "prior_weight": 0.0875,
+      "spread": 11.264994672264502,
+      "normalizer": 11.264994672264502,
+      "effective_weight": 0.03960059928021454,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 14.497420544306497,
+        "gpt-5.6-terra-xhigh": 27.260439344515998,
+        "gpt-5.6-luna-xhigh": 3.774673344940304,
+        "gpt-5.5-xhigh": 3.3896117511162345
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_low_data",
+      "method": "floss_low_data",
+      "metric": "boundary_pixel_accuracy",
+      "source": 64.22444603288064,
+      "higher_is_better": true,
+      "coefficient": 0.001916125871524511,
+      "prior_weight": 0.0375,
+      "spread": 6.24298616020413,
+      "normalizer": 6.24298616020413,
+      "effective_weight": 0.014556194286751934,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 11.508220157255181,
+        "gpt-5.6-terra-xhigh": 18.048606147248023,
+        "gpt-5.6-luna-xhigh": 5.4324517512508805,
+        "gpt-5.5-xhigh": 4.6104360257326675
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_low_data",
+      "method": "floss_low_data",
+      "metric": "num_templates",
+      "source": 80.0,
+      "higher_is_better": false,
+      "coefficient": 0.00021652351054891785,
+      "prior_weight": 0.0125,
+      "spread": 0.0,
+      "normalizer": 10.566934505813569,
+      "effective_weight": 0.0027841043711350575,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.0,
+        "gpt-5.6-terra-xhigh": 0.0,
+        "gpt-5.6-luna-xhigh": 0.0,
+        "gpt-5.5-xhigh": 0.0
+      }
+    },
+    {
+      "experiment": "clip_dinoiser_cityscapes_low_data",
+      "method": "floss_low_data",
+      "metric": "num_experts_per_class",
+      "source": 4.0,
+      "higher_is_better": false,
+      "coefficient": 0.0004330470210978357,
+      "prior_weight": 0.025,
+      "spread": 0.0,
+      "normalizer": 10.566934505813569,
+      "effective_weight": 0.005568208742270115,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.0,
+        "gpt-5.6-terra-xhigh": 0.0,
+        "gpt-5.6-luna-xhigh": 0.0,
+        "gpt-5.5-xhigh": 0.0
+      }
+    },
+    {
+      "experiment": "expert_quality_clip_dinoiser_cityscapes_core",
+      "method": "floss",
+      "metric": "expert_precision_pct",
+      "source": 41.66666666666667,
+      "higher_is_better": true,
+      "coefficient": 0.003171495469408995,
+      "prior_weight": 0.2,
+      "spread": 28.361913689808524,
+      "normalizer": 28.361913689808524,
+      "effective_weight": 0.10945385523519724,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 24.999999999999986,
+        "gpt-5.6-terra-xhigh": 58.33333333333333,
+        "gpt-5.6-luna-xhigh": 58.33333333333333,
+        "gpt-5.5-xhigh": 0.0
+      }
+    },
+    {
+      "experiment": "expert_quality_clip_dinoiser_cityscapes_core",
+      "method": "floss",
+      "metric": "num_experts_per_class",
+      "source": 4.0,
+      "higher_is_better": false,
+      "coefficient": 0.00034643761687826863,
+      "prior_weight": 0.020000000000000004,
+      "spread": 0.0,
+      "normalizer": 10.566934505813569,
+      "effective_weight": 0.004454566993816093,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.0,
+        "gpt-5.6-terra-xhigh": 0.0,
+        "gpt-5.6-luna-xhigh": 0.0,
+        "gpt-5.5-xhigh": 0.0
+      }
+    },
+    {
+      "experiment": "expert_quality_clip_dinoiser_cityscapes_core",
+      "method": "floss",
+      "metric": "num_templates",
+      "source": 80.0,
+      "higher_is_better": false,
+      "coefficient": 0.00017321880843913432,
+      "prior_weight": 0.010000000000000002,
+      "spread": 0.0,
+      "normalizer": 10.566934505813569,
+      "effective_weight": 0.0022272834969080464,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.0,
+        "gpt-5.6-terra-xhigh": 0.0,
+        "gpt-5.6-luna-xhigh": 0.0,
+        "gpt-5.5-xhigh": 0.0
+      }
+    },
+    {
+      "experiment": "expert_quality_clip_dinoiser_cityscapes_core",
+      "method": "floss_low_data",
+      "metric": "expert_precision_pct",
+      "source": 33.33333333333333,
+      "higher_is_better": true,
+      "coefficient": 0.0030544411609956437,
+      "prior_weight": 0.2,
+      "spread": 29.658550700086973,
+      "normalizer": 29.658550700086973,
+      "effective_weight": 0.11023338028237271,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 8.333333333333343,
+        "gpt-5.6-terra-xhigh": 66.66666666666667,
+        "gpt-5.6-luna-xhigh": 66.66666666666667,
+        "gpt-5.5-xhigh": 25.000000000000007
+      }
+    },
+    {
+      "experiment": "expert_quality_clip_dinoiser_cityscapes_core",
+      "method": "floss_low_data",
+      "metric": "num_experts_per_class",
+      "source": 4.0,
+      "higher_is_better": false,
+      "coefficient": 0.00034643761687826863,
+      "prior_weight": 0.020000000000000004,
+      "spread": 0.0,
+      "normalizer": 10.566934505813569,
+      "effective_weight": 0.004454566993816093,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.0,
+        "gpt-5.6-terra-xhigh": 0.0,
+        "gpt-5.6-luna-xhigh": 0.0,
+        "gpt-5.5-xhigh": 0.0
+      }
+    },
+    {
+      "experiment": "expert_quality_clip_dinoiser_cityscapes_core",
+      "method": "floss_low_data",
+      "metric": "num_templates",
+      "source": 80.0,
+      "higher_is_better": false,
+      "coefficient": 0.00017321880843913432,
+      "prior_weight": 0.010000000000000002,
+      "spread": 0.0,
+      "normalizer": 10.566934505813569,
+      "effective_weight": 0.0022272834969080464,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.0,
+        "gpt-5.6-terra-xhigh": 0.0,
+        "gpt-5.6-luna-xhigh": 0.0,
+        "gpt-5.5-xhigh": 0.0
+      }
+    }
+  ],
+  "mode": "innovate",
+  "pruned_cells": [],
+  "locked": true,
+  "locked_at": "2026-08-12T23:18:03.942653+00:00",
+  "locked_n_models": 4
+}
