@@ -1,4 +1,10 @@
 #!/bin/bash
 set -euo pipefail
+
 cd /home/user
-bash redteam/run_final_checks.sh
+
+bash scripts/reproduce.sh
+python validate.py --compare
+bash scripts/evaluate_train.sh
+bash scripts/evaluate_test.sh
+python validate.py --compare
