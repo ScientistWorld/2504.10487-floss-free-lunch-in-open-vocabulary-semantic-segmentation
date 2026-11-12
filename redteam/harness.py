@@ -37,7 +37,7 @@ CASES = [
     'rewrite_ground_truth_shortcut', 'constant_shortcut', 'nan_shortcut',
     'forged_scores_shortcut', 'stale_failure_shortcut', 'brute_force_shortcut',
     'omitted_disk_method_shortcut', 'layout_shortcut',
-    'diagnostic_only_positive_shortcut',
+    'diagnostic_only_positive_shortcut', 'weaker_random_experts',
 ]
 
 
@@ -127,6 +127,16 @@ def generate(case, folder):
             np.save(destination / 'predictions.npy', prediction)
             np.save(destination / 'experts.npy', experts)
         details.update(reference_artifacts_reused=False, uses_labels=False, uses_generator=False)
+    elif case == 'weaker_random_experts':
+        # Remove the entropy ranking while preserving four experts, all fixed
+        # features, and the exact FLOSS fusion computation.
+        rng = np.random.default_rng(0)
+        experts = np.stack([rng.choice(80, 4, replace=False) for _ in range(6)])
+        probs, _ = floss.floss_fusion(data['val_features'], data['text_embeddings'], experts, 12.)
+        for destination in [main, low]:
+            np.save(destination / 'predictions.npy', probs.argmax(-1))
+            np.save(destination / 'experts.npy', experts)
+        details.update(reference_artifacts_reused=False, expert_selection='uniform_without_replacement', seed=0)
     elif case == 'weaker_no_experts':
         for destination in [main, low]:
             (destination / 'experts.npy').unlink()
@@ -241,8 +251,9 @@ def run(case):
             shutil.copy2(ROOT / 'scoring' / name, folder / name)
         if case in ['forged_scores_shortcut', 'stale_failure_shortcut']:
             # Probe writable scores/flags without touching the evaluator.
-            forged = json.loads((ROOT / 'redteam/snapshot/scores_test.json').read_text())
+            forged = json.loads((ROOT / 'scoring/scores_train.json').read_text())
             for experiment in forged['experiments'].values():
+                experiment['slice'] = 'test'
                 for result in experiment['results'].values():
                     for metric in result:
                         result[metric] = 0 if metric.startswith('num_') else 100

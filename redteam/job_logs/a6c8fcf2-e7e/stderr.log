@@ -1,0 +1,12 @@
+[hive] This stderr log is managed by Hive.
+[hive] job_id: a0db6cfb
+[hive] host: node
+[hive] node_id: b0107b5378266c495df28f942e3871578455bb07c79442d3c3ae0402
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-12 05:43:07 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2504.10487:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2504.10487/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2504.10487/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'

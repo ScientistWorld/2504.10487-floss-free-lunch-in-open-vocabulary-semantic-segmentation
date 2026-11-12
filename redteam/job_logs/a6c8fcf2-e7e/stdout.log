@@ -1,0 +1,102 @@
+[hive] This stdout log is managed by Hive.
+[hive] job_id: a0db6cfb
+[hive] host: node
+[hive] node_id: b0107b5378266c495df28f942e3871578455bb07c79442d3c3ae0402
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-12 05:43:07 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2504.10487:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2504.10487/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2504.10487/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+{"case": "reference", "reference_artifacts_reused": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.7876582920143846}
+{"case": "seed_0", "reference_artifacts_reused": false, "seed": 0, "adaptation_image_order": [4, 18, 2, 43, 21, 34, 20, 11, 1, 19, 10, 22, 28, 6, 30, 3, 36, 44, 16, 35, 45, 23, 27, 8, 37, 46, 17, 0, 24, 25, 32, 26, 42, 9, 38, 40, 13, 12, 7, 39, 47, 5, 14, 29, 41, 33, 15, 31], "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 2.6153207199822646}
+{"case": "seed_1", "reference_artifacts_reused": false, "seed": 1, "adaptation_image_order": [15, 25, 40, 23, 30, 6, 27, 37, 3, 28, 9, 33, 16, 24, 0, 20, 22, 7, 46, 35, 17, 19, 45, 29, 31, 21, 43, 1, 11, 47, 14, 4, 44, 39, 42, 26, 34, 2, 12, 10, 36, 5, 8, 32, 41, 18, 13, 38], "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 2.5914497709891293}
+{"case": "seed_2", "reference_artifacts_reused": false, "seed": 2, "adaptation_image_order": [26, 44, 40, 6, 38, 5, 12, 7, 34, 33, 39, 41, 3, 9, 18, 28, 43, 0, 27, 4, 10, 14, 23, 16, 15, 46, 13, 24, 20, 25, 22, 47, 2, 11, 32, 42, 45, 17, 19, 37, 21, 29, 31, 30, 35, 36, 8, 1], "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 2.4608899999875575}
+{"case": "stronger_consensus", "reference_artifacts_reused": false, "uses_labels": false, "uses_generator": false, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.6209547229809687}
+{"case": "stronger_consensus_fusion", "reference_artifacts_reused": false, "uses_labels": false, "uses_generator": false, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 3.4645861399767455}
+{"case": "weaker_no_experts", "reference_artifacts_reused": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.6818704010220245}
+{"case": "weaker_one_image", "reference_artifacts_reused": false, "seed": 0, "adaptation_image_order": [4, 18, 2, 43, 21, 34, 20, 11, 1, 19, 10, 22, 28, 6, 30, 3, 36, 44, 16, 35, 45, 23, 27, 8, 37, 46, 17, 0, 24, 25, 32, 26, 42, 9, 38, 40, 13, 12, 7, 39, 47, 5, 14, 29, 41, 33, 15, 31], "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 2.107638466026401}
+{"case": "rebuild_answers_shortcut", "reference_artifacts_reused": true, "generated_input_matches_original_sha256": true, "generated_visible_arrays_match": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.9046431950118858}
+{"case": "unlinked_experts_shortcut", "reference_artifacts_reused": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.279661473003216}
+{"case": "empty_budget_shortcut", "reference_artifacts_reused": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.3348013320064638}
+{"case": "diagnostic_only_shortcut", "reference_artifacts_reused": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.691233730991371}
+{"case": "shrink_pool_shortcut", "reference_artifacts_reused": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 3.8189354320056736}
+{"case": "rewrite_ground_truth_shortcut", "reference_artifacts_reused": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.747095452999929}
+{"case": "constant_shortcut", "reference_artifacts_reused": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.535455593984807}
+{"case": "nan_shortcut", "reference_artifacts_reused": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.4544244809949305}
+{"case": "forged_scores_shortcut", "reference_artifacts_reused": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.5227210430020932}
+{"case": "stale_failure_shortcut", "reference_artifacts_reused": true, "train_exit_code": 0, "test_exit_code": 1, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.485193280997919}
+{"case": "brute_force_shortcut", "reference_artifacts_reused": true, "enumerated_single_template_classifiers": 80, "generated_input_matches_original_sha256": true, "generated_visible_arrays_match": true, "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 3.700367056997493}
+{"case": "omitted_disk_method_shortcut", "reference_artifacts_reused": true, "unregistered_method_path": "outputs/redteam_unregistered_shortcut", "train_exit_code": 0, "test_exit_code": 0, "hidden_command": "bash scripts/evaluate_test.sh", "elapsed_seconds": 1.8739900660002604}
+| Run | Core mIoU | Low mIoU | Expert % | Rank delta* | Test exit |
+|---|---:|---:|---:|---:|---:|
+| brute_force_shortcut | 41.6078 | 41.6078 | 91.6667 | 0.7047 | 0 |
+| constant_shortcut | 4.3355 | 4.3355 | 33.3333 | -2.5988 | 0 |
+| diagnostic_only_shortcut | missing | missing | 33.3333 | 0.0000 | 0 |
+| empty_budget_shortcut | 37.8363 | 38.5212 | missing | 0.0188 | 0 |
+| forged_scores_shortcut | 37.8363 | 38.5212 | 33.3333 | 0.0000 | 0 |
+| nan_shortcut | 0.0000 | 0.0000 | 33.3333 | -3.3136 | 0 |
+| omitted_disk_method_shortcut | 37.8363 | 38.5212 | 33.3333 | 0.0000 | 0 |
+| rebuild_answers_shortcut | 100.0000 | 100.0000 | 100.0000 | 4.4692 | 0 |
+| reference | 37.8363 | 38.5212 | 33.3333 | 0.0000 | 0 |
+| rewrite_ground_truth_shortcut | 100.0000 | 100.0000 | 100.0000 | 4.4692 | 0 |
+| seed_0 | 37.8363 | 38.7687 | 33.3333 | 0.0054 | 0 |
+| seed_1 | 37.8363 | 37.7299 | 33.3333 | -0.0165 | 0 |
+| seed_2 | 37.8363 | 30.9609 | 33.3333 | -0.2214 | 0 |
+| shrink_pool_shortcut | 37.8363 | 38.5212 | 33.3333 | 0.2228 | 0 |
+| stale_failure_shortcut | 100.0000 | 100.0000 | 100.0000 | 4.7108 | 1 |
+| stronger_consensus | 41.9500 | 41.9500 | 100.0000 | 0.7718 | 0 |
+| stronger_consensus_fusion | 41.6899 | 41.6899 | 100.0000 | 0.7609 | 0 |
+| unlinked_experts_shortcut | 37.8363 | 38.5212 | 100.0000 | 0.4272 | 0 |
+| weaker_no_experts | 33.2851 | 33.2851 | missing | -0.6348 | 0 |
+| weaker_one_image | 40.6422 | 40.6422 | 25.0000 | 0.1880 | 0 |
+
+*Audit-cohort standard deviations; the future cohort changes the numerical size. Reference delta is zero.
+
+```json
+{
+  "clip_dinoiser_cityscapes_core.mIoU": {
+    "values": [
+      37.83629851870367,
+      37.83629851870367,
+      37.83629851870367
+    ],
+    "min": 37.83629851870367,
+    "max": 37.83629851870367,
+    "range": 0.0,
+    "sample_sd": 0.0
+  },
+  "clip_dinoiser_cityscapes_low_data.mIoU": {
+    "values": [
+      38.7686878566728,
+      37.72985500293483,
+      30.960930632623924
+    ],
+    "min": 30.960930632623924,
+    "max": 38.7686878566728,
+    "range": 7.807757224048874,
+    "sample_sd": 4.2398620987535605
+  },
+  "expert_quality_clip_dinoiser_cityscapes_core.expert_precision_pct": {
+    "values": [
+      33.33333333333333,
+      33.33333333333333,
+      33.33333333333333
+    ],
+    "min": 33.33333333333333,
+    "max": 33.33333333333333,
+    "range": 0.0,
+    "sample_sd": 0.0
+  },
+  "combined_rank": {
+    "values": [
+      0.005377615843931656,
+      -0.01649104142524876,
+      -0.22141689915796117
+    ],
+    "range": 0.22679451500189282
+  }
+}
+```
