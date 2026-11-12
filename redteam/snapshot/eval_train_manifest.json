@@ -1,0 +1,23 @@
+{
+  "slice": "train",
+  "experiments": {
+    "clip_dinoiser_cityscapes_core": {
+      "runs": {
+        "floss": "outputs/floss",
+        "template_average": "outputs/template_average"
+      }
+    },
+    "clip_dinoiser_cityscapes_low_data": {
+      "runs": {
+        "floss_low_data": "outputs/floss_low_data",
+        "template_average": "outputs/template_average"
+      }
+    },
+    "expert_quality_clip_dinoiser_cityscapes_core": {
+      "runs": {
+        "floss": "outputs/floss",
+        "floss_low_data": "outputs/floss_low_data"
+      }
+    }
+  }
+}

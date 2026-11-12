@@ -1,0 +1,9 @@
+#!/bin/bash
+set -euo pipefail
+cd /home/user
+export OPENBLAS_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+for case in reference seed_0 seed_1 seed_2 stronger_consensus stronger_consensus_fusion weaker_no_experts weaker_one_image rebuild_answers_shortcut unlinked_experts_shortcut empty_budget_shortcut diagnostic_only_shortcut shrink_pool_shortcut rewrite_ground_truth_shortcut constant_shortcut nan_shortcut forged_scores_shortcut stale_failure_shortcut brute_force_shortcut omitted_disk_method_shortcut; do
+  bash "redteam/$case/run.sh"
+done
+python redteam/summarize.py

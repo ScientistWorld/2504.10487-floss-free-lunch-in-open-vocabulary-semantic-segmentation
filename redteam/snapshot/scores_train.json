@@ -1,0 +1,65 @@
+{
+  "experiments": {
+    "clip_dinoiser_cityscapes_core": {
+      "slice": "train",
+      "results": {
+        "floss": {
+          "mIoU": 37.38383094148929,
+          "pixel_accuracy": 60.61921296296296,
+          "mean_class_accuracy": 62.62961616162127,
+          "rare_class_mIoU": 22.468019729446766,
+          "boundary_pixel_accuracy": 62.401715511079345,
+          "num_templates": 80.0,
+          "num_experts_per_class": 4.0
+        },
+        "template_average": {
+          "mIoU": 32.868230261886055,
+          "pixel_accuracy": 57.01195987654321,
+          "mean_class_accuracy": 59.301873111944715,
+          "rare_class_mIoU": 19.63530146455081,
+          "boundary_pixel_accuracy": 59.29235167977126,
+          "num_templates": 80.0,
+          "num_experts_per_class": 80.0
+        }
+      }
+    },
+    "clip_dinoiser_cityscapes_low_data": {
+      "slice": "train",
+      "results": {
+        "floss_low_data": {
+          "mIoU": 38.02711371139358,
+          "pixel_accuracy": 62.64467592592593,
+          "mean_class_accuracy": 64.43033726616406,
+          "rare_class_mIoU": 22.238901508320016,
+          "boundary_pixel_accuracy": 64.22444603288064,
+          "num_templates": 80.0,
+          "num_experts_per_class": 4.0
+        },
+        "template_average": {
+          "mIoU": 32.868230261886055,
+          "pixel_accuracy": 57.01195987654321,
+          "mean_class_accuracy": 59.301873111944715,
+          "rare_class_mIoU": 19.63530146455081,
+          "boundary_pixel_accuracy": 59.29235167977126,
+          "num_templates": 80.0,
+          "num_experts_per_class": 80.0
+        }
+      }
+    },
+    "expert_quality_clip_dinoiser_cityscapes_core": {
+      "slice": "train",
+      "results": {
+        "floss": {
+          "expert_precision_pct": 41.66666666666667,
+          "num_experts_per_class": 4.0,
+          "num_templates": 80.0
+        },
+        "floss_low_data": {
+          "expert_precision_pct": 33.33333333333333,
+          "num_experts_per_class": 4.0,
+          "num_templates": 80.0
+        }
+      }
+    }
+  }
+}

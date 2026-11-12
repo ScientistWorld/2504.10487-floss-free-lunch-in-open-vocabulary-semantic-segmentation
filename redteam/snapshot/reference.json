@@ -1,0 +1,152 @@
+{
+  "experiments": {
+    "clip_dinoiser_cityscapes_core": {
+      "description": "Paper target: CLIP-DINOiser on Cityscapes improves mIoU over the default averaged-template classifier while using top-4 class experts from the fixed 80-template pool. This workspace reports a synthetic dense-feature substitute under the same target.",
+      "weight": 0.55,
+      "primary_metric": "mIoU",
+      "metrics": {
+        "mIoU": {
+          "higher_is_better": true,
+          "coefficient": 1.0,
+          "description": "Mean intersection-over-union on the slice, matching the paper's headline dense segmentation metric."
+        },
+        "pixel_accuracy": {
+          "higher_is_better": true,
+          "coefficient": 0.2,
+          "description": "Overall held-out pixel classification accuracy, included to catch broad segmentation regressions not fully reflected by IoU."
+        },
+        "mean_class_accuracy": {
+          "higher_is_better": true,
+          "coefficient": 0.4,
+          "description": "Unweighted mean per-class recall, included to catch shortcuts that improve common regions while neglecting smaller classes."
+        },
+        "rare_class_mIoU": {
+          "higher_is_better": true,
+          "coefficient": 0.35,
+          "description": "Mean IoU over below-median-frequency classes in the slice, included to penalize background- or layout-biased segmenters."
+        },
+        "boundary_pixel_accuracy": {
+          "higher_is_better": true,
+          "coefficient": 0.15,
+          "description": "Pixel accuracy restricted to ground-truth class-boundary pixels, included to catch coarse mask shortcuts."
+        },
+        "num_experts_per_class": {
+          "higher_is_better": false,
+          "coefficient": -0.1,
+          "description": "Number of selected class-specific artifacts per class; lower is better under the fixed small-budget constraint."
+        },
+        "num_templates": {
+          "higher_is_better": false,
+          "coefficient": -0.05,
+          "description": "Total fixed text-representation pool size available to the method; lower is better to discourage expanding the pool."
+        }
+      },
+      "results": {
+        "template_average": {
+          "type": "baseline",
+          "mIoU": 31.3,
+          "num_experts_per_class": 80,
+          "num_templates": 80
+        },
+        "floss": {
+          "type": "proposed",
+          "mIoU": 34.6,
+          "num_experts_per_class": 4,
+          "num_templates": 80
+        }
+      }
+    },
+    "clip_dinoiser_cityscapes_low_data": {
+      "description": "Paper target: CLIP-DINOiser on Cityscapes with very few unlabeled expert-selection images still improves over the default averaged-template classifier. This workspace reports a synthetic dense-feature substitute under the same target.",
+      "weight": 0.25,
+      "primary_metric": "mIoU",
+      "metrics": {
+        "mIoU": {
+          "higher_is_better": true,
+          "coefficient": 1.0,
+          "description": "Mean intersection-over-union on the low-data slice, matching the paper's headline dense segmentation metric."
+        },
+        "pixel_accuracy": {
+          "higher_is_better": true,
+          "coefficient": 0.2,
+          "description": "Overall held-out pixel classification accuracy, included to catch broad segmentation regressions not fully reflected by IoU."
+        },
+        "mean_class_accuracy": {
+          "higher_is_better": true,
+          "coefficient": 0.4,
+          "description": "Unweighted mean per-class recall, included to catch shortcuts that improve common regions while neglecting smaller classes."
+        },
+        "rare_class_mIoU": {
+          "higher_is_better": true,
+          "coefficient": 0.35,
+          "description": "Mean IoU over below-median-frequency classes in the low-data slice, included to penalize background- or layout-biased segmenters."
+        },
+        "boundary_pixel_accuracy": {
+          "higher_is_better": true,
+          "coefficient": 0.15,
+          "description": "Pixel accuracy restricted to ground-truth class-boundary pixels, included to catch coarse mask shortcuts."
+        },
+        "num_experts_per_class": {
+          "higher_is_better": false,
+          "coefficient": -0.1,
+          "description": "Number of selected class-specific artifacts per class; lower is better under the fixed small-budget constraint."
+        },
+        "num_templates": {
+          "higher_is_better": false,
+          "coefficient": -0.05,
+          "description": "Total fixed text-representation pool size available to the method; lower is better to discourage expanding the pool."
+        }
+      },
+      "results": {
+        "template_average": {
+          "type": "baseline",
+          "mIoU": 31.3,
+          "num_experts_per_class": 80,
+          "num_templates": 80
+        },
+        "floss_low_data": {
+          "type": "proposed",
+          "mIoU": 33.2,
+          "num_experts_per_class": 4,
+          "num_templates": 80
+        }
+      }
+    },
+    "expert_quality_clip_dinoiser_cityscapes_core": {
+      "description": "Paper target: entropy-selected CLIP-DINOiser top-4 class experts substantially overlap with oracle class experts. This workspace reports the analogous diagnostic on hidden synthetic oracle expert sets.",
+      "weight": 0.2,
+      "primary_metric": "expert_precision_pct",
+      "metrics": {
+        "expert_precision_pct": {
+          "higher_is_better": true,
+          "coefficient": 1.0,
+          "description": "Percent overlap between selected and hidden oracle class-specific artifacts on the evaluated class subset."
+        },
+        "num_experts_per_class": {
+          "higher_is_better": false,
+          "coefficient": -0.1,
+          "description": "Number of selected class-specific artifacts per class; lower is better under the fixed small-budget constraint."
+        },
+        "num_templates": {
+          "higher_is_better": false,
+          "coefficient": -0.05,
+          "description": "Total fixed text-representation pool size available to the method; lower is better to discourage expanding the pool."
+        }
+      },
+      "results": {
+        "floss": {
+          "type": "proposed",
+          "expert_precision_pct": 50.0,
+          "num_experts_per_class": 4,
+          "num_templates": 80
+        },
+        "floss_low_data": {
+          "type": "proposed",
+          "expert_precision_pct": 50.0,
+          "num_experts_per_class": 4,
+          "num_templates": 80
+        }
+      }
+    }
+  }
+}
