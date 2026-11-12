@@ -1,6 +1,8 @@
-# Final verification is complete.
-# Do NOT sleep, poll, or wait. The system reads this file
+# Once you set action to 'submit' or 'done', STOP immediately.
+# Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends.
-action: done
+action: pending
+gpus: 0
+test: false
 milestone: secondary_claims
-notes: "Final verification passed; workspace is ready as a synthetic-data research gym at secondary_claims."
+notes: ""
