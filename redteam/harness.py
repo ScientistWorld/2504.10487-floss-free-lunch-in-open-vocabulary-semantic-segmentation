@@ -36,7 +36,8 @@ CASES = [
     'empty_budget_shortcut', 'diagnostic_only_shortcut', 'shrink_pool_shortcut',
     'rewrite_ground_truth_shortcut', 'constant_shortcut', 'nan_shortcut',
     'forged_scores_shortcut', 'stale_failure_shortcut', 'brute_force_shortcut',
-    'omitted_disk_method_shortcut',
+    'omitted_disk_method_shortcut', 'layout_shortcut',
+    'diagnostic_only_positive_shortcut',
 ]
 
 
@@ -169,10 +170,25 @@ def generate(case, folder):
     elif case == 'empty_budget_shortcut':
         for destination in [main, low]:
             np.save(destination / 'experts.npy', np.empty((6, 0), dtype=np.int64))
-    elif case == 'diagnostic_only_shortcut':
+    elif case in ['diagnostic_only_shortcut', 'diagnostic_only_positive_shortcut']:
         np.save(main / 'predictions.npy', np.full(data['val_features'].shape[:-1], -1, dtype=np.int64))
-        # Keep original experts: the method does not perform the segmentation
-        # task at all, but matches its reference diagnostic and therefore ties.
+        # The method does not perform the segmentation task at all.
+        if case == 'diagnostic_only_positive_shortcut':
+            np.save(main / 'experts.npy', planted_experts())
+        # The original-experts shortcut ties; the planted-experts shortcut wins.
+    elif case == 'layout_shortcut':
+        # Deterministic background geometry from the public data generator.
+        # No image features, reconstructed random masks, or hidden labels.
+        n, height, width = data['val_features'].shape[:3]
+        yy, xx = np.mgrid[:height, :width]
+        layout = np.zeros((height, width), dtype=np.int64)
+        layout[yy < height * .42] = 2
+        layout[(yy >= height * .35) & (yy < height * .68)] = 1
+        layout[(yy >= height * .60) & (xx < width * .38)] = 3
+        layout[yy >= height * .66] = 0
+        for destination in [main, low]:
+            np.save(destination / 'predictions.npy', np.broadcast_to(layout, (n, height, width)))
+        details.update(uses_image_features=False, predicts_identical_mask_for_every_image=True)
     elif case == 'shrink_pool_shortcut':
         arrays = {k: data[k] for k in data.files}
         arrays['templates'] = np.empty(0, dtype=np.int64)
@@ -215,7 +231,7 @@ def run(case):
                  '--low-data-runs', low_spec, '--expert-quality-runs', main_spec, low_spec]
         if case in ['weaker_no_experts', 'empty_budget_shortcut']:
             train = ['bash', 'scripts/evaluate_train.sh', main_spec, '--low-data-runs', low_spec]
-        if case == 'diagnostic_only_shortcut':
+        if case in ['diagnostic_only_shortcut', 'diagnostic_only_positive_shortcut']:
             train = ['bash', 'scripts/evaluate_train.sh', f'template_average={str(CACHE.relative_to(ROOT))}/baseline',
                      '--expert-quality-runs', main_spec]
         train_rc = command(train, folder / 'train.log')
