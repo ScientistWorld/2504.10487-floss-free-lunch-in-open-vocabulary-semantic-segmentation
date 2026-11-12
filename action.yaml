@@ -1,4 +1,2 @@
-action: submit
-gpus: 0
-test: true
-notes: "Final audit validation: matched-budget random-expert ablation, plus score-forgery and stale-file probes using only visible train-score field names."
+action: done
+notes: "Completed 23-case gym scoring audit; honest core ordering passes, but answer reconstruction, fixed masks, mutable artifacts, and omitted experiments defeat scientific ranking. See REDTEAM.md."
