@@ -1,0 +1,298 @@
+{
+  "rank_definition": "weighted abs(coefficient) * direction * (value - saved reference) / population_std; missing metrics skipped; audit-cohort normalization, not unknown future cohort",
+  "reference_profile": {
+    "clip_dinoiser_cityscapes_core": {
+      "mIoU": 37.83629851870367,
+      "pixel_accuracy": 61.342592592592595,
+      "mean_class_accuracy": 61.824523224071115,
+      "rare_class_mIoU": 22.69227201907275,
+      "boundary_pixel_accuracy": 62.376959533357635,
+      "num_templates": 80.0,
+      "num_experts_per_class": 4.0
+    },
+    "clip_dinoiser_cityscapes_low_data": {
+      "mIoU": 38.521247396255625,
+      "pixel_accuracy": 63.20408950617284,
+      "mean_class_accuracy": 63.686489728337,
+      "rare_class_mIoU": 22.48007071159384,
+      "boundary_pixel_accuracy": 65.62158220925993,
+      "num_templates": 80.0,
+      "num_experts_per_class": 4.0
+    },
+    "expert_quality_clip_dinoiser_cityscapes_core": {
+      "expert_precision_pct": 33.33333333333333,
+      "num_experts_per_class": 4.0,
+      "num_templates": 80.0
+    }
+  },
+  "cohort_standard_deviations": {
+    "clip_dinoiser_cityscapes_core": {
+      "mIoU": 23.111105058275733,
+      "pixel_accuracy": 20.751724747807124,
+      "mean_class_accuracy": 21.696622507295604,
+      "rare_class_mIoU": 25.47125519203811,
+      "boundary_pixel_accuracy": 21.330483326176928,
+      "num_experts_per_class": 17.043532335165555,
+      "num_templates": 17.863750261554884
+    },
+    "clip_dinoiser_cityscapes_low_data": {
+      "mIoU": 23.178951390024476,
+      "pixel_accuracy": 20.88239306046448,
+      "mean_class_accuracy": 21.92562360981838,
+      "rare_class_mIoU": 25.690620648566824,
+      "boundary_pixel_accuracy": 21.489931650307813,
+      "num_experts_per_class": 17.043532335165555,
+      "num_templates": 17.863750261554884
+    },
+    "expert_quality_clip_dinoiser_cityscapes_core": {
+      "expert_precision_pct": 31.207962122875404,
+      "num_experts_per_class": 0.0,
+      "num_templates": 18.324913891634047
+    }
+  },
+  "runs": {
+    "brute_force_shortcut": {
+      "test_exit_code": 0,
+      "core_mIoU": 41.60778877703011,
+      "low_data_mIoU": 41.60778877703011,
+      "expert_precision_pct": 91.66666666666666,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 0.7047350525249032,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.6192096378375249
+    },
+    "constant_shortcut": {
+      "test_exit_code": 0,
+      "core_mIoU": 4.335455246913581,
+      "low_data_mIoU": 4.335455246913581,
+      "expert_precision_pct": 33.33333333333333,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": -2.5987669972878913,
+      "literal_floss_rank_delta_core_plus_diagnostic": -1.7726907462250037
+    },
+    "diagnostic_only_shortcut": {
+      "test_exit_code": 0,
+      "core_mIoU": null,
+      "low_data_mIoU": null,
+      "expert_precision_pct": 33.33333333333333,
+      "core_experts": null,
+      "core_templates": null,
+      "illustrative_combined_rank_delta": 0.0,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.0
+    },
+    "empty_budget_shortcut": {
+      "test_exit_code": 0,
+      "core_mIoU": 37.83629851870367,
+      "low_data_mIoU": 38.521247396255625,
+      "expert_precision_pct": null,
+      "core_experts": 0.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 0.01877545063471091,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.012908122311363752
+    },
+    "forged_scores_shortcut": {
+      "test_exit_code": 0,
+      "core_mIoU": 37.83629851870367,
+      "low_data_mIoU": 38.521247396255625,
+      "expert_precision_pct": 33.33333333333333,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 0.0,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.0
+    },
+    "nan_shortcut": {
+      "test_exit_code": 0,
+      "core_mIoU": 0.0,
+      "low_data_mIoU": 0.0,
+      "expert_precision_pct": 33.33333333333333,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": -3.3135884258598236,
+      "literal_floss_rank_delta_core_plus_diagnostic": -2.2652373271273833
+    },
+    "omitted_disk_method_shortcut": {
+      "test_exit_code": 0,
+      "core_mIoU": 37.83629851870367,
+      "low_data_mIoU": 38.521247396255625,
+      "expert_precision_pct": 33.33333333333333,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 0.0,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.0
+    },
+    "rebuild_answers_shortcut": {
+      "test_exit_code": 0,
+      "core_mIoU": 100.0,
+      "low_data_mIoU": 100.0,
+      "expert_precision_pct": 100.0,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 4.469224549174106,
+      "literal_floss_rank_delta_core_plus_diagnostic": 3.22839581573711
+    },
+    "reference": {
+      "test_exit_code": 0,
+      "core_mIoU": 37.83629851870367,
+      "low_data_mIoU": 38.521247396255625,
+      "expert_precision_pct": 33.33333333333333,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 0.0,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.0
+    },
+    "rewrite_ground_truth_shortcut": {
+      "test_exit_code": 0,
+      "core_mIoU": 100.0,
+      "low_data_mIoU": 100.0,
+      "expert_precision_pct": 100.0,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 4.469224549174106,
+      "literal_floss_rank_delta_core_plus_diagnostic": 3.22839581573711
+    },
+    "seed_0": {
+      "test_exit_code": 0,
+      "core_mIoU": 37.83629851870367,
+      "low_data_mIoU": 38.7686878566728,
+      "expert_precision_pct": 33.33333333333333,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 0.005377615843931656,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.0
+    },
+    "seed_1": {
+      "test_exit_code": 0,
+      "core_mIoU": 37.83629851870367,
+      "low_data_mIoU": 37.72985500293483,
+      "expert_precision_pct": 33.33333333333333,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": -0.01649104142524876,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.0
+    },
+    "seed_2": {
+      "test_exit_code": 0,
+      "core_mIoU": 37.83629851870367,
+      "low_data_mIoU": 30.960930632623924,
+      "expert_precision_pct": 33.33333333333333,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": -0.22141689915796117,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.0
+    },
+    "shrink_pool_shortcut": {
+      "test_exit_code": 0,
+      "core_mIoU": 37.83629851870367,
+      "low_data_mIoU": 38.521247396255625,
+      "expert_precision_pct": 33.33333333333333,
+      "core_experts": 4.0,
+      "core_templates": 0.0,
+      "illustrative_combined_rank_delta": 0.22279013040713203,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.16681084356319698
+    },
+    "stale_failure_shortcut": {
+      "test_exit_code": 1,
+      "core_mIoU": 100,
+      "low_data_mIoU": 100,
+      "expert_precision_pct": 100,
+      "core_experts": 0,
+      "core_templates": 0,
+      "illustrative_combined_rank_delta": 4.710790130215948,
+      "literal_floss_rank_delta_core_plus_diagnostic": 3.408114781611671
+    },
+    "stronger_consensus": {
+      "test_exit_code": 0,
+      "core_mIoU": 41.94995052627157,
+      "low_data_mIoU": 41.94995052627157,
+      "expert_precision_pct": 100.0,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 0.7717783134329443,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.681999747611248
+    },
+    "stronger_consensus_fusion": {
+      "test_exit_code": 0,
+      "core_mIoU": 41.68994196025045,
+      "low_data_mIoU": 41.68994196025045,
+      "expert_precision_pct": 100.0,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 0.760916690652594,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.6745255717956395
+    },
+    "unlinked_experts_shortcut": {
+      "test_exit_code": 0,
+      "core_mIoU": 37.83629851870367,
+      "low_data_mIoU": 38.521247396255625,
+      "expert_precision_pct": 100.0,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 0.42724139694978724,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.42724139694978724
+    },
+    "weaker_no_experts": {
+      "test_exit_code": 0,
+      "core_mIoU": 33.285071816744136,
+      "low_data_mIoU": 33.285071816744136,
+      "expert_precision_pct": null,
+      "core_experts": 80.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": -0.6347658930120273,
+      "literal_floss_rank_delta_core_plus_diagnostic": -0.41929448040171935
+    },
+    "weaker_one_image": {
+      "test_exit_code": 0,
+      "core_mIoU": 40.64217373903761,
+      "low_data_mIoU": 40.64217373903761,
+      "expert_precision_pct": 25.0,
+      "core_experts": 4.0,
+      "core_templates": 80.0,
+      "illustrative_combined_rank_delta": 0.18804271438562117,
+      "literal_floss_rank_delta_core_plus_diagnostic": 0.13033976975867242
+    }
+  },
+  "seed_spread": {
+    "clip_dinoiser_cityscapes_core.mIoU": {
+      "values": [
+        37.83629851870367,
+        37.83629851870367,
+        37.83629851870367
+      ],
+      "min": 37.83629851870367,
+      "max": 37.83629851870367,
+      "range": 0.0,
+      "sample_sd": 0.0
+    },
+    "clip_dinoiser_cityscapes_low_data.mIoU": {
+      "values": [
+        38.7686878566728,
+        37.72985500293483,
+        30.960930632623924
+      ],
+      "min": 30.960930632623924,
+      "max": 38.7686878566728,
+      "range": 7.807757224048874,
+      "sample_sd": 4.2398620987535605
+    },
+    "expert_quality_clip_dinoiser_cityscapes_core.expert_precision_pct": {
+      "values": [
+        33.33333333333333,
+        33.33333333333333,
+        33.33333333333333
+      ],
+      "min": 33.33333333333333,
+      "max": 33.33333333333333,
+      "range": 0.0,
+      "sample_sd": 0.0
+    },
+    "combined_rank": {
+      "values": [
+        0.005377615843931656,
+        -0.01649104142524876,
+        -0.22141689915796117
+      ],
+      "range": 0.22679451500189282
+    }
+  }
+}

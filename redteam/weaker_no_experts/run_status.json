@@ -1,0 +1,8 @@
+{
+  "case": "weaker_no_experts",
+  "reference_artifacts_reused": true,
+  "train_exit_code": 0,
+  "test_exit_code": 0,
+  "hidden_command": "bash scripts/evaluate_test.sh",
+  "elapsed_seconds": 1.6818704010220245
+}

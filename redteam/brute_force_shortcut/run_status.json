@@ -1,0 +1,11 @@
+{
+  "case": "brute_force_shortcut",
+  "reference_artifacts_reused": true,
+  "enumerated_single_template_classifiers": 80,
+  "generated_input_matches_original_sha256": true,
+  "generated_visible_arrays_match": true,
+  "train_exit_code": 0,
+  "test_exit_code": 0,
+  "hidden_command": "bash scripts/evaluate_test.sh",
+  "elapsed_seconds": 3.700367056997493
+}

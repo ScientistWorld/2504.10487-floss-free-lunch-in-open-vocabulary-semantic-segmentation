@@ -1,0 +1,9 @@
+{
+  "case": "omitted_disk_method_shortcut",
+  "reference_artifacts_reused": true,
+  "unregistered_method_path": "outputs/redteam_unregistered_shortcut",
+  "train_exit_code": 0,
+  "test_exit_code": 0,
+  "hidden_command": "bash scripts/evaluate_test.sh",
+  "elapsed_seconds": 1.8739900660002604
+}

@@ -1,0 +1,8 @@
+{
+  "case": "stale_failure_shortcut",
+  "reference_artifacts_reused": true,
+  "train_exit_code": 0,
+  "test_exit_code": 1,
+  "hidden_command": "bash scripts/evaluate_test.sh",
+  "elapsed_seconds": 1.485193280997919
+}

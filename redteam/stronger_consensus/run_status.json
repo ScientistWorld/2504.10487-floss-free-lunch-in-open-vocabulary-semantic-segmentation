@@ -1,0 +1,10 @@
+{
+  "case": "stronger_consensus",
+  "reference_artifacts_reused": false,
+  "uses_labels": false,
+  "uses_generator": false,
+  "train_exit_code": 0,
+  "test_exit_code": 0,
+  "hidden_command": "bash scripts/evaluate_test.sh",
+  "elapsed_seconds": 1.6209547229809687
+}

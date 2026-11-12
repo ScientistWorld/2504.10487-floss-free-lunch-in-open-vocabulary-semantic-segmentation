@@ -1,0 +1,10 @@
+{
+  "case": "rebuild_answers_shortcut",
+  "reference_artifacts_reused": true,
+  "generated_input_matches_original_sha256": true,
+  "generated_visible_arrays_match": true,
+  "train_exit_code": 0,
+  "test_exit_code": 0,
+  "hidden_command": "bash scripts/evaluate_test.sh",
+  "elapsed_seconds": 1.9046431950118858
+}

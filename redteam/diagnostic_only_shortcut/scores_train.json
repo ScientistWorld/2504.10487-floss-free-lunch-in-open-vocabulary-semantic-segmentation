@@ -1,0 +1,28 @@
+{
+  "experiments": {
+    "clip_dinoiser_cityscapes_core": {
+      "slice": "train",
+      "results": {
+        "template_average": {
+          "mIoU": 32.868230261886055,
+          "pixel_accuracy": 57.01195987654321,
+          "mean_class_accuracy": 59.301873111944715,
+          "rare_class_mIoU": 19.63530146455081,
+          "boundary_pixel_accuracy": 59.29235167977126,
+          "num_templates": 80.0,
+          "num_experts_per_class": 80.0
+        }
+      }
+    },
+    "expert_quality_clip_dinoiser_cityscapes_core": {
+      "slice": "train",
+      "results": {
+        "floss": {
+          "expert_precision_pct": 41.66666666666667,
+          "num_experts_per_class": 4.0,
+          "num_templates": 80.0
+        }
+      }
+    }
+  }
+}

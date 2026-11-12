@@ -1,0 +1,47 @@
+{
+  "experiments": {
+    "clip_dinoiser_cityscapes_core": {
+      "slice": "test",
+      "results": {
+        "floss": {
+          "mIoU": 37.83629851870367,
+          "pixel_accuracy": 61.342592592592595,
+          "mean_class_accuracy": 61.824523224071115,
+          "rare_class_mIoU": 22.69227201907275,
+          "boundary_pixel_accuracy": 62.376959533357635,
+          "num_templates": 80.0,
+          "num_experts_per_class": 4.0
+        }
+      }
+    },
+    "clip_dinoiser_cityscapes_low_data": {
+      "slice": "test",
+      "results": {
+        "floss_low_data": {
+          "mIoU": 38.521247396255625,
+          "pixel_accuracy": 63.20408950617284,
+          "mean_class_accuracy": 63.686489728337,
+          "rare_class_mIoU": 22.48007071159384,
+          "boundary_pixel_accuracy": 65.62158220925993,
+          "num_templates": 80.0,
+          "num_experts_per_class": 4.0
+        }
+      }
+    },
+    "expert_quality_clip_dinoiser_cityscapes_core": {
+      "slice": "test",
+      "results": {
+        "floss": {
+          "expert_precision_pct": 100.0,
+          "num_experts_per_class": 4.0,
+          "num_templates": 80.0
+        },
+        "floss_low_data": {
+          "expert_precision_pct": 100.0,
+          "num_experts_per_class": 4.0,
+          "num_templates": 80.0
+        }
+      }
+    }
+  }
+}

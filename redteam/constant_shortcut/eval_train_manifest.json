@@ -1,0 +1,21 @@
+{
+  "slice": "train",
+  "experiments": {
+    "clip_dinoiser_cityscapes_core": {
+      "runs": {
+        "floss": "redteam/constant_shortcut/outputs/main"
+      }
+    },
+    "clip_dinoiser_cityscapes_low_data": {
+      "runs": {
+        "floss_low_data": "redteam/constant_shortcut/outputs/low"
+      }
+    },
+    "expert_quality_clip_dinoiser_cityscapes_core": {
+      "runs": {
+        "floss": "redteam/constant_shortcut/outputs/main",
+        "floss_low_data": "redteam/constant_shortcut/outputs/low"
+      }
+    }
+  }
+}

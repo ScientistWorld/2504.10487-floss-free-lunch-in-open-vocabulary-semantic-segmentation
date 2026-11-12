@@ -1,0 +1,21 @@
+{
+  "slice": "test",
+  "experiments": {
+    "clip_dinoiser_cityscapes_core": {
+      "runs": {
+        "floss": "redteam/stronger_consensus/outputs/main"
+      }
+    },
+    "clip_dinoiser_cityscapes_low_data": {
+      "runs": {
+        "floss_low_data": "redteam/stronger_consensus/outputs/low"
+      }
+    },
+    "expert_quality_clip_dinoiser_cityscapes_core": {
+      "runs": {
+        "floss": "redteam/stronger_consensus/outputs/main",
+        "floss_low_data": "redteam/stronger_consensus/outputs/low"
+      }
+    }
+  }
+}

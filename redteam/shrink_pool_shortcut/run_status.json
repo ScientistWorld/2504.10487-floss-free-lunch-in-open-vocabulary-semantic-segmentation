@@ -1,0 +1,8 @@
+{
+  "case": "shrink_pool_shortcut",
+  "reference_artifacts_reused": true,
+  "train_exit_code": 0,
+  "test_exit_code": 0,
+  "hidden_command": "bash scripts/evaluate_test.sh",
+  "elapsed_seconds": 3.8189354320056736
+}

@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/user/eval/test/evaluate.py", line 172, in <module>
+    main()
+  File "/home/user/eval/test/evaluate.py", line 149, in main
+    metrics = evaluate_run(args.dataset, args.labels, Path(path))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate.py", line 83, in evaluate_run
+    raise ValueError(f"Prediction shape {pred.shape} does not match labels {labels.shape}")
+ValueError: Prediction shape (0,) does not match labels (36, 24, 24)

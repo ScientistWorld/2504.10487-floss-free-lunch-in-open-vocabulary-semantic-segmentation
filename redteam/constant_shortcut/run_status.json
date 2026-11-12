@@ -1,0 +1,8 @@
+{
+  "case": "constant_shortcut",
+  "reference_artifacts_reused": true,
+  "train_exit_code": 0,
+  "test_exit_code": 0,
+  "hidden_command": "bash scripts/evaluate_test.sh",
+  "elapsed_seconds": 1.535455593984807
+}
