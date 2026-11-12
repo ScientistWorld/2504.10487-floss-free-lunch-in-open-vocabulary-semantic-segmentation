@@ -1,29 +1,31 @@
 # Evaluation Targets
 
-## Primary: clip_dinoiser_cityscapes_core
+All targets are scored by `scripts/evaluate_train.sh` (visible slice: 2000-image unlabeled pool, 500 labeled dev images) and `scripts/evaluate_test.sh` (hidden slice: a different 2000-image unlabeled pool, 2000 ADE20K validation images). Both run every `outputs/<name>/procedure.py` and the built-in `template_average` baseline.
 
-Tests the paper's CLIP-DINOiser Cityscapes improvement target using this workspace's held-out synthetic dense-feature substitute.
+## Primary: ade20k_naclip_core (weight 0.6)
 
-- **Metric**: mIoU (higher is better)
-- **How to run evaluation**: run `bash scripts/reproduce.sh`, then `bash scripts/evaluate.sh`.
+Paper Table 1, NACLIP on ADE20K: 17.4 → 18.4 mIoU. The method adapts label-free on the full unlabeled pool and is scored on the held-out images.
 
-## Constraint: template_budget
+- **Metric**: `mIoU` over 150 classes (higher is better).
 
-Tests whether the adapted system preserves the benchmark constraint: it uses only a small class-specific artifact budget drawn from the fixed 80-item pool rather than adding a larger prompt set or a trained model.
+## Secondary: ade20k_naclip_low_data (weight 0.25)
 
-- **Metrics**: num_experts_per_class and num_templates (lower is better subject to maintaining mIoU)
-- **How to run evaluation**: the evaluator reads the saved selected-artifact file and the dataset pool size.
+Paper Fig. 3 / Table 4: adaptation from very few unlabeled images still helps. 12 evaluator-drawn runs with 4, 16 and 64 adaptation images, each scored on 500 fixed held-out images.
 
-## Primary: clip_dinoiser_cityscapes_low_data
+- **Metric**: mean `mIoU` over the 12 runs (higher is better).
 
-Tests the paper's low-data CLIP-DINOiser Cityscapes target using this workspace's synthetic dense-feature substitute with only a few unlabeled selection images.
+## Diagnostic: ade20k_naclip_expert_quality (weight 0.15)
 
-- **Metric**: mIoU (higher is better)
-- **How to run evaluation**: run `bash scripts/reproduce.sh`, then inspect the `clip_dinoiser_cityscapes_low_data` entry written by `scripts/evaluate.sh`.
+Paper Table 2 (Eq. 8), NACLIP on ADE20K: 57%. This is the share of the 4 per-class templates a method reports that are true experts (paper Eq. 4) on the held-out labels.
 
-## Diagnostic: expert_quality_clip_dinoiser_cityscapes_core
+- **Metric**: `expert_precision_pct` (higher is better).
 
-Tests the paper's expert-quality target using hidden oracle artifact sets in the synthetic substitute. This is a diagnostic target for class-specific artifact quality, not a permission to use validation labels during adaptation.
+## Constraints (enforced by the protocol rather than scored)
 
-- **Metric**: expert_precision_pct (higher is better)
-- **How to run evaluation**: run `bash scripts/reproduce.sh`, then inspect the `expert_quality_clip_dinoiser_cityscapes_core` entry written by `scripts/evaluate.sh`.
+The paper's claim is an improvement *without labels, without training, and with a frozen backbone and the fixed 80-template pool*. The protocol enforces these structurally:
+
+- A procedure receives only unlabeled features and the 80×150 template embeddings.
+- It runs on scored images it never sees, under shuffled template and class order.
+- Any invalid output fails the whole run (worst value in every metric).
+
+Rules that the protocol cannot enforce mechanically, such as no reading of label files and no data beyond what `adapt` is given, are listed in `scoring/CONSTRAINTS.md` and are checked separately.

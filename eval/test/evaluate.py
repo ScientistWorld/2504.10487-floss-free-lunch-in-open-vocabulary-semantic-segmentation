@@ -1,171 +1,208 @@
-"""Held-out test-slice scorer for saved OVSS segmentation artifacts."""
+"""Hidden-test scorer for the ADE20K template-selection task.
+
+Usage (no arguments; this is what scripts/evaluate_test.sh runs):
+
+    python eval/test/evaluate.py
+
+Every directory under outputs/ is a method and is scored; a directory without a
+working outputs/<name>/procedure.py is scored as a failed run. The frozen
+model's averaged-template classifier is scored as the built-in baseline
+`template_average`. Each method's procedure runs in a separate worker process
+(eval/test/worker.py) on inputs only eval/test/ holds; this process then
+recomputes every number from the per-pixel class maps the worker wrote and the
+hidden labels. A failed run receives the worst value in every metric of every
+experiment. The previous scores file is deleted before scoring starts.
+"""
 
 from __future__ import annotations
 
 import argparse
 import json
+import subprocess
+import sys
+import tempfile
 from pathlib import Path
 
 import numpy as np
 
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
 
-SLICE = "test"
+import protocol as P  # noqa: E402
+from oracle import array_sha256, compute_oracle, file_sha256, true_experts  # noqa: E402
 
-
-def _slice_indices(num_images: int) -> np.ndarray:
-    """Use a fixed odd-index half of the validation pool."""
-    return np.arange(1, num_images, 2, dtype=np.int64)
-
-
-def _class_indices(num_classes: int) -> np.ndarray:
-    """Use the held-out complement of the visible expert-quality classes."""
-    train_classes = {0, 3, 4}
-    return np.array([idx for idx in range(num_classes) if idx not in train_classes], dtype=np.int64)
+BUILTIN = "template_average"
 
 
-def mean_iou(pred: np.ndarray, target: np.ndarray, num_classes: int) -> tuple[float, list[float]]:
-    ious: list[float] = []
-    for cls in range(num_classes):
-        pred_mask = pred == cls
-        target_mask = target == cls
-        union = np.logical_or(pred_mask, target_mask).sum()
-        if union == 0:
-            ious.append(float("nan"))
-            continue
-        inter = np.logical_and(pred_mask, target_mask).sum()
-        ious.append(float(inter / union))
-    return float(np.nanmean(ious) * 100.0), [x * 100.0 for x in ious]
+def _discover(outputs_root: Path) -> list[tuple[str, Path | None]]:
+    methods: list[tuple[str, Path | None]] = [(BUILTIN, None)]
+    if outputs_root.is_dir():
+        for path in sorted(p for p in outputs_root.iterdir() if p.is_dir()):
+            name = path.name if path.name != BUILTIN else f"{BUILTIN}@outputs"
+            methods.append((name, path))
+    return methods
 
 
-def pixel_accuracy(pred: np.ndarray, target: np.ndarray) -> float:
-    return float((pred == target).mean() * 100.0)
+def _confusion(pred: np.ndarray, gt: np.ndarray, k: int) -> np.ndarray:
+    cm = np.zeros(k * k, dtype=np.int64)
+    step = 1 << 24
+    for s in range(0, len(gt), step):
+        g = np.asarray(gt[s : s + step])
+        p = np.asarray(pred[s : s + step]).astype(np.int64)
+        v = g != 255
+        cm += np.bincount(g[v].astype(np.int64) * k + p[v], minlength=k * k)
+    return cm.reshape(k, k)
 
 
-def mean_class_accuracy(pred: np.ndarray, target: np.ndarray, num_classes: int) -> float:
-    recalls: list[float] = []
-    for cls in range(num_classes):
-        mask = target == cls
-        if mask.any():
-            recalls.append(float((pred[mask] == cls).mean()))
-    return float(np.mean(recalls) * 100.0)
+def _miou(cm: np.ndarray) -> float:
+    inter = np.diag(cm).astype(np.float64)
+    union = cm.sum(0) + cm.sum(1) - inter
+    iou = np.where(union > 0, inter / np.maximum(union, 1), np.nan)
+    return float(np.nanmean(iou) * 100.0)
 
 
-def rare_class_iou(pred: np.ndarray, target: np.ndarray, per_class_iou: list[float], num_classes: int) -> float:
-    counts = np.array([(target == cls).sum() for cls in range(num_classes)], dtype=np.int64)
-    present = np.flatnonzero(counts > 0)
-    if len(present) == 0:
-        return 0.0
-    cutoff = float(np.median(counts[present]))
-    rare = [cls for cls in present if counts[cls] <= cutoff]
-    return float(np.mean([per_class_iou[int(cls)] for cls in rare]))
+def _load_pred(path: Path, size: int, k: int) -> np.ndarray:
+    pred = np.load(path, mmap_mode="r")
+    if pred.dtype != np.uint8 or pred.shape != (size,):
+        raise ValueError(f"{path.name}: expected uint8[{size}], got {pred.dtype}{list(pred.shape)}")
+    if size and int(pred.max()) >= k:
+        raise ValueError(f"{path.name}: class id out of range")
+    return pred
 
 
-def boundary_pixel_accuracy(pred: np.ndarray, target: np.ndarray) -> float:
-    boundary = np.zeros(target.shape, dtype=bool)
-    boundary[:, 1:, :] |= target[:, 1:, :] != target[:, :-1, :]
-    boundary[:, :-1, :] |= target[:, :-1, :] != target[:, 1:, :]
-    boundary[:, :, 1:] |= target[:, :, 1:] != target[:, :, :-1]
-    boundary[:, :, :-1] |= target[:, :, :-1] != target[:, :, 1:]
-    if not boundary.any():
-        return pixel_accuracy(pred, target)
-    return float((pred[boundary] == target[boundary]).mean() * 100.0)
+class Truth:
+    def __init__(self) -> None:
+        missing = [p for p in (P.TEXT, P.LABELS, Path(f"{P.EVAL_PREFIX}_index.npz"),
+                               Path(f"{P.POOL_PREFIX}_index.npz")) if not p.exists()]
+        if missing:
+            raise FileNotFoundError(f"hidden test data missing: {missing}; run scripts/prepare_data.sh")
+        if not P.HASHES.exists():
+            raise RuntimeError("eval/test/label_hashes.json is missing")
+        hashes = json.loads(P.HASHES.read_text())
+        self.labels = np.load(P.LABELS, mmap_mode="r")
+        if file_sha256(P.LABELS) != hashes.get("val_labels.npy"):
+            raise RuntimeError("hidden labels do not match eval/test/label_hashes.json")
+        index = np.load(f"{P.EVAL_PREFIX}_index.npz")
+        self.label_hw = index["label_hw"]
+        self.label_offsets = index["label_offsets"]
+        if int(self.label_offsets[-1]) != len(self.labels):
+            raise RuntimeError("hidden label index is inconsistent with the label file")
+        self.text = np.load(P.TEXT)
+        self.m, self.k, _ = self.text.shape
+        self.n_pool = len(np.load(f"{P.POOL_PREFIX}_index.npz")["hw"])
+        iou = np.load(P.ORACLE)["iou"] if P.ORACLE.exists() else None
+        if iou is None or array_sha256(iou) != hashes.get("val_oracle_iou"):
+            print("[eval] oracle table missing or modified; recomputing from verified labels", flush=True)
+            iou = compute_oracle(np.load(f"{P.EVAL_PREFIX}_feats.npy", mmap_mode="r"), index,
+                                 self.labels, self.text)["iou"]
+        self.true_experts = true_experts(iou)  # [M, K]
+        self.eligible = np.flatnonzero(self.true_experts.any(axis=0))
+        self.low_ids = P.low_eval_ids(len(self.label_hw))
+        self.low_gt = np.concatenate(
+            [self.labels[self.label_offsets[i] : self.label_offsets[i + 1]] for i in self.low_ids])
+        self.n_low_runs = len(P.low_data_runs(self.n_pool))
+
+    def expert_precision(self, ids: np.ndarray) -> float:
+        hits = [len(set(ids[c].tolist()) & set(np.flatnonzero(self.true_experts[:, c]).tolist()))
+                for c in self.eligible]
+        return float(np.mean(hits) / P.NUM_EXPERTS * 100.0)
+
+    def chance_precision(self) -> float:
+        return float(np.mean(self.true_experts[:, self.eligible].sum(0) / self.m) * 100.0)
+
+    def per_image(self, pred: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        n, k = len(self.label_hw), self.k
+        inter = np.zeros((n, k), dtype=np.int64)
+        union = np.zeros((n, k), dtype=np.int64)
+        for i in range(n):
+            s, e = self.label_offsets[i], self.label_offsets[i + 1]
+            cm = _confusion(pred[s:e], self.labels[s:e], k)
+            inter[i] = np.diag(cm)
+            union[i] = cm.sum(0) + cm.sum(1) - inter[i]
+        return inter, union
 
 
-def evaluate_run(dataset_path: Path, labels_path: Path, output_dir: Path) -> dict[str, float]:
-    data = np.load(dataset_path, allow_pickle=False)
-    labels_data = np.load(labels_path, allow_pickle=False)
-    labels = labels_data["val_labels"]
-    indices = _slice_indices(labels.shape[0])
-    num_classes = len(data["class_names"])
-
-    pred = np.load(output_dir / "predictions.npy")
-    if pred.shape != labels.shape:
-        raise ValueError(f"Prediction shape {pred.shape} does not match labels {labels.shape}")
-
-    pred_slice = pred[indices]
-    label_slice = labels[indices]
-    miou, per_class = mean_iou(pred_slice, label_slice, num_classes)
-    return {
-        "mIoU": miou,
-        "pixel_accuracy": pixel_accuracy(pred_slice, label_slice),
-        "mean_class_accuracy": mean_class_accuracy(pred_slice, label_slice, num_classes),
-        "rare_class_mIoU": rare_class_iou(pred_slice, label_slice, per_class, num_classes),
-        "boundary_pixel_accuracy": boundary_pixel_accuracy(pred_slice, label_slice),
-        "num_templates": float(len(data["templates"])),
-        "num_experts_per_class": float(_num_experts(output_dir)),
-    }
-
-
-def evaluate_expert_quality(dataset_path: Path, labels_path: Path, output_dir: Path) -> dict[str, float]:
-    data = np.load(dataset_path, allow_pickle=False)
-    predicted_path = output_dir / "experts.npy"
-    if not predicted_path.exists():
-        raise ValueError(f"{output_dir} does not contain experts.npy")
-
-    predicted = np.load(predicted_path)
-    oracle = np.load(labels_path, allow_pickle=False)["expert_templates"]
-    if predicted.shape != oracle.shape:
-        raise ValueError(f"Expert shape {predicted.shape} does not match oracle shape {oracle.shape}")
-
-    class_indices = _class_indices(oracle.shape[0])
-    per_class = []
-    for pred_row, oracle_row in zip(predicted[class_indices], oracle[class_indices]):
-        overlap = len(set(int(x) for x in pred_row) & set(int(x) for x in oracle_row))
-        per_class.append(overlap / len(pred_row))
-
-    return {
-        "expert_precision_pct": float(np.mean(per_class) * 100.0),
-        "num_experts_per_class": float(predicted.shape[1]),
-        "num_templates": float(len(data["templates"])),
-    }
+def _score(name: str, method_dir: Path | None, truth: Truth, details_dir: Path | None) -> dict:
+    scratch = P.ROOT / "tmp" / "eval_scratch"
+    scratch.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="test_", dir=scratch) as tmp:
+        tmp_path = Path(tmp)
+        cmd = [sys.executable, str(HERE / "worker.py"), "--out", str(tmp_path)]
+        if method_dir is None:
+            cmd.append("--builtin")
+        else:
+            procedure = method_dir / "procedure.py"
+            if not procedure.is_file():
+                raise FileNotFoundError(f"{method_dir} has no procedure.py")
+            cmd += ["--procedure", str(procedure.resolve())]
+        result = subprocess.run(cmd, cwd=str(P.ROOT), timeout=P.WORKER_TIMEOUT_S)
+        if result.returncode != 0:
+            raise RuntimeError(f"worker exited with code {result.returncode}")
+        status_file = tmp_path / "worker_status.json"
+        status = json.loads(status_file.read_text()) if status_file.exists() else {}
+        if not status.get("completed") or status.get("failed"):
+            raise RuntimeError("worker did not complete")
+        core = _load_pred(tmp_path / "core.npy", len(truth.labels), truth.k)
+        metrics = {P.EXP_CORE: {"mIoU": _miou(_confusion(core, truth.labels, truth.k))}}
+        low = []
+        for r in range(truth.n_low_runs):
+            pred = _load_pred(tmp_path / f"low_{r}.npy", len(truth.low_gt), truth.k)
+            low.append(_miou(_confusion(pred, truth.low_gt, truth.k)))
+        metrics[P.EXP_LOW] = {"mIoU": float(np.mean(low))}
+        precision = 0.0
+        if method_dir is None:
+            precision = truth.chance_precision()
+        elif (tmp_path / "experts.npy").exists():
+            ids = np.load(tmp_path / "experts.npy")
+            if (ids.shape == (truth.k, P.NUM_EXPERTS) and np.issubdtype(ids.dtype, np.integer)
+                    and ids.min() >= 0 and ids.max() < truth.m
+                    and all(len(set(row.tolist())) == P.NUM_EXPERTS for row in ids)):
+                precision = truth.expert_precision(ids)
+        else:
+            print(f"[eval] {name}: expert diagnostic scored 0 ({status.get('experts_error')})", flush=True)
+        metrics[P.EXP_EXPERT] = {"expert_precision_pct": precision}
+        if details_dir is not None:
+            inter, union = truth.per_image(core)
+            details_dir.mkdir(parents=True, exist_ok=True)
+            np.savez(details_dir / f"{name}.npz", inter=inter, union=union, low_miou=np.array(low))
+        return metrics
 
 
-def _num_experts(output_dir: Path) -> int:
-    experts = output_dir / "experts.npy"
-    if not experts.exists():
-        return 80
-    arr = np.load(experts)
-    return int(arr.shape[1])
-
-
-def _add_experiment(results: dict, name: str) -> None:
-    results["experiments"][name] = {"slice": SLICE, "results": {}}
+def _write(path: Path, per_method: dict[str, dict]) -> None:
+    out = {"experiments": {exp: {"slice": "test", "results": {}} for exp in P.WORST}}
+    for name, metrics in per_method.items():
+        for exp in P.WORST:
+            out["experiments"][exp]["results"][name] = metrics[exp]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(out, indent=2) + "\n")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", type=Path, default=Path("data/downloads/floss_synthetic_inputs.npz"))
-    parser.add_argument("--labels", type=Path, default=Path("data/downloads/floss_synthetic_eval.npz"))
-    parser.add_argument("--runs", nargs="+", required=True)
-    parser.add_argument("--low-data-runs", nargs="*", default=[])
-    parser.add_argument("--expert-quality-runs", nargs="*", default=[])
-    parser.add_argument("--output", type=Path, default=Path("scoring/scores_test.json"))
+    parser.add_argument("--outputs-root", type=Path, default=P.ROOT / "outputs")
+    parser.add_argument("--output", type=Path, default=P.ROOT / "scoring" / "scores_test.json")
+    parser.add_argument("--details-dir", type=Path, default=None, help="optional per-image diagnostics")
     args = parser.parse_args()
-
-    results: dict[str, dict[str, dict[str, dict[str, float]]]] = {"experiments": {}}
-    _add_experiment(results, "clip_dinoiser_cityscapes_core")
-    for spec in args.runs:
-        name, path = spec.split("=", 1)
-        metrics = evaluate_run(args.dataset, args.labels, Path(path))
-        results["experiments"]["clip_dinoiser_cityscapes_core"]["results"][name] = metrics
-
-    if args.low_data_runs:
-        _add_experiment(results, "clip_dinoiser_cityscapes_low_data")
-        for spec in args.low_data_runs:
-            name, path = spec.split("=", 1)
-            metrics = evaluate_run(args.dataset, args.labels, Path(path))
-            results["experiments"]["clip_dinoiser_cityscapes_low_data"]["results"][name] = metrics
-
-    if args.expert_quality_runs:
-        _add_experiment(results, "expert_quality_clip_dinoiser_cityscapes_core")
-        for spec in args.expert_quality_runs:
-            name, path = spec.split("=", 1)
-            metrics = evaluate_expert_quality(args.dataset, args.labels, Path(path))
-            results["experiments"]["expert_quality_clip_dinoiser_cityscapes_core"]["results"][name] = metrics
-
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(results, indent=2) + "\n")
-    print(json.dumps(results, indent=2))
+    args.output.unlink(missing_ok=True)
+    methods = _discover(args.outputs_root)
+    worst = {exp: dict(v) for exp, v in P.WORST.items()}
+    try:
+        truth = Truth()
+    except Exception as exc:  # noqa: BLE001
+        print(f"[eval] cannot score: {exc}", flush=True)
+        _write(args.output, {name: worst for name, _ in methods})
+        sys.exit(1)
+    per_method: dict[str, dict] = {}
+    for name, method_dir in methods:
+        print(f"[eval] scoring {name}", flush=True)
+        try:
+            per_method[name] = _score(name, method_dir, truth, args.details_dir)
+        except Exception as exc:  # noqa: BLE001 - any failure is a failed run
+            print(f"[eval] {name}: FAILED ({exc}); worst value in every metric", flush=True)
+            per_method[name] = {exp: dict(v) for exp, v in P.WORST.items()}
+        print(f"[eval] {name}: {json.dumps(per_method[name])}", flush=True)
+    _write(args.output, per_method)
+    print(json.dumps(json.loads(args.output.read_text()), indent=2))
 
 
 if __name__ == "__main__":

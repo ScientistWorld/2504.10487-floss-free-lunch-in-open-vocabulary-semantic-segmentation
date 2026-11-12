@@ -9,11 +9,12 @@
 # Only use container.def for the base Docker image and apt-get packages.
 #
 # IMPORTANT: Install into the SYSTEM Python, not a virtual environment.
-# The overlay may be recreated on container rebuilds — a venv inside
-# it will be lost and all subsequent jobs will fail.
 # Use: uv pip install --system <packages>
-# Do NOT create a venv (python -m venv, virtualenv, etc.).
+#
+# torch: frozen CLIP backbone (feature extraction) and method procedures (GPU or CPU).
+# transformers: loads the public CLIP ViT-B/16 weights (pytorch_model.bin needs torch >= 2.6).
+# pillow is pinned: hidden labels are hashed after nearest-neighbour resizing.
 
 set -e
 
-uv pip install --system numpy
+uv pip install --system "numpy==2.2.6" "torch==2.6.0" "transformers==4.51.3" "pillow==11.1.0"

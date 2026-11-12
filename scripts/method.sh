@@ -1,30 +1,16 @@
 #!/bin/bash
-# Run the paper's proposed method.
+# Install the paper's method (FLOSS) as a gym procedure and score it.
 #
-# This script trains/runs the paper's method using code in method/.
+# The method needs no training: outputs/floss/procedure.py is a copy of
+# method/floss.py, run by the evaluators on the unlabeled adaptation images
+# they choose. Default settings are the paper's (N = 4 entropy-selected
+# class-experts, highest-confidence fusion).
 #
-# Usage:
-#   bash scripts/method.sh
+# Usage: bash scripts/method.sh
 
-set -e
-
-cd /home/user
-
-bash scripts/download.sh
-python method/floss.py \
-  --dataset data/downloads/floss_synthetic_inputs.npz \
-  --output-dir outputs/floss \
-  --top-n 4 \
-  --temperature 12.0
-
-python method/floss.py \
-  --dataset data/downloads/floss_synthetic_inputs.npz \
-  --output-dir outputs/floss_low_data \
-  --top-n 4 \
-  --temperature 12.0 \
-  --train-limit 4
-
-bash scripts/evaluate.sh \
-  floss=outputs/floss \
-  --low-data-runs floss_low_data=outputs/floss_low_data \
-  --expert-quality-runs floss=outputs/floss floss_low_data=outputs/floss_low_data
+set -euo pipefail
+cd "$(dirname "$0")/.."
+mkdir -p outputs/floss
+cp method/floss.py outputs/floss/procedure.py
+rm -f outputs/floss/config.json
+bash scripts/evaluate.sh

@@ -1,150 +1,87 @@
 {
   "experiments": {
-    "clip_dinoiser_cityscapes_core": {
-      "description": "Paper target: CLIP-DINOiser on Cityscapes improves mIoU over the default averaged-template classifier while using top-4 class experts from the fixed 80-template pool. This workspace reports a synthetic dense-feature substitute under the same target.",
-      "weight": 0.55,
+    "ade20k_naclip_core": {
+      "description": "Paper Table 1 (NACLIP column, ADE20K): label- and training-free adaptation of a frozen OVSS model from unlabeled images improves mIoU over CLIP's default averaged-template classifier. Gym setting: frozen NACLIP (CLIP ViT-B/16) features of ADE20K (150 classes), the 80 ImageNet templates, adaptation on 2000 unlabeled training images (the paper uses all 20,210), scored on the 2000 validation images at half of the 336-short-side resolution. The template_average and floss entries are the paper's reported NACLIP ADE20K numbers; the _paper_cityscapes_* entries keep the paper's CLIP-DINOiser Cityscapes numbers used by earlier versions of this gym (not on this gym's scale).",
+      "weight": 0.6,
       "primary_metric": "mIoU",
       "metrics": {
         "mIoU": {
           "higher_is_better": true,
           "coefficient": 1.0,
-          "description": "Mean intersection-over-union on the slice, matching the paper's headline dense segmentation metric."
-        },
-        "pixel_accuracy": {
-          "higher_is_better": true,
-          "coefficient": 0.2,
-          "description": "Overall held-out pixel classification accuracy, included to catch broad segmentation regressions not fully reflected by IoU."
-        },
-        "mean_class_accuracy": {
-          "higher_is_better": true,
-          "coefficient": 0.4,
-          "description": "Unweighted mean per-class recall, included to catch shortcuts that improve common regions while neglecting smaller classes."
-        },
-        "rare_class_mIoU": {
-          "higher_is_better": true,
-          "coefficient": 0.35,
-          "description": "Mean IoU over below-median-frequency classes in the slice, included to penalize background- or layout-biased segmenters."
-        },
-        "boundary_pixel_accuracy": {
-          "higher_is_better": true,
-          "coefficient": 0.15,
-          "description": "Pixel accuracy restricted to ground-truth class-boundary pixels, included to catch coarse mask shortcuts."
-        },
-        "num_experts_per_class": {
-          "higher_is_better": false,
-          "coefficient": -0.1,
-          "description": "Number of selected class-specific artifacts per class; lower is better under the fixed small-budget constraint."
-        },
-        "num_templates": {
-          "higher_is_better": false,
-          "coefficient": -0.05,
-          "description": "Total fixed text-representation pool size available to the method; lower is better to discourage expanding the pool."
+          "description": "Mean intersection-over-union over the 150 ADE20K classes on the scored images (dataset-level IoU per class, classes absent from both prediction and label skipped), the paper's metric."
         }
       },
       "results": {
         "template_average": {
           "type": "baseline",
-          "mIoU": 31.3,
-          "num_experts_per_class": 80,
-          "num_templates": 80
+          "mIoU": 17.4
         },
         "floss": {
           "type": "proposed",
-          "mIoU": 34.6,
-          "num_experts_per_class": 4,
-          "num_templates": 80
+          "mIoU": 18.4
+        },
+        "_paper_cityscapes_clipdinoiser_template_average": {
+          "type": "baseline",
+          "mIoU": 31.3
+        },
+        "_paper_cityscapes_clipdinoiser_floss": {
+          "type": "proposed",
+          "mIoU": 34.6
         }
       }
     },
-    "clip_dinoiser_cityscapes_low_data": {
-      "description": "Paper target: CLIP-DINOiser on Cityscapes with very few unlabeled expert-selection images still improves over the default averaged-template classifier. This workspace reports a synthetic dense-feature substitute under the same target.",
+    "ade20k_naclip_low_data": {
+      "description": "Paper Fig. 3 / Table 4 claim: with only a few unlabeled images the adaptation still helps. Gym setting: the evaluator draws 4, 16 and 64 unlabeled adaptation images (4 seeds each) and scores each run on 500 fixed validation images; the metric is the mean mIoU over the 12 runs. The paper reports no ADE20K low-data numbers: the floss entry is the paper's full-data NACLIP ADE20K mIoU (the level low-data adaptation approaches) and template_average its baseline, which uses no adaptation images. The paper's own low-data numbers (CLIP-DINOiser, Cityscapes, one image) are kept under _paper_ keys.",
       "weight": 0.25,
       "primary_metric": "mIoU",
       "metrics": {
         "mIoU": {
           "higher_is_better": true,
           "coefficient": 1.0,
-          "description": "Mean intersection-over-union on the low-data slice, matching the paper's headline dense segmentation metric."
-        },
-        "pixel_accuracy": {
-          "higher_is_better": true,
-          "coefficient": 0.2,
-          "description": "Overall held-out pixel classification accuracy, included to catch broad segmentation regressions not fully reflected by IoU."
-        },
-        "mean_class_accuracy": {
-          "higher_is_better": true,
-          "coefficient": 0.4,
-          "description": "Unweighted mean per-class recall, included to catch shortcuts that improve common regions while neglecting smaller classes."
-        },
-        "rare_class_mIoU": {
-          "higher_is_better": true,
-          "coefficient": 0.35,
-          "description": "Mean IoU over below-median-frequency classes in the low-data slice, included to penalize background- or layout-biased segmenters."
-        },
-        "boundary_pixel_accuracy": {
-          "higher_is_better": true,
-          "coefficient": 0.15,
-          "description": "Pixel accuracy restricted to ground-truth class-boundary pixels, included to catch coarse mask shortcuts."
-        },
-        "num_experts_per_class": {
-          "higher_is_better": false,
-          "coefficient": -0.1,
-          "description": "Number of selected class-specific artifacts per class; lower is better under the fixed small-budget constraint."
-        },
-        "num_templates": {
-          "higher_is_better": false,
-          "coefficient": -0.05,
-          "description": "Total fixed text-representation pool size available to the method; lower is better to discourage expanding the pool."
+          "description": "Mean over the low-data runs of the 150-class mIoU on the fixed low-data scoring images."
         }
       },
       "results": {
         "template_average": {
           "type": "baseline",
-          "mIoU": 31.3,
-          "num_experts_per_class": 80,
-          "num_templates": 80
+          "mIoU": 17.4
         },
-        "floss_low_data": {
+        "floss": {
           "type": "proposed",
-          "mIoU": 33.2,
-          "num_experts_per_class": 4,
-          "num_templates": 80
+          "mIoU": 18.4
+        },
+        "_paper_cityscapes_clipdinoiser_template_average": {
+          "type": "baseline",
+          "mIoU": 31.3
+        },
+        "_paper_cityscapes_clipdinoiser_floss_1_image": {
+          "type": "proposed",
+          "mIoU": 33.2
         }
       }
     },
-    "expert_quality_clip_dinoiser_cityscapes_core": {
-      "description": "Paper target: entropy-selected CLIP-DINOiser top-4 class experts substantially overlap with oracle class experts. This workspace reports the analogous diagnostic on hidden synthetic oracle expert sets.",
-      "weight": 0.2,
+    "ade20k_naclip_expert_quality": {
+      "description": "Paper Table 2 (Eq. 8): share of the 4 class-experts a method selects (after adapting on the full unlabeled pool) that are true experts, i.e. single templates whose class IoU on the scored labels beats the averaged classifier (Eq. 4). Averaged over classes that have at least one true expert. The template_average row reports the chance level of a uniformly random 4-template selection. floss is the paper's NACLIP ADE20K value; the CLIP-DINOiser Cityscapes value is kept under a _paper_ key.",
+      "weight": 0.15,
       "primary_metric": "expert_precision_pct",
       "metrics": {
         "expert_precision_pct": {
           "higher_is_better": true,
           "coefficient": 1.0,
-          "description": "Percent overlap between selected and hidden oracle class-specific artifacts on the evaluated class subset."
-        },
-        "num_experts_per_class": {
-          "higher_is_better": false,
-          "coefficient": -0.1,
-          "description": "Number of selected class-specific artifacts per class; lower is better under the fixed small-budget constraint."
-        },
-        "num_templates": {
-          "higher_is_better": false,
-          "coefficient": -0.05,
-          "description": "Total fixed text-representation pool size available to the method; lower is better to discourage expanding the pool."
+          "description": "100 * mean over eligible classes of |selected experts that are true experts| / 4."
         }
       },
       "results": {
+        "template_average": {
+          "type": "baseline"
+        },
         "floss": {
           "type": "proposed",
-          "expert_precision_pct": 50.0,
-          "num_experts_per_class": 4,
-          "num_templates": 80
+          "expert_precision_pct": 57.0
         },
-        "floss_low_data": {
+        "_paper_cityscapes_clipdinoiser_floss": {
           "type": "proposed",
-          "expert_precision_pct": 50.0,
-          "num_experts_per_class": 4,
-          "num_templates": 80
+          "expert_precision_pct": 62.0
         }
       }
     }

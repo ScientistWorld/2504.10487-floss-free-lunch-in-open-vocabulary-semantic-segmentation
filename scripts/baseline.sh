@@ -1,26 +1,14 @@
 #!/bin/bash
-# Run a baseline method from the paper.
+# The paper's baseline: the frozen NACLIP model with CLIP's default
+# averaged-template classifier (all 80 templates averaged per class).
 #
-# Baselines are simple reference methods the paper compares against. 
-# Implement this only if applicable, i.e. the paper has baselines.
-# You do not need to implement all baselines to begin — 
-# just enough to validate that the evaluation pipeline works 
-# and provide a reference point. You can decide to expand more baselines later.
-# Each baseline must be actually run and scored through evaluate.sh
-# so the numbers are verified, not self-reported.
-# You can decide what this baseline script should do yourself.
+# It needs no adaptation and is built into both evaluators, which score it as
+# `template_average` alongside every method under outputs/. This script runs
+# the visible-slice evaluation so the baseline (and any installed method) is
+# scored into scoring/scores.json.
 #
-# Usage:
-#   bash scripts/baseline.sh <name>
+# Usage: bash scripts/baseline.sh
 
-set -e
-
-cd /home/user
-
-bash scripts/download.sh
-python baseline/template_average.py \
-  --dataset data/downloads/floss_synthetic_inputs.npz \
-  --output-dir outputs/template_average \
-  --temperature 12.0
-
-bash scripts/evaluate.sh template_average=outputs/template_average
+set -euo pipefail
+cd "$(dirname "$0")/.."
+bash scripts/evaluate.sh

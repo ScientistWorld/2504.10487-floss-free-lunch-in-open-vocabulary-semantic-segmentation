@@ -234,3 +234,9 @@ core.[0-9]*
 
 # Auto-added by swarm
 data/downloads/
+
+# Hidden test inputs/labels and generated features (rebuilt by scripts/download.sh + scripts/prepare_data.sh)
+eval/test/data/
+*.npy.orig
+*.npz.orig
+.wget-hsts

@@ -1,13 +1,15 @@
 # Experiment Overview
 
-## clip_dinoiser_cityscapes_core
+All three experiments use the same frozen open-vocabulary segmentation model, NACLIP features on ADE20K with 150 classes and CLIP's 80 prompt templates. They score the same method procedure, which the evaluator runs on unlabeled images it chooses. No method sees the scored images or any label.
 
-Tracks the paper's CLIP-DINOiser Cityscapes core claim while evaluating on this workspace's held-out synthetic dense-feature substitute. It tests whether adaptation improves segmentation quality while using the same fixed feature inputs and class vocabulary as the baseline.
+## ade20k_naclip_core
 
-## clip_dinoiser_cityscapes_low_data
+Can a frozen model be made to segment a target dataset better using only that dataset's unlabeled images, with no training and no labels? The method adapts on a pool of 2000 unlabeled images and is scored by mIoU on held-out images (hidden test: the 2000 ADE20K validation images). The comparison point is the model's default classifier (`template_average`). This is the paper's headline claim.
 
-Tracks the paper's low-data CLIP-DINOiser Cityscapes claim on the synthetic dense-feature substitute. It tests whether the reproduced system still improves held-out dense segmentation quality when adaptation is restricted to a very small unlabeled selection subset.
+## ade20k_naclip_low_data
 
-## expert_quality_clip_dinoiser_cityscapes_core
+Does the adaptation still help when only a handful of unlabeled images is available, and how quickly does it approach the full-pool result? The evaluator gives the method 4, 16 or 64 unlabeled images (four random draws each) and scores each run on the same 500 held-out images. The metric is the mean mIoU over the 12 runs. A method that cannot handle tiny adaptation sets, or that is unstable across draws, loses here even if it is strong with the full pool.
 
-Tracks the paper's expert-quality diagnostic on hidden oracle artifact sets in the synthetic substitute. It helps future agents understand whether gains are accompanied by meaningful class-specific adaptation decisions rather than only final-mask changes.
+## ade20k_naclip_expert_quality
+
+Are the class-specific decisions a method makes actually the right ones? For every class the method names the 4 prompt templates it trusts most. A template counts as correct when, used alone, it segments that class better than the default classifier on the held-out labels. The score is the percentage of correct choices. It checks that segmentation gains come from identifying genuinely better class-wise text representations, and it rises only with better label-free identification. The `template_average` row is the chance level of a random choice.

@@ -1,43 +1,22 @@
-"""Template-averaging OVSS baseline used by FLOSS."""
+"""The paper's baseline as a gym procedure: CLIP's averaged-template classifier.
+
+Both evaluators already score this baseline as the built-in `template_average`
+entry; this file is the smallest complete example of the procedure interface
+(see briefing/evaluation.md). Copy it to outputs/<name>/procedure.py to run it
+as a method.
+"""
 
 from __future__ import annotations
-
-import argparse
-import json
-from pathlib import Path
 
 import numpy as np
 
 
-def softmax(logits: np.ndarray) -> np.ndarray:
-    logits = logits - logits.max(axis=-1, keepdims=True)
-    exp = np.exp(logits)
-    return exp / exp.sum(axis=-1, keepdims=True)
+def adapt(features_list, text_embeddings):
+    """Ignores the unlabeled images; averages the M template embeddings per class."""
+    cls = np.asarray(text_embeddings, dtype=np.float32).mean(axis=0)  # [K, D]
+    return cls / np.linalg.norm(cls, axis=-1, keepdims=True)
 
 
-def run(dataset_path: Path, output_dir: Path, temperature: float = 12.0) -> None:
-    data = np.load(dataset_path, allow_pickle=False)
-    text = data["text_embeddings"].astype(np.float32)
-    features = data["val_features"].astype(np.float32)
-    classifier = text.mean(axis=0)
-    classifier = classifier / np.clip(np.linalg.norm(classifier, axis=-1, keepdims=True), 1e-8, None)
-    probs = softmax(np.einsum("...d,kd->...k", features, classifier) * temperature)
-    output_dir.mkdir(parents=True, exist_ok=True)
-    np.save(output_dir / "predictions.npy", probs.argmax(axis=-1).astype(np.int64))
-    np.save(output_dir / "probabilities.npy", probs.astype(np.float32))
-    (output_dir / "metadata.json").write_text(
-        json.dumps({"method": "template_average", "dataset": str(dataset_path)}, indent=2) + "\n"
-    )
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", type=Path, default=Path("data/downloads/floss_synthetic_inputs.npz"))
-    parser.add_argument("--output-dir", type=Path, default=Path("outputs/template_average"))
-    parser.add_argument("--temperature", type=float, default=12.0)
-    args = parser.parse_args()
-    run(args.dataset, args.output_dir, args.temperature)
-
-
-if __name__ == "__main__":
-    main()
+def predict(state, features):
+    """[h, w, D] patch features -> [h, w, K] class scores (cosine logits)."""
+    return np.asarray(features, dtype=np.float32) @ state.T

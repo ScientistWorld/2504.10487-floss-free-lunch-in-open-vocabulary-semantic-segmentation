@@ -1,25 +1,33 @@
 #!/bin/bash
-# Download all data and models needed for this environment.
+# Download all data and models needed for this environment (needs internet).
 #
-# Run on a node with internet access BEFORE building the container
-# or submitting compute jobs.
+# Idempotent: skips anything already in place.
 #
-# This script should be idempotent — safe to run multiple times.
-# It should skip files that already exist.
+# Estimated download: ~0.97 GB (ADE20K challenge zip) + ~0.6 GB (CLIP ViT-B/16)
+# Disk after placement: ~0.3 GB images + 0.6 GB weights; features built later
+# by scripts/prepare_data.sh add ~4 GB (data/downloads/naclip, eval/test/data/naclip).
 #
-# Update the storage estimate below as you add downloads.
-#
-# Estimated total download size: 0 GB
-# Estimated disk usage after generation: < 20 MB
+# The ADE20K zip is split by data/ade20k_layout.py: method-visible images go
+# to data/downloads/ade20k/, the hidden test images and validation labels to
+# eval/test/data/ade20k/. Nothing else from the archive is kept.
 
-set -e
-
+set -euo pipefail
 cd "$(dirname "$0")/.."
 
-mkdir -p data/downloads
+CLIP_DIR=data/downloads/clip-vit-base-patch16
+mkdir -p "$CLIP_DIR"
+for f in config.json merges.txt preprocessor_config.json special_tokens_map.json \
+         tokenizer.json tokenizer_config.json vocab.json pytorch_model.bin; do
+  if [ ! -s "$CLIP_DIR/$f" ]; then
+    wget -q -c "https://huggingface.co/openai/clip-vit-base-patch16/resolve/main/$f" -O "$CLIP_DIR/$f"
+  fi
+done
 
-if [ ! -e data/downloads/floss_synthetic_inputs.npz ] || [ ! -e data/downloads/floss_synthetic_eval.npz ]; then
-  python data/floss_benchmark.py \
-    --output data/downloads/floss_synthetic_inputs.npz \
-    --labels-output data/downloads/floss_synthetic_eval.npz
+if ! python3 data/ade20k_layout.py --check; then
+  ZIP=data/downloads/ADEChallengeData2016.zip
+  mkdir -p data/downloads
+  wget -q -c https://data.csail.mit.edu/places/ADEchallenge/ADEChallengeData2016.zip -O "$ZIP"
+  python3 data/ade20k_layout.py --zip "$ZIP"
+  rm -f "$ZIP"
 fi
+echo "downloads ready; build features with: bash scripts/prepare_data.sh (GPU)"
