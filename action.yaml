@@ -1,4 +1,4 @@
 action: submit
 gpus: 0
 test: true
-notes: "Follow-up audit: fixed-layout predictions and invalid segmentation with only a high-scoring diagnostic registered; summarize all 22 runs."
+notes: "Final audit validation: matched-budget random-expert ablation, plus score-forgery and stale-file probes using only visible train-score field names."

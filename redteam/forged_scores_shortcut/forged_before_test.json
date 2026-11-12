@@ -14,18 +14,6 @@
           "success": true,
           "runtime_seconds": -1,
           "mIoU_flag": "passed"
-        },
-        "template_average": {
-          "mIoU": 100,
-          "pixel_accuracy": 100,
-          "mean_class_accuracy": 100,
-          "rare_class_mIoU": 100,
-          "boundary_pixel_accuracy": 100,
-          "num_templates": 0,
-          "num_experts_per_class": 0,
-          "success": true,
-          "runtime_seconds": -1,
-          "mIoU_flag": "passed"
         }
       }
     },
@@ -33,18 +21,6 @@
       "slice": "test",
       "results": {
         "floss_low_data": {
-          "mIoU": 100,
-          "pixel_accuracy": 100,
-          "mean_class_accuracy": 100,
-          "rare_class_mIoU": 100,
-          "boundary_pixel_accuracy": 100,
-          "num_templates": 0,
-          "num_experts_per_class": 0,
-          "success": true,
-          "runtime_seconds": -1,
-          "mIoU_flag": "passed"
-        },
-        "template_average": {
           "mIoU": 100,
           "pixel_accuracy": 100,
           "mean_class_accuracy": 100,
