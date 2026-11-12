@@ -1,4 +1,4 @@
 action: submit
 gpus: 0
 test: true
-notes: "Audit 20 isolated variants: quality ordering, 3 seeds, visible-generator answer reconstruction, artifact budgets, omissions, ground truth changes, degeneracy and stale score handling."
+notes: "Follow-up audit: fixed-layout predictions and invalid segmentation with only a high-scoring diagnostic registered; summarize all 22 runs."

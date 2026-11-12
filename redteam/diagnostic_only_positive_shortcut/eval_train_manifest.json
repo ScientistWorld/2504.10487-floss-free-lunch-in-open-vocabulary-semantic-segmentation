@@ -1,0 +1,18 @@
+{
+  "slice": "train",
+  "experiments": {
+    "clip_dinoiser_cityscapes_core": {
+      "runs": {
+        "template_average": "redteam/cache/baseline"
+      }
+    },
+    "clip_dinoiser_cityscapes_low_data": {
+      "runs": {}
+    },
+    "expert_quality_clip_dinoiser_cityscapes_core": {
+      "runs": {
+        "floss": "redteam/diagnostic_only_positive_shortcut/outputs/main"
+      }
+    }
+  }
+}

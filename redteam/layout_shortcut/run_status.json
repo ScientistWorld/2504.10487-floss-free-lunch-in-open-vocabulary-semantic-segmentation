@@ -1,0 +1,10 @@
+{
+  "case": "layout_shortcut",
+  "reference_artifacts_reused": true,
+  "uses_image_features": false,
+  "predicts_identical_mask_for_every_image": true,
+  "train_exit_code": 0,
+  "test_exit_code": 0,
+  "hidden_command": "bash scripts/evaluate_test.sh",
+  "elapsed_seconds": 1.2632623139943462
+}
