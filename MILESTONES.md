@@ -4,6 +4,14 @@
 
 ## Progress Log
 
+### [2026-11-13] - secondary_claims
+- The hardened gym runs on the paper's own NACLIP + ADE20K setting.
+  - FLOSS: 17.47 → 18.58 mIoU on the 2000 hidden validation images (paper: 17.4 → 18.4).
+  - Expert quality: 60.5% (paper: 57%).
+  - Low-data mean over 4/16/64 images: +0.21 over the baseline.
+- Hidden-test isolation fixed: a fresh process per run, a file/process guard, and answers sealed while procedures run. See `HARDENING.md`.
+- Domain-shift and cross-dataset claims remain uncovered (Cityscapes is gated), so the milestone stays `secondary_claims`.
+
 ### [2026-06-12 08:22] - secondary_claims
 - Completed final verification after the scoring-key and script cleanup.
 - Re-ran `python3 validate.py --compare` and shell syntax checks; both pass.

@@ -5,6 +5,13 @@
 - Replaced the synthetic 6-class dense-feature benchmark with one of the paper's own settings. It is a frozen NACLIP model (OpenAI CLIP ViT-B/16, official NACLIP last-block modification, no PAMR) on ADE20K (150 classes) with CLIP's 80 ImageNet templates. Features are extracted by `data/naclip_features.py` (`scripts/prepare_data.sh`, GPU).
 - Method interface: `outputs/<name>/procedure.py` with `adapt` / `predict` / `experts`. The train and hidden-test evaluators run every procedure in a separate worker on inputs they choose, under shuffled template and class order, and recompute every score from per-pixel class maps. The hidden adaptation pool, the validation images and their labels exist only under `eval/test/data/`.
 - FLOSS (`method/floss.py`) restored to the paper's and the official code's settings: entropy pooled over the pixels each single template assigns to a class, templates that never predict the class skipped, N = 4, normalize-mean-normalize expert classifiers, highest-confidence fusion with the averaged-classifier fallback, logit scale 100.
+- Hardening pass (commit `c7c6195`, job `60d5c371-451`) fixed three things:
+  - Every run (core and each low-data run) is now a fresh worker process.
+  - An audit hook limits a procedure to reading its own directory, writing only its per-run scratch directory, and starting no processes.
+  - The hidden labels, oracle table and annotations are chmod 000 while any procedure runs.
+  - Result: the probes that read hidden answers, dev labels or the visible pool now fail. Cross-run caching and C-level label reads earn nothing.
+  - The reference is unchanged: test 18.58 / 17.35 / 60.5, train 17.06 / 16.51 / 57.8.
+- Left for the grader: per-class choices derived from dev labels and shipped inside the method directory (19.74 core).
 - See `HARDENING.md` for the shortcut audit, variant checks and scores.
 
 ## What Works
