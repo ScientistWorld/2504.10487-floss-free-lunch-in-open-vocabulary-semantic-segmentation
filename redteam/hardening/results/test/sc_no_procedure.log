@@ -1,0 +1,31 @@
+[eval] scoring sc_no_procedure
+[eval] sc_no_procedure: FAILED (redteam/hardening/outputs/cases/sc_no_procedure/sc_no_procedure has no procedure.py); worst value in every metric
+[eval] sc_no_procedure: {"ade20k_naclip_core": {"mIoU": 0.0}, "ade20k_naclip_low_data": {"mIoU": 0.0}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "sc_no_procedure": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "sc_no_procedure": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "sc_no_procedure": {
+          "expert_precision_pct": 0.0
+        }
+      }
+    }
+  }
+}

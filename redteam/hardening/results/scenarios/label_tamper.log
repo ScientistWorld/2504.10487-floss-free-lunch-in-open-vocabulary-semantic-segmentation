@@ -1,0 +1,2 @@
+[eval] cannot score: hidden labels do not match eval/test/label_hashes.json
+exit=1

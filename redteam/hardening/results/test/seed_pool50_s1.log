@@ -1,0 +1,44 @@
+[eval] scoring seed_pool50_s1
+[worker] run 0 done in 6s
+[worker] run 1 done in 2s
+[worker] run 2 done in 2s
+[worker] run 3 done in 2s
+[worker] run 4 done in 2s
+[worker] run 5 done in 2s
+[worker] run 6 done in 1s
+[worker] run 7 done in 3s
+[worker] run 8 done in 3s
+[worker] run 9 done in 2s
+[worker] run 10 done in 2s
+[worker] run 11 done in 2s
+[worker] run 12 done in 2s
+[eval] seed_pool50_s1: low-data runs [16.83, 16.63, 16.89, 16.38, 17.06, 17.33, 17.24, 16.98, 17.2, 17.65, 17.53, 17.55]
+[eval] seed_pool50_s1: {"ade20k_naclip_core": {"mIoU": 18.642420532488384}, "ade20k_naclip_low_data": {"mIoU": 17.107062825373358}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 59.5}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "seed_pool50_s1": {
+          "mIoU": 18.642420532488384
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "seed_pool50_s1": {
+          "mIoU": 17.107062825373358
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "seed_pool50_s1": {
+          "expert_precision_pct": 59.5
+        }
+      }
+    }
+  }
+}

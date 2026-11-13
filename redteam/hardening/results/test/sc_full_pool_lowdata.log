@@ -1,0 +1,64 @@
+[eval] scoring sc_full_pool_lowdata
+Traceback (most recent call last):
+  File "/home/user/eval/test/worker.py", line 228, in main
+    experts = _run(proc, args.run, text, pool, adapt_ids, evals, eval_ids, out_dir / "pred.npy",
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 179, in _run
+    state = proc.adapt([pool.image(int(i)) for i in adapt_ids], text_p)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/redteam/hardening/outputs/cases/sc_full_pool_lowdata/sc_full_pool_lowdata/procedure.py", line 16, in adapt
+    feats = np.load(VISIBLE / "adapt_feats.npy", mmap_mode="r")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/numpy/lib/_npyio_impl.py", line 451, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 86, in hook
+    raise PermissionError(f"evaluator: a procedure may only read files in its own directory, not {path}")
+PermissionError: evaluator: a procedure may only read files in its own directory, not /home/user/data/downloads/naclip/adapt_feats.npy
+[eval] worker exited with code 1; retrying once
+Traceback (most recent call last):
+  File "/home/user/eval/test/worker.py", line 228, in main
+    experts = _run(proc, args.run, text, pool, adapt_ids, evals, eval_ids, out_dir / "pred.npy",
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 179, in _run
+    state = proc.adapt([pool.image(int(i)) for i in adapt_ids], text_p)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/redteam/hardening/outputs/cases/sc_full_pool_lowdata/sc_full_pool_lowdata/procedure.py", line 16, in adapt
+    feats = np.load(VISIBLE / "adapt_feats.npy", mmap_mode="r")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/numpy/lib/_npyio_impl.py", line 451, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 86, in hook
+    raise PermissionError(f"evaluator: a procedure may only read files in its own directory, not {path}")
+PermissionError: evaluator: a procedure may only read files in its own directory, not /home/user/data/downloads/naclip/adapt_feats.npy
+[eval] sc_full_pool_lowdata: FAILED (worker exited with code 1); worst value in every metric
+[eval] sc_full_pool_lowdata: {"ade20k_naclip_core": {"mIoU": 0.0}, "ade20k_naclip_low_data": {"mIoU": 0.0}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "sc_full_pool_lowdata": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "sc_full_pool_lowdata": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "sc_full_pool_lowdata": {
+          "expert_precision_pct": 0.0
+        }
+      }
+    }
+  }
+}

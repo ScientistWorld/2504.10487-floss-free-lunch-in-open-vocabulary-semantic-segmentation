@@ -1,0 +1,28 @@
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "sc_dev_oracle_shipped": {
+          "mIoU": 19.7433953308517
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "sc_dev_oracle_shipped": {
+          "mIoU": 19.14110818914855
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "sc_dev_oracle_shipped": {
+          "expert_precision_pct": 84.5
+        }
+      }
+    }
+  }
+}

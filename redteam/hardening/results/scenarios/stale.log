@@ -1,0 +1,53 @@
+[eval] scoring sc_crash
+Traceback (most recent call last):
+  File "/home/user/eval/test/worker.py", line 228, in main
+    experts = _run(proc, args.run, text, pool, adapt_ids, evals, eval_ids, out_dir / "pred.npy",
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 189, in _run
+    scores = _as_scores(proc.predict(state, feats), h, w, k)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/redteam/hardening/outputs/crash_only/sc_crash/procedure.py", line 10, in predict
+    raise RuntimeError("deliberate failure")
+RuntimeError: deliberate failure
+[eval] worker exited with code 1; retrying once
+Traceback (most recent call last):
+  File "/home/user/eval/test/worker.py", line 228, in main
+    experts = _run(proc, args.run, text, pool, adapt_ids, evals, eval_ids, out_dir / "pred.npy",
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 189, in _run
+    scores = _as_scores(proc.predict(state, feats), h, w, k)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/redteam/hardening/outputs/crash_only/sc_crash/procedure.py", line 10, in predict
+    raise RuntimeError("deliberate failure")
+RuntimeError: deliberate failure
+[eval] sc_crash: FAILED (worker exited with code 1); worst value in every metric
+[eval] sc_crash: {"ade20k_naclip_core": {"mIoU": 0.0}, "ade20k_naclip_low_data": {"mIoU": 0.0}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "sc_crash": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "sc_crash": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "sc_crash": {
+          "expert_precision_pct": 0.0
+        }
+      }
+    }
+  }
+}
+exit=0

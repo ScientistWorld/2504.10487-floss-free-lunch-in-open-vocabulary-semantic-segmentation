@@ -1,0 +1,44 @@
+[eval] scoring v_min_support
+[worker] run 0 done in 7s
+[worker] run 1 done in 3s
+[worker] run 2 done in 3s
+[worker] run 3 done in 2s
+[worker] run 4 done in 2s
+[worker] run 5 done in 2s
+[worker] run 6 done in 2s
+[worker] run 7 done in 2s
+[worker] run 8 done in 2s
+[worker] run 9 done in 2s
+[worker] run 10 done in 3s
+[worker] run 11 done in 3s
+[worker] run 12 done in 2s
+[eval] v_min_support: low-data runs [17.17, 16.82, 16.84, 16.96, 17.61, 17.56, 17.12, 17.21, 17.64, 17.92, 17.79, 17.78]
+[eval] v_min_support: {"ade20k_naclip_core": {"mIoU": 18.679262816481305}, "ade20k_naclip_low_data": {"mIoU": 17.367966814332203}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 62.0}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "v_min_support": {
+          "mIoU": 18.679262816481305
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "v_min_support": {
+          "mIoU": 17.367966814332203
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "v_min_support": {
+          "expert_precision_pct": 62.0
+        }
+      }
+    }
+  }
+}

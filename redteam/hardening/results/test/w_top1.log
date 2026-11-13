@@ -1,0 +1,44 @@
+[eval] scoring w_top1
+[worker] run 0 done in 7s
+[worker] run 1 done in 3s
+[worker] run 2 done in 2s
+[worker] run 3 done in 2s
+[worker] run 4 done in 2s
+[worker] run 5 done in 2s
+[worker] run 6 done in 2s
+[worker] run 7 done in 2s
+[worker] run 8 done in 2s
+[worker] run 9 done in 3s
+[worker] run 10 done in 2s
+[worker] run 11 done in 2s
+[worker] run 12 done in 2s
+[eval] w_top1: low-data runs [16.91, 16.75, 16.34, 16.71, 17.27, 17.22, 17.21, 17.29, 17.56, 17.71, 17.45, 17.84]
+[eval] w_top1: {"ade20k_naclip_core": {"mIoU": 18.467315314243763}, "ade20k_naclip_low_data": {"mIoU": 17.18761879927453}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 60.5}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "w_top1": {
+          "mIoU": 18.467315314243763
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "w_top1": {
+          "mIoU": 17.18761879927453
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "w_top1": {
+          "expert_precision_pct": 60.5
+        }
+      }
+    }
+  }
+}

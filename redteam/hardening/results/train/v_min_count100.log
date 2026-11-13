@@ -1,0 +1,44 @@
+[eval-train] scoring v_min_count100
+[worker] run 0 done in 4s
+[worker] run 1 done in 1s
+[worker] run 2 done in 1s
+[worker] run 3 done in 1s
+[worker] run 4 done in 1s
+[worker] run 5 done in 1s
+[worker] run 6 done in 1s
+[worker] run 7 done in 2s
+[worker] run 8 done in 2s
+[worker] run 9 done in 2s
+[worker] run 10 done in 2s
+[worker] run 11 done in 2s
+[worker] run 12 done in 2s
+[eval-train] v_min_count100: low-data runs [16.22, 16.33, 16.4, 16.48, 16.23, 16.29, 16.18, 15.83, 16.38, 16.42, 16.38, 16.43]
+[eval-train] v_min_count100: {"ade20k_naclip_core": {"mIoU": 17.103434606222017}, "ade20k_naclip_low_data": {"mIoU": 16.29850296179936}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 59.895833333333336}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "train",
+      "results": {
+        "v_min_count100": {
+          "mIoU": 17.103434606222017
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "train",
+      "results": {
+        "v_min_count100": {
+          "mIoU": 16.29850296179936
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "train",
+      "results": {
+        "v_min_count100": {
+          "expert_precision_pct": 59.895833333333336
+        }
+      }
+    }
+  }
+}

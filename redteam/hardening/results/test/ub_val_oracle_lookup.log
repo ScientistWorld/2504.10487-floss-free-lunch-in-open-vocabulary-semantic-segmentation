@@ -1,0 +1,72 @@
+[eval] scoring ub_val_oracle_lookup
+Traceback (most recent call last):
+  File "/home/user/eval/test/worker.py", line 226, in main
+    proc = _TemplateAverage() if args.builtin else _load_procedure(args.procedure.resolve())
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 119, in _load_procedure
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user/redteam/hardening/outputs/cases/ub_val_oracle_lookup/ub_val_oracle_lookup/procedure.py", line 13, in <module>
+    CANON = oracle_top4(_hidden if _hidden.exists() else ROOT / "data" / "downloads" / "naclip" / "dev_oracle.npz")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/redteam/hardening/outputs/cases/ub_val_oracle_lookup/ub_val_oracle_lookup/_common.py", line 49, in oracle_top4
+    iou = np.load(path)["iou"][:-1]
+          ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/numpy/lib/_npyio_impl.py", line 451, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 86, in hook
+    raise PermissionError(f"evaluator: a procedure may only read files in its own directory, not {path}")
+PermissionError: evaluator: a procedure may only read files in its own directory, not /home/user/eval/test/data/naclip/val_oracle.npz
+[eval] worker exited with code 1; retrying once
+Traceback (most recent call last):
+  File "/home/user/eval/test/worker.py", line 226, in main
+    proc = _TemplateAverage() if args.builtin else _load_procedure(args.procedure.resolve())
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 119, in _load_procedure
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user/redteam/hardening/outputs/cases/ub_val_oracle_lookup/ub_val_oracle_lookup/procedure.py", line 13, in <module>
+    CANON = oracle_top4(_hidden if _hidden.exists() else ROOT / "data" / "downloads" / "naclip" / "dev_oracle.npz")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/redteam/hardening/outputs/cases/ub_val_oracle_lookup/ub_val_oracle_lookup/_common.py", line 49, in oracle_top4
+    iou = np.load(path)["iou"][:-1]
+          ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/numpy/lib/_npyio_impl.py", line 451, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 86, in hook
+    raise PermissionError(f"evaluator: a procedure may only read files in its own directory, not {path}")
+PermissionError: evaluator: a procedure may only read files in its own directory, not /home/user/eval/test/data/naclip/val_oracle.npz
+[eval] ub_val_oracle_lookup: FAILED (worker exited with code 1); worst value in every metric
+[eval] ub_val_oracle_lookup: {"ade20k_naclip_core": {"mIoU": 0.0}, "ade20k_naclip_low_data": {"mIoU": 0.0}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "ub_val_oracle_lookup": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "ub_val_oracle_lookup": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "ub_val_oracle_lookup": {
+          "expert_precision_pct": 0.0
+        }
+      }
+    }
+  }
+}

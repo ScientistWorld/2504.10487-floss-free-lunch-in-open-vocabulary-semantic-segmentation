@@ -1,0 +1,52 @@
+[eval] scoring sc_nan
+Traceback (most recent call last):
+  File "/home/user/eval/test/worker.py", line 228, in main
+    experts = _run(proc, args.run, text, pool, adapt_ids, evals, eval_ids, out_dir / "pred.npy",
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 189, in _run
+    scores = _as_scores(proc.predict(state, feats), h, w, k)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 149, in _as_scores
+    raise ValueError("predict() returned non-finite scores")
+ValueError: predict() returned non-finite scores
+[eval] worker exited with code 1; retrying once
+Traceback (most recent call last):
+  File "/home/user/eval/test/worker.py", line 228, in main
+    experts = _run(proc, args.run, text, pool, adapt_ids, evals, eval_ids, out_dir / "pred.npy",
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 189, in _run
+    scores = _as_scores(proc.predict(state, feats), h, w, k)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 149, in _as_scores
+    raise ValueError("predict() returned non-finite scores")
+ValueError: predict() returned non-finite scores
+[eval] sc_nan: FAILED (worker exited with code 1); worst value in every metric
+[eval] sc_nan: {"ade20k_naclip_core": {"mIoU": 0.0}, "ade20k_naclip_low_data": {"mIoU": 0.0}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "sc_nan": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "sc_nan": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "sc_nan": {
+          "expert_precision_pct": 0.0
+        }
+      }
+    }
+  }
+}

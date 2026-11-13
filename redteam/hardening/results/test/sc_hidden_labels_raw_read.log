@@ -1,0 +1,44 @@
+[eval] scoring sc_hidden_labels_raw_read
+[worker] run 0 done in 11s
+[worker] run 1 done in 3s
+[worker] run 2 done in 2s
+[worker] run 3 done in 2s
+[worker] run 4 done in 2s
+[worker] run 5 done in 2s
+[worker] run 6 done in 2s
+[worker] run 7 done in 2s
+[worker] run 8 done in 2s
+[worker] run 9 done in 3s
+[worker] run 10 done in 3s
+[worker] run 11 done in 3s
+[worker] run 12 done in 2s
+[eval] sc_hidden_labels_raw_read: low-data runs [17.16, 16.83, 16.88, 16.85, 17.6, 17.43, 17.22, 17.24, 17.76, 17.86, 17.65, 17.7]
+[eval] sc_hidden_labels_raw_read: {"ade20k_naclip_core": {"mIoU": 18.580357872537967}, "ade20k_naclip_low_data": {"mIoU": 17.347819052043928}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 60.5}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "sc_hidden_labels_raw_read": {
+          "mIoU": 18.580357872537967
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "sc_hidden_labels_raw_read": {
+          "mIoU": 17.347819052043928
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "sc_hidden_labels_raw_read": {
+          "expert_precision_pct": 60.5
+        }
+      }
+    }
+  }
+}

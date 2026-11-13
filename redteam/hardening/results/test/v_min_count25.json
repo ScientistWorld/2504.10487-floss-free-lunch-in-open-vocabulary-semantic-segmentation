@@ -1,0 +1,28 @@
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "v_min_count25": {
+          "mIoU": 18.591610171608576
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "v_min_count25": {
+          "mIoU": 17.188095442187265
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "v_min_count25": {
+          "expert_precision_pct": 61.0
+        }
+      }
+    }
+  }
+}
