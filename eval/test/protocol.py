@@ -24,6 +24,8 @@ TEXT = DATA / "text_embeddings.npy"
 LABELS = DATA / "val_labels.npy"
 ORACLE = DATA / "val_oracle.npz"
 HASHES = HERE / "label_hashes.json"
+# Test answers and everything that regenerates them; unreadable while a procedure runs.
+ANSWERS = (LABELS, ORACLE, HERE / "data" / "ade20k" / "val" / "annotations")
 
 EXP_CORE = "ade20k_naclip_core"
 EXP_LOW = "ade20k_naclip_low_data"
@@ -35,7 +37,7 @@ LOW_DATA_SEEDS = (0, 1, 2, 3)
 LOW_EVAL_IMAGES = 500  # validation images scored in every low-data run
 PERM_SEED = 7121
 SUBSET_SEED = 5507
-WORKER_TIMEOUT_S = 4 * 3600
+WORKER_TIMEOUT_S = 4 * 3600  # total budget per method over all of its runs
 
 WORST = {
     EXP_CORE: {"mIoU": 0.0},

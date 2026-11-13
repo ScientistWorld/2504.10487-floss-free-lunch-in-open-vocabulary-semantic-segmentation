@@ -5,20 +5,22 @@ Usage (no arguments; this is what scripts/evaluate_train.sh runs):
     python eval/train/evaluate.py
 
 Same protocol and interface as the hidden test, on method-visible data: every
-directory under outputs/ is a method whose outputs/<name>/procedure.py is run
-by a separate worker (eval/train/worker.py) that adapts on the visible
-unlabeled pool and predicts the 500 labeled dev images. This process recomputes
-every number from the per-pixel class maps and the dev labels; a failed run
-receives the worst value in every metric of every experiment.
+directory under outputs/ is a method whose outputs/<name>/procedure.py is run,
+one fresh worker process per run (eval/train/worker.py), adapting on the
+visible unlabeled pool and predicting the 500 labeled dev images. This process
+recomputes every number from the per-pixel class maps and the dev labels; a
+failed run receives the worst value in every metric of every experiment.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import numpy as np
@@ -99,47 +101,71 @@ class Truth:
         return float(np.mean(self.true_experts[:, self.eligible].sum(0) / self.m) * 100.0)
 
 
+def _worker_run(cmd: list[str], out: Path, deadline: float) -> dict:
+    """One worker process for one run; retried once if it fails (e.g. a transient GPU error)."""
+    for attempt in (1, 2):
+        for f in out.iterdir():
+            shutil.rmtree(f) if f.is_dir() and not f.is_symlink() else f.unlink()
+        remaining = deadline - time.time()
+        if remaining <= 0:
+            raise TimeoutError("method exceeded its time budget")
+        try:
+            result = subprocess.run(cmd, cwd=str(P.ROOT), timeout=remaining)
+        except subprocess.TimeoutExpired:
+            raise TimeoutError("method exceeded its time budget") from None
+        status_file = out / "worker_status.json"
+        status = json.loads(status_file.read_text()) if status_file.exists() else {}
+        if result.returncode == 0 and status.get("completed") and not status.get("failed"):
+            return status
+        error = f"worker exited with code {result.returncode}"
+        if attempt == 1:
+            print(f"[eval-train] {error}; retrying once", flush=True)
+    raise RuntimeError(error)
+
+
 def _score(name: str, method_dir: Path | None, truth: Truth) -> dict:
     scratch = P.ROOT / "tmp" / "eval_scratch"
     scratch.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="train_", dir=scratch) as tmp:
-        tmp_path = Path(tmp)
-        cmd = [sys.executable, str(HERE / "worker.py"), "--out", str(tmp_path)]
-        if method_dir is None:
-            cmd.append("--builtin")
-        else:
-            procedure = method_dir / "procedure.py"
-            if not procedure.is_file():
-                raise FileNotFoundError(f"{method_dir} has no procedure.py")
-            cmd += ["--procedure", str(procedure.resolve())]
-        result = subprocess.run(cmd, cwd=str(P.ROOT), timeout=P.WORKER_TIMEOUT_S)
-        if result.returncode != 0:
-            raise RuntimeError(f"worker exited with code {result.returncode}")
-        status_file = tmp_path / "worker_status.json"
-        status = json.loads(status_file.read_text()) if status_file.exists() else {}
-        if not status.get("completed") or status.get("failed"):
-            raise RuntimeError("worker did not complete")
-        core = _load_pred(tmp_path / "core.npy", len(truth.labels), truth.k)
-        metrics = {P.EXP_CORE: {"mIoU": _miou(_confusion(core, truth.labels, truth.k))}}
-        low = [
-            _miou(_confusion(_load_pred(tmp_path / f"low_{r}.npy", len(truth.low_gt), truth.k), truth.low_gt, truth.k))
-            for r in range(truth.n_low_runs)
-        ]
-        metrics[P.EXP_LOW] = {"mIoU": float(np.mean(low))}
-        precision = 0.0
-        if method_dir is None:
-            precision = truth.chance_precision()
-        elif (tmp_path / "experts.npy").exists():
-            ids = np.load(tmp_path / "experts.npy")
-            if (ids.shape == (truth.k, P.NUM_EXPERTS) and np.issubdtype(ids.dtype, np.integer)
-                    and ids.min() >= 0 and ids.max() < truth.m
-                    and all(len(set(row.tolist())) == P.NUM_EXPERTS for row in ids)):
-                precision = truth.expert_precision(ids)
-        else:
-            print(f"[eval-train] {name}: expert diagnostic scored 0 ({status.get('experts_error')})", flush=True)
-        metrics[P.EXP_EXPERT] = {"expert_precision_pct": precision}
-        print(f"[eval-train] {name}: low-data runs {[round(x, 2) for x in low]}", flush=True)
-        return metrics
+    base = [sys.executable, str(HERE / "worker.py")]
+    if method_dir is None:
+        base.append("--builtin")
+    else:
+        procedure = method_dir / "procedure.py"
+        if not procedure.is_file():
+            raise FileNotFoundError(f"{method_dir} has no procedure.py")
+        base += ["--procedure", str(procedure.resolve())]
+    deadline = time.time() + P.WORKER_TIMEOUT_S
+    core = None
+    status: dict = {}
+    ids = None
+    low = []
+    for run in range(1 + truth.n_low_runs):  # run 0: core; runs 1..n: low-data
+        with tempfile.TemporaryDirectory(prefix="train_", dir=scratch) as tmp:
+            tmp_path = Path(tmp)
+            st = _worker_run(base + ["--out", str(tmp_path), "--run", str(run)], tmp_path, deadline)
+            if run == 0:
+                status = st
+                core = np.array(_load_pred(tmp_path / "pred.npy", len(truth.labels), truth.k))
+                if (tmp_path / "experts.npy").exists():
+                    ids = np.load(tmp_path / "experts.npy")
+            else:
+                pred = _load_pred(tmp_path / "pred.npy", len(truth.low_gt), truth.k)
+                low.append(_miou(_confusion(pred, truth.low_gt, truth.k)))
+    metrics = {P.EXP_CORE: {"mIoU": _miou(_confusion(core, truth.labels, truth.k))}}
+    metrics[P.EXP_LOW] = {"mIoU": float(np.mean(low))}
+    precision = 0.0
+    if method_dir is None:
+        precision = truth.chance_precision()
+    elif ids is not None:
+        if (ids.shape == (truth.k, P.NUM_EXPERTS) and np.issubdtype(ids.dtype, np.integer)
+                and ids.min() >= 0 and ids.max() < truth.m
+                and all(len(set(row.tolist())) == P.NUM_EXPERTS for row in ids)):
+            precision = truth.expert_precision(ids)
+    else:
+        print(f"[eval-train] {name}: expert diagnostic scored 0 ({status.get('experts_error')})", flush=True)
+    metrics[P.EXP_EXPERT] = {"expert_precision_pct": precision}
+    print(f"[eval-train] {name}: low-data runs {[round(x, 2) for x in low]}", flush=True)
+    return metrics
 
 
 def _write(path: Path, per_method: dict[str, dict]) -> None:
@@ -155,9 +181,12 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--outputs-root", type=Path, default=P.ROOT / "outputs")
     parser.add_argument("--output", type=Path, default=P.ROOT / "scoring" / "scores_train.json")
+    parser.add_argument("--skip-builtin", action="store_true", help="tooling: do not score template_average")
     args = parser.parse_args()
     args.output.unlink(missing_ok=True)
     methods = _discover(args.outputs_root)
+    if args.skip_builtin:
+        methods = [(n, d) for n, d in methods if d is not None]
     try:
         truth = Truth()
     except Exception as exc:  # noqa: BLE001

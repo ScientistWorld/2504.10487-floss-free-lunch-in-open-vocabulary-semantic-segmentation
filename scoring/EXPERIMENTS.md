@@ -8,7 +8,7 @@ Can a frozen model be made to segment a target dataset better using only that da
 
 ## ade20k_naclip_low_data
 
-Does the adaptation still help when only a handful of unlabeled images is available, and how quickly does it approach the full-pool result? The evaluator gives the method 4, 16 or 64 unlabeled images (four random draws each) and scores each run on the same 500 held-out images. The metric is the mean mIoU over the 12 runs. A method that cannot handle tiny adaptation sets, or that is unstable across draws, loses here even if it is strong with the full pool.
+Does the adaptation still help when only a handful of unlabeled images is available, and how quickly does it approach the full-pool result? The evaluator gives the method 4, 16 or 64 unlabeled images (four random draws each) and scores each run on the same 500 held-out images. The metric is the mean mIoU over the 12 runs. Each run starts from scratch, so knowledge from the full pool cannot be carried over. A method that cannot handle tiny adaptation sets, or that is unstable across draws, loses here even if it is strong with the full pool.
 
 ## ade20k_naclip_expert_quality
 

@@ -6,6 +6,7 @@ export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 
 python -c "import torch, transformers, PIL, numpy; print('torch', torch.__version__, 'cuda', torch.cuda.is_available(), 'transformers', transformers.__version__, 'pillow', PIL.__version__, 'numpy', numpy.__version__)"
 nproc || true
+nvidia-smi --query-gpu=name,memory.used,memory.total --format=csv 2>/dev/null || true
 
 # 1. Frozen-backbone features, labels and ground-truth tables (idempotent).
 bash scripts/prepare_data.sh
@@ -18,7 +19,7 @@ bash scripts/evaluate_test.sh   # scoring/scores_test.json
 
 # 3. Variants, seed reruns and shortcut probes through the same evaluators (GPU only; slow on CPU).
 if python -c "import torch, sys; sys.exit(0 if torch.cuda.is_available() else 1)"; then
-  bash redteam/hardening/run_hardening.sh
+  bash redteam/hardening/run_hardening.sh || echo "hardening exited with status $?"
 else
   echo "no GPU: skipping hardening cases"
 fi

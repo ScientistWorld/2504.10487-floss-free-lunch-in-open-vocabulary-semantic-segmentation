@@ -25,6 +25,11 @@ ids    = experts(state)                    # optional: int array [K, 4]
 - `experts` names, for every class, the 4 templates (indices into the given template axis, distinct within a row) the method considers the most reliable for that class. It is used only by the expert-quality experiment.
 - **Template and class order are shuffled in every evaluator call.** Indices refer to the order passed to `adapt`; the evaluator maps them back. A method must not depend on the identity of a template or class index.
 
+### Isolation of each run
+
+- **Every run is a fresh process.** The core run and each of the 12 low-data runs import `procedure.py` anew in their own worker process, so nothing computed in one run (module-level state, caches) is available in another.
+- **File access.** While a procedure runs, it may read files only inside its own `outputs/<name>/` directory (and Python source files). It may not read anything else under the workspace (`data/`, `eval/`, other method directories, ...), may not write files (except into the run's own scratch directory, which is deleted when the run ends), and may not start other processes. A blocked access raises `PermissionError`; if the procedure does not handle it, the run fails. On the hidden test the evaluation labels are additionally unreadable while any procedure runs.
+
 `baseline/template_average.py` is a complete minimal example. The frozen model's default averaged-template classifier is built into both evaluators and scored as `template_average`.
 
 ## Experiments and metrics
@@ -44,7 +49,7 @@ ids    = experts(state)                    # optional: int array [K, 4]
 
 ## Failure rules
 
-A method whose directory has no `procedure.py`, whose procedure raises, times out (4 h per method), or returns scores of the wrong shape or with non-finite values is a **failed run**. It gets mIoU 0 and expert precision 0 in every experiment. An invalid or missing `experts()` output scores 0 in the expert-quality experiment only. The hidden test deletes the previous score file before it starts, and refuses to score (all methods failed) if the hidden labels no longer match their recorded hash.
+A method whose directory has no `procedure.py`, whose procedure raises in any run (including on a blocked file access), times out (4 h per method over all of its runs), or returns scores of the wrong shape or with non-finite values is a **failed run**. A run that fails is retried once before the method is failed. It gets mIoU 0 and expert precision 0 in every experiment. An invalid or missing `experts()` output scores 0 in the expert-quality experiment only. The hidden test deletes the previous score file before it starts, and refuses to score (all methods failed) if the hidden labels no longer match their recorded hash.
 
 ## Paper reference numbers
 

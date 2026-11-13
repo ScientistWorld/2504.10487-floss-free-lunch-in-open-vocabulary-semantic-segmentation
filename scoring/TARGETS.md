@@ -26,6 +26,7 @@ The paper's claim is an improvement *without labels, without training, and with 
 
 - A procedure receives only unlabeled features and the 80×150 template embeddings.
 - It runs on scored images it never sees, under shuffled template and class order.
+- Every run (core and each low-data run) is a fresh process. The procedure can read only its own directory, cannot write lasting files and cannot start processes. The hidden labels are unreadable while it runs.
 - Any invalid output fails the whole run (worst value in every metric).
 
 Rules that the protocol cannot enforce mechanically, such as no reading of label files and no data beyond what `adapt` is given, are listed in `scoring/CONSTRAINTS.md` and are checked separately.

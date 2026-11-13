@@ -1,15 +1,22 @@
-"""Run one method's procedure on the visible (train-slice) inputs (separate process).
+"""Run one method's procedure for ONE run of the visible (train-slice) protocol.
 
-The parent evaluator (evaluate.py) launches this worker once per method. The
-worker loads `procedure.py`, calls
+Same interface and isolation as the hidden test's worker, on method-visible
+data: the parent evaluator (evaluate.py) launches a fresh worker for every run.
+Run 0 is the core run (adapt on the whole visible adaptation pool, predict
+every dev image, report experts); runs 1..12 are the low-data runs. The worker
+loads `procedure.py`, calls
 
     state  = adapt(features_list, text_embeddings)
     scores = predict(state, features)          # per image, [h, w, K]
-    ids    = experts(state)                    # optional, [K, 4] template ids
+    ids    = experts(state)                    # core run only, optional, [K, 4]
 
-on the visible adaptation pool and dev images, with template and class
-order shuffled per run, and writes per-pixel class maps (uint8) to --out. It
-never sees labels and never computes a score; the parent does that.
+with template and class order shuffled per run, and writes per-pixel class maps
+(uint8) to --out. It never sees labels and never computes a score.
+
+Before the procedure is imported, an audit hook restricts the process: the
+procedure may read files only inside its own directory (plus Python source
+files), may write only inside this run's --out directory, and may not start
+other processes. Everything else under the workspace is off limits.
 """
 
 from __future__ import annotations
@@ -17,6 +24,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 import sys
 import time
 import traceback
@@ -30,6 +38,61 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import protocol as P  # noqa: E402
+
+_SPAWN_EVENTS = frozenset({
+    "subprocess.Popen", "os.system", "os.exec", "os.posix_spawn", "os.spawn", "os.fork",
+    "os.forkpty", "os.startfile", "pty.spawn",
+})
+_MUTATE_EVENTS = frozenset({
+    "os.chmod", "os.chown", "os.chflags", "os.lchflags", "os.rename", "os.remove", "os.rmdir",
+    "os.mkdir", "os.symlink", "os.link", "os.truncate", "os.utime", "os.setxattr", "os.removexattr",
+    "os.mkfifo", "os.mknod", "shutil.rmtree", "shutil.move", "shutil.copyfile", "shutil.copymode",
+    "shutil.copystat", "shutil.copytree", "shutil.chown", "shutil.make_archive", "shutil.unpack_archive",
+})
+_WRITE_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND
+
+
+def _install_guard(root: Path, proc_dir: Path | None, out_dir: Path) -> None:
+    """Restrict file access and process creation for the rest of this process."""
+    root_s = os.path.realpath(root)
+    out_s = os.path.realpath(out_dir)
+    readable = [out_s] + ([os.path.realpath(proc_dir)] if proc_dir is not None else [])
+
+    def inside(path: str, base: str) -> bool:
+        return path == base or path.startswith(base + os.sep)
+
+    def real(obj) -> str | None:
+        if isinstance(obj, int) or obj is None:
+            return None
+        try:
+            return os.path.realpath(os.fsdecode(obj))
+        except (TypeError, ValueError):
+            return None
+
+    def hook(event: str, args: tuple) -> None:
+        if event == "open":
+            path = real(args[0])
+            if path is None:
+                return
+            mode, flags = args[1], args[2]
+            writing = (isinstance(mode, str) and any(c in mode for c in "wax+")) or (
+                isinstance(flags, int) and bool(flags & _WRITE_FLAGS))
+            if writing:
+                if inside(path, out_s) or path == os.devnull:
+                    return
+                raise PermissionError(f"evaluator: a procedure may not write {path}")
+            if inside(path, root_s) and not path.endswith(".py") and not any(inside(path, b) for b in readable):
+                raise PermissionError(f"evaluator: a procedure may only read files in its own directory, not {path}")
+        elif event in _MUTATE_EVENTS:
+            for a in args:
+                path = real(a) if isinstance(a, (str, bytes, os.PathLike)) else None
+                if path is not None and not inside(path, out_s):
+                    raise PermissionError(f"evaluator: {event} on {path} is not allowed")
+        elif event in _SPAWN_EVENTS:
+            raise PermissionError(f"evaluator: a procedure may not start processes ({event})")
+
+    sys.dont_write_bytecode = True
+    sys.addaudithook(hook)
 
 
 class _TemplateAverage:
@@ -138,35 +201,45 @@ def _run(proc, run_index, text, pool, adapt_ids, evals, eval_ids, out_path, want
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--run", type=int, required=True, help="0 = core run, r >= 1 = low-data run r")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--procedure", type=Path)
     group.add_argument("--builtin", action="store_true")
     args = parser.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     status: dict = {}
+    out_dir = args.out.resolve()
     try:
-        proc = _TemplateAverage() if args.builtin else _load_procedure(args.procedure)
         text = np.load(P.TEXT)
         pool, evals = _Split(P.POOL_PREFIX), _Split(P.EVAL_PREFIX)
+        runs = P.low_data_runs(len(pool))
+        if not 0 <= args.run <= len(runs):
+            raise ValueError(f"run index {args.run} out of range")
+        if args.run == 0:
+            adapt_ids, eval_ids = np.arange(len(pool)), np.arange(len(evals))
+        else:
+            adapt_ids, eval_ids = runs[args.run - 1]["adapt_ids"], P.low_eval_ids(len(evals))
+        torch.zeros(1, device=device)  # initialise the device before the guard
+        proc_dir = None if args.builtin else args.procedure.resolve().parent
+        _install_guard(P.ROOT, proc_dir, out_dir)
+        proc = _TemplateAverage() if args.builtin else _load_procedure(args.procedure.resolve())
         t0 = time.time()
-        experts = _run(proc, 0, text, pool, np.arange(len(pool)), evals, np.arange(len(evals)),
-                       args.out / "core.npy", not args.builtin, device)
+        experts = _run(proc, args.run, text, pool, adapt_ids, evals, eval_ids, out_dir / "pred.npy",
+                       args.run == 0 and not args.builtin, device)
         if experts is not None:
             ids, err = experts
             if ids is not None:
-                np.save(args.out / "experts.npy", ids)
+                np.save(out_dir / "experts.npy", ids)
             status["experts_error"] = err
-        print(f"[worker] core done in {time.time() - t0:.0f}s", flush=True)
-        low_ids = P.low_eval_ids(len(evals))
-        for r, run in enumerate(P.low_data_runs(len(pool))):
-            _run(proc, 1 + r, text, pool, run["adapt_ids"], evals, low_ids, args.out / f"low_{r}.npy", False, device)
-        print(f"[worker] low-data done in {time.time() - t0:.0f}s", flush=True)
+        print(f"[worker] run {args.run} done in {time.time() - t0:.0f}s", flush=True)
     except BaseException:  # noqa: BLE001 - any failure (including sys.exit) fails the run
         traceback.print_exc()
-        (args.out / "worker_status.json").write_text(json.dumps({"failed": True}))
-        sys.exit(1)
+        try:
+            (out_dir / "worker_status.json").write_text(json.dumps({"failed": True}))
+        finally:
+            os._exit(1)
     status["completed"] = True
-    (args.out / "worker_status.json").write_text(json.dumps(status))
+    (out_dir / "worker_status.json").write_text(json.dumps(status))
 
 
 if __name__ == "__main__":

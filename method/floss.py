@@ -36,6 +36,7 @@ CONFIG = {
     "selection": "entropy",  # entropy (paper) | avg_prob | random
     "region": "own",  # own (paper): patches the template predicts as k | default_region: patches W_CLIP predicts as k
     "min_support": 0.0,  # 0 (paper: >0 predicted patches); else fraction of the class's median valid count
+    "min_count": 0,  # 0 (paper); else a template needs >= this many predicted patches to be a candidate expert
     "fusion": "highest",  # highest (paper) | default_conflict | average_conflict | average_all
     "shrink": 0.0,  # 0 (paper); >0 adds the averaged class embedding to each expert classifier
     "pool_fraction": 1.0,  # <1 adapts on a random subset of the given images (sensitivity runs)
@@ -104,7 +105,7 @@ def _template_statistics(features_list, text: np.ndarray):
 def _rank(count: np.ndarray, entropy: np.ndarray, avg_prob: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Templates sorted per class (best first) and the [M, K] mask of eligible templates."""
     m, k = count.shape
-    valid = count > 0
+    valid = count >= max(1, int(CONFIG["min_count"]))  # paper: the template predicts the class at least once
     if CONFIG["selection"] == "random":
         rng = np.random.default_rng(CONFIG["seed"])
         return np.argsort(rng.random((m, k)), axis=0, kind="stable"), np.ones((m, k), dtype=bool)

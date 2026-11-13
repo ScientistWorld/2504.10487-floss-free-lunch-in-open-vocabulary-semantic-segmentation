@@ -14,6 +14,7 @@ Idempotent: skips artifacts that already exist.
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -60,8 +61,19 @@ def _labels(index_path: Path, out_path: Path) -> None:
     np.save(out_path, np.concatenate(chunks))
 
 
+def _unseal() -> None:
+    """The evaluator makes answers unreadable while a procedure runs; undo a seal a killed run left behind."""
+    for path in (OUT / "val_labels.npy", OUT / "val_oracle.npz", SRC / "val" / "annotations"):
+        if path.exists():
+            need = 0o770 if path.is_dir() else 0o660
+            mode = path.stat().st_mode & 0o7777
+            if mode & need != need:
+                os.chmod(path, mode | need)
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
+    _unseal()
     encoder = None
 
     def enc() -> NaclipEncoder:
