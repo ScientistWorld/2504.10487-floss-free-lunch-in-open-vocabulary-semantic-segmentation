@@ -1,8 +1,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends.
-action: pending
-gpus: 0
+action: submit
+gpus: 1
 test: false
 milestone: secondary_claims
-notes: ""
+notes: "Build NACLIP ADE20K features + labels + oracle tables (train-visible and hidden), score FLOSS reference and built-in baseline through evaluate_train/evaluate_test, then run hardening cohort (variants, seed reruns, shortcut probes, tamper/stale scenarios) and analysis."

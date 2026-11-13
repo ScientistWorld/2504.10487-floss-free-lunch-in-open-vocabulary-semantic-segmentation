@@ -1,0 +1,244 @@
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "mIoU": 17.469166022251407
+        },
+        "floss": {
+          "mIoU": 18.580357872537967
+        },
+        "sc_constant": {
+          "mIoU": 0.00036061846224354097
+        },
+        "sc_crash": {
+          "mIoU": 0.0
+        },
+        "sc_dev_oracle_hardcoded": {
+          "mIoU": 17.113695466548663
+        },
+        "sc_dev_oracle_lookup": {
+          "mIoU": 19.7433953308517
+        },
+        "sc_empty_experts": {
+          "mIoU": 18.580357872537967
+        },
+        "sc_full_pool_lowdata": {
+          "mIoU": 18.560988662493997
+        },
+        "sc_layout_prior_lookup": {
+          "mIoU": 0.4883403731091843
+        },
+        "sc_nan": {
+          "mIoU": 0.0
+        },
+        "sc_no_procedure": {
+          "mIoU": 0.0
+        },
+        "seed_pool50_s0": {
+          "mIoU": 18.611848140994443
+        },
+        "seed_pool50_s1": {
+          "mIoU": 18.642420532488384
+        },
+        "seed_pool50_s2": {
+          "mIoU": 18.511019110555356
+        },
+        "ub_val_oracle_lookup": {
+          "mIoU": 20.7352366028875
+        },
+        "v_avg_prob": {
+          "mIoU": 18.910487139790906
+        },
+        "v_default_region": {
+          "mIoU": 17.241677064049288
+        },
+        "v_default_region_shrink": {
+          "mIoU": 17.31213364825404
+        },
+        "v_min_support": {
+          "mIoU": 18.679262816481305
+        },
+        "v_shrink": {
+          "mIoU": 18.10038467107147
+        },
+        "v_top8": {
+          "mIoU": 18.468793058466535
+        },
+        "w_average_all": {
+          "mIoU": 18.189100254933734
+        },
+        "w_default_conflict": {
+          "mIoU": 18.29090594655239
+        },
+        "w_random_experts": {
+          "mIoU": 17.03781300592162
+        },
+        "w_top1": {
+          "mIoU": 18.467315314243763
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "mIoU": 17.139638777505343
+        },
+        "floss": {
+          "mIoU": 17.347819052043928
+        },
+        "sc_constant": {
+          "mIoU": 0.0021729544958258447
+        },
+        "sc_crash": {
+          "mIoU": 0.0
+        },
+        "sc_dev_oracle_hardcoded": {
+          "mIoU": 16.866246694845504
+        },
+        "sc_dev_oracle_lookup": {
+          "mIoU": 19.14110818914855
+        },
+        "sc_empty_experts": {
+          "mIoU": 17.347819052043928
+        },
+        "sc_full_pool_lowdata": {
+          "mIoU": 17.872194610922488
+        },
+        "sc_layout_prior_lookup": {
+          "mIoU": 0.5081254424479306
+        },
+        "sc_nan": {
+          "mIoU": 0.0
+        },
+        "sc_no_procedure": {
+          "mIoU": 0.0
+        },
+        "seed_pool50_s0": {
+          "mIoU": 17.20241746519757
+        },
+        "seed_pool50_s1": {
+          "mIoU": 17.107062825373358
+        },
+        "seed_pool50_s2": {
+          "mIoU": 17.09290689874906
+        },
+        "ub_val_oracle_lookup": {
+          "mIoU": 19.928098009178537
+        },
+        "v_avg_prob": {
+          "mIoU": 17.264602309299537
+        },
+        "v_default_region": {
+          "mIoU": 16.932233725827988
+        },
+        "v_default_region_shrink": {
+          "mIoU": 16.993667544018844
+        },
+        "v_min_support": {
+          "mIoU": 17.367966814332203
+        },
+        "v_shrink": {
+          "mIoU": 17.24769015485175
+        },
+        "v_top8": {
+          "mIoU": 17.3536355920724
+        },
+        "w_average_all": {
+          "mIoU": 17.456626038409777
+        },
+        "w_default_conflict": {
+          "mIoU": 17.24767621658106
+        },
+        "w_random_experts": {
+          "mIoU": 16.87076652297794
+        },
+        "w_top1": {
+          "mIoU": 17.18761879927453
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "expert_precision_pct": 39.35833333333333
+        },
+        "floss": {
+          "expert_precision_pct": 60.5
+        },
+        "sc_constant": {
+          "expert_precision_pct": 0.0
+        },
+        "sc_crash": {
+          "expert_precision_pct": 0.0
+        },
+        "sc_dev_oracle_hardcoded": {
+          "expert_precision_pct": 37.166666666666664
+        },
+        "sc_dev_oracle_lookup": {
+          "expert_precision_pct": 84.5
+        },
+        "sc_empty_experts": {
+          "expert_precision_pct": 0.0
+        },
+        "sc_full_pool_lowdata": {
+          "expert_precision_pct": 59.66666666666667
+        },
+        "sc_layout_prior_lookup": {
+          "expert_precision_pct": 0.0
+        },
+        "sc_nan": {
+          "expert_precision_pct": 0.0
+        },
+        "sc_no_procedure": {
+          "expert_precision_pct": 0.0
+        },
+        "seed_pool50_s0": {
+          "expert_precision_pct": 60.66666666666667
+        },
+        "seed_pool50_s1": {
+          "expert_precision_pct": 59.5
+        },
+        "seed_pool50_s2": {
+          "expert_precision_pct": 58.333333333333336
+        },
+        "ub_val_oracle_lookup": {
+          "expert_precision_pct": 100.0
+        },
+        "v_avg_prob": {
+          "expert_precision_pct": 63.66666666666667
+        },
+        "v_default_region": {
+          "expert_precision_pct": 32.83333333333333
+        },
+        "v_default_region_shrink": {
+          "expert_precision_pct": 32.83333333333333
+        },
+        "v_min_support": {
+          "expert_precision_pct": 62.0
+        },
+        "v_shrink": {
+          "expert_precision_pct": 60.5
+        },
+        "v_top8": {
+          "expert_precision_pct": 60.5
+        },
+        "w_average_all": {
+          "expert_precision_pct": 60.5
+        },
+        "w_default_conflict": {
+          "expert_precision_pct": 60.5
+        },
+        "w_random_experts": {
+          "expert_precision_pct": 38.666666666666664
+        },
+        "w_top1": {
+          "expert_precision_pct": 60.5
+        }
+      }
+    }
+  }
+}

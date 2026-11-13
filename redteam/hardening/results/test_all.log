@@ -1,0 +1,364 @@
+[eval] scoring template_average
+[worker] core done in 96s
+[worker] low-data done in 209s
+[eval] template_average: {"ade20k_naclip_core": {"mIoU": 17.469166022251407}, "ade20k_naclip_low_data": {"mIoU": 17.139638777505343}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 39.35833333333333}}
+[eval] scoring floss
+[worker] core done in 13s
+[worker] low-data done in 31s
+[eval] floss: {"ade20k_naclip_core": {"mIoU": 18.580357872537967}, "ade20k_naclip_low_data": {"mIoU": 17.347819052043928}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 60.5}}
+[eval] scoring sc_constant
+[worker] core done in 2s
+[worker] low-data done in 6s
+[eval] sc_constant: expert diagnostic scored 0 (procedure defines no experts())
+[eval] sc_constant: {"ade20k_naclip_core": {"mIoU": 0.00036061846224354097}, "ade20k_naclip_low_data": {"mIoU": 0.0021729544958258447}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+[eval] scoring sc_crash
+Traceback (most recent call last):
+  File "/home/user/eval/test/worker.py", line 152, in main
+    experts = _run(proc, 0, text, pool, np.arange(len(pool)), evals, np.arange(len(evals)),
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 125, in _run
+    scores = _as_scores(proc.predict(state, feats), h, w, k)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/redteam/hardening/outputs/all/sc_crash/procedure.py", line 10, in predict
+    raise RuntimeError("deliberate failure")
+RuntimeError: deliberate failure
+[eval] sc_crash: FAILED (worker exited with code 1); worst value in every metric
+[eval] sc_crash: {"ade20k_naclip_core": {"mIoU": 0.0}, "ade20k_naclip_low_data": {"mIoU": 0.0}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+[eval] scoring sc_dev_oracle_hardcoded
+[worker] core done in 6s
+[worker] low-data done in 26s
+[eval] sc_dev_oracle_hardcoded: {"ade20k_naclip_core": {"mIoU": 17.113695466548663}, "ade20k_naclip_low_data": {"mIoU": 16.866246694845504}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 37.166666666666664}}
+[eval] scoring sc_dev_oracle_lookup
+[worker] core done in 8s
+[worker] low-data done in 23s
+[eval] sc_dev_oracle_lookup: {"ade20k_naclip_core": {"mIoU": 19.7433953308517}, "ade20k_naclip_low_data": {"mIoU": 19.14110818914855}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 84.5}}
+[eval] scoring sc_empty_experts
+[worker] core done in 7s
+[worker] low-data done in 23s
+[eval] sc_empty_experts: expert diagnostic scored 0 (experts() must return an integer array of shape (150, 4), got (150, 0) int64)
+[eval] sc_empty_experts: {"ade20k_naclip_core": {"mIoU": 18.580357872537967}, "ade20k_naclip_low_data": {"mIoU": 17.347819052043928}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+[eval] scoring sc_full_pool_lowdata
+[worker] core done in 14s
+[worker] low-data done in 51s
+[eval] sc_full_pool_lowdata: {"ade20k_naclip_core": {"mIoU": 18.560988662493997}, "ade20k_naclip_low_data": {"mIoU": 17.872194610922488}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 59.66666666666667}}
+[eval] scoring sc_layout_prior_lookup
+[worker] core done in 2s
+[worker] low-data done in 6s
+[eval] sc_layout_prior_lookup: expert diagnostic scored 0 (procedure defines no experts())
+[eval] sc_layout_prior_lookup: {"ade20k_naclip_core": {"mIoU": 0.4883403731091843}, "ade20k_naclip_low_data": {"mIoU": 0.5081254424479306}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+[eval] scoring sc_nan
+Traceback (most recent call last):
+  File "/home/user/eval/test/worker.py", line 152, in main
+    experts = _run(proc, 0, text, pool, np.arange(len(pool)), evals, np.arange(len(evals)),
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 125, in _run
+    scores = _as_scores(proc.predict(state, feats), h, w, k)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 85, in _as_scores
+    raise ValueError("predict() returned non-finite scores")
+ValueError: predict() returned non-finite scores
+[eval] sc_nan: FAILED (worker exited with code 1); worst value in every metric
+[eval] sc_nan: {"ade20k_naclip_core": {"mIoU": 0.0}, "ade20k_naclip_low_data": {"mIoU": 0.0}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+[eval] scoring sc_no_procedure
+[eval] sc_no_procedure: FAILED (redteam/hardening/outputs/all/sc_no_procedure has no procedure.py); worst value in every metric
+[eval] sc_no_procedure: {"ade20k_naclip_core": {"mIoU": 0.0}, "ade20k_naclip_low_data": {"mIoU": 0.0}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+[eval] scoring seed_pool50_s0
+[worker] core done in 12s
+[worker] low-data done in 30s
+[eval] seed_pool50_s0: {"ade20k_naclip_core": {"mIoU": 18.611848140994443}, "ade20k_naclip_low_data": {"mIoU": 17.20241746519757}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 60.66666666666667}}
+[eval] scoring seed_pool50_s1
+[worker] core done in 7s
+[worker] low-data done in 22s
+[eval] seed_pool50_s1: {"ade20k_naclip_core": {"mIoU": 18.642420532488384}, "ade20k_naclip_low_data": {"mIoU": 17.107062825373358}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 59.5}}
+[eval] scoring seed_pool50_s2
+[worker] core done in 12s
+[worker] low-data done in 32s
+[eval] seed_pool50_s2: {"ade20k_naclip_core": {"mIoU": 18.511019110555356}, "ade20k_naclip_low_data": {"mIoU": 17.09290689874906}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 58.333333333333336}}
+[eval] scoring ub_val_oracle_lookup
+[worker] core done in 6s
+[worker] low-data done in 22s
+[eval] ub_val_oracle_lookup: {"ade20k_naclip_core": {"mIoU": 20.7352366028875}, "ade20k_naclip_low_data": {"mIoU": 19.928098009178537}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 100.0}}
+[eval] scoring v_avg_prob
+[worker] core done in 10s
+[worker] low-data done in 35s
+[eval] v_avg_prob: {"ade20k_naclip_core": {"mIoU": 18.910487139790906}, "ade20k_naclip_low_data": {"mIoU": 17.264602309299537}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 63.66666666666667}}
+[eval] scoring v_default_region
+[worker] core done in 7s
+[worker] low-data done in 24s
+[eval] v_default_region: {"ade20k_naclip_core": {"mIoU": 17.241677064049288}, "ade20k_naclip_low_data": {"mIoU": 16.932233725827988}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 32.83333333333333}}
+[eval] scoring v_default_region_shrink
+[worker] core done in 7s
+[worker] low-data done in 36s
+[eval] v_default_region_shrink: {"ade20k_naclip_core": {"mIoU": 17.31213364825404}, "ade20k_naclip_low_data": {"mIoU": 16.993667544018844}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 32.83333333333333}}
+[eval] scoring v_min_support
+[worker] core done in 7s
+[worker] low-data done in 23s
+[eval] v_min_support: {"ade20k_naclip_core": {"mIoU": 18.679262816481305}, "ade20k_naclip_low_data": {"mIoU": 17.367966814332203}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 62.0}}
+[eval] scoring v_shrink
+[worker] core done in 7s
+[worker] low-data done in 35s
+[eval] v_shrink: {"ade20k_naclip_core": {"mIoU": 18.10038467107147}, "ade20k_naclip_low_data": {"mIoU": 17.24769015485175}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 60.5}}
+[eval] scoring v_top8
+[worker] core done in 7s
+[worker] low-data done in 23s
+[eval] v_top8: {"ade20k_naclip_core": {"mIoU": 18.468793058466535}, "ade20k_naclip_low_data": {"mIoU": 17.3536355920724}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 60.5}}
+[eval] scoring w_average_all
+[worker] core done in 7s
+[worker] low-data done in 32s
+[eval] w_average_all: {"ade20k_naclip_core": {"mIoU": 18.189100254933734}, "ade20k_naclip_low_data": {"mIoU": 17.456626038409777}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 60.5}}
+[eval] scoring w_default_conflict
+[worker] core done in 7s
+[worker] low-data done in 23s
+[eval] w_default_conflict: {"ade20k_naclip_core": {"mIoU": 18.29090594655239}, "ade20k_naclip_low_data": {"mIoU": 17.24767621658106}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 60.5}}
+[eval] scoring w_random_experts
+[worker] core done in 7s
+[worker] low-data done in 27s
+[eval] w_random_experts: {"ade20k_naclip_core": {"mIoU": 17.03781300592162}, "ade20k_naclip_low_data": {"mIoU": 16.87076652297794}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 38.666666666666664}}
+[eval] scoring w_top1
+[worker] core done in 8s
+[worker] low-data done in 24s
+[eval] w_top1: {"ade20k_naclip_core": {"mIoU": 18.467315314243763}, "ade20k_naclip_low_data": {"mIoU": 17.18761879927453}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 60.5}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "mIoU": 17.469166022251407
+        },
+        "floss": {
+          "mIoU": 18.580357872537967
+        },
+        "sc_constant": {
+          "mIoU": 0.00036061846224354097
+        },
+        "sc_crash": {
+          "mIoU": 0.0
+        },
+        "sc_dev_oracle_hardcoded": {
+          "mIoU": 17.113695466548663
+        },
+        "sc_dev_oracle_lookup": {
+          "mIoU": 19.7433953308517
+        },
+        "sc_empty_experts": {
+          "mIoU": 18.580357872537967
+        },
+        "sc_full_pool_lowdata": {
+          "mIoU": 18.560988662493997
+        },
+        "sc_layout_prior_lookup": {
+          "mIoU": 0.4883403731091843
+        },
+        "sc_nan": {
+          "mIoU": 0.0
+        },
+        "sc_no_procedure": {
+          "mIoU": 0.0
+        },
+        "seed_pool50_s0": {
+          "mIoU": 18.611848140994443
+        },
+        "seed_pool50_s1": {
+          "mIoU": 18.642420532488384
+        },
+        "seed_pool50_s2": {
+          "mIoU": 18.511019110555356
+        },
+        "ub_val_oracle_lookup": {
+          "mIoU": 20.7352366028875
+        },
+        "v_avg_prob": {
+          "mIoU": 18.910487139790906
+        },
+        "v_default_region": {
+          "mIoU": 17.241677064049288
+        },
+        "v_default_region_shrink": {
+          "mIoU": 17.31213364825404
+        },
+        "v_min_support": {
+          "mIoU": 18.679262816481305
+        },
+        "v_shrink": {
+          "mIoU": 18.10038467107147
+        },
+        "v_top8": {
+          "mIoU": 18.468793058466535
+        },
+        "w_average_all": {
+          "mIoU": 18.189100254933734
+        },
+        "w_default_conflict": {
+          "mIoU": 18.29090594655239
+        },
+        "w_random_experts": {
+          "mIoU": 17.03781300592162
+        },
+        "w_top1": {
+          "mIoU": 18.467315314243763
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "mIoU": 17.139638777505343
+        },
+        "floss": {
+          "mIoU": 17.347819052043928
+        },
+        "sc_constant": {
+          "mIoU": 0.0021729544958258447
+        },
+        "sc_crash": {
+          "mIoU": 0.0
+        },
+        "sc_dev_oracle_hardcoded": {
+          "mIoU": 16.866246694845504
+        },
+        "sc_dev_oracle_lookup": {
+          "mIoU": 19.14110818914855
+        },
+        "sc_empty_experts": {
+          "mIoU": 17.347819052043928
+        },
+        "sc_full_pool_lowdata": {
+          "mIoU": 17.872194610922488
+        },
+        "sc_layout_prior_lookup": {
+          "mIoU": 0.5081254424479306
+        },
+        "sc_nan": {
+          "mIoU": 0.0
+        },
+        "sc_no_procedure": {
+          "mIoU": 0.0
+        },
+        "seed_pool50_s0": {
+          "mIoU": 17.20241746519757
+        },
+        "seed_pool50_s1": {
+          "mIoU": 17.107062825373358
+        },
+        "seed_pool50_s2": {
+          "mIoU": 17.09290689874906
+        },
+        "ub_val_oracle_lookup": {
+          "mIoU": 19.928098009178537
+        },
+        "v_avg_prob": {
+          "mIoU": 17.264602309299537
+        },
+        "v_default_region": {
+          "mIoU": 16.932233725827988
+        },
+        "v_default_region_shrink": {
+          "mIoU": 16.993667544018844
+        },
+        "v_min_support": {
+          "mIoU": 17.367966814332203
+        },
+        "v_shrink": {
+          "mIoU": 17.24769015485175
+        },
+        "v_top8": {
+          "mIoU": 17.3536355920724
+        },
+        "w_average_all": {
+          "mIoU": 17.456626038409777
+        },
+        "w_default_conflict": {
+          "mIoU": 17.24767621658106
+        },
+        "w_random_experts": {
+          "mIoU": 16.87076652297794
+        },
+        "w_top1": {
+          "mIoU": 17.18761879927453
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "expert_precision_pct": 39.35833333333333
+        },
+        "floss": {
+          "expert_precision_pct": 60.5
+        },
+        "sc_constant": {
+          "expert_precision_pct": 0.0
+        },
+        "sc_crash": {
+          "expert_precision_pct": 0.0
+        },
+        "sc_dev_oracle_hardcoded": {
+          "expert_precision_pct": 37.166666666666664
+        },
+        "sc_dev_oracle_lookup": {
+          "expert_precision_pct": 84.5
+        },
+        "sc_empty_experts": {
+          "expert_precision_pct": 0.0
+        },
+        "sc_full_pool_lowdata": {
+          "expert_precision_pct": 59.66666666666667
+        },
+        "sc_layout_prior_lookup": {
+          "expert_precision_pct": 0.0
+        },
+        "sc_nan": {
+          "expert_precision_pct": 0.0
+        },
+        "sc_no_procedure": {
+          "expert_precision_pct": 0.0
+        },
+        "seed_pool50_s0": {
+          "expert_precision_pct": 60.66666666666667
+        },
+        "seed_pool50_s1": {
+          "expert_precision_pct": 59.5
+        },
+        "seed_pool50_s2": {
+          "expert_precision_pct": 58.333333333333336
+        },
+        "ub_val_oracle_lookup": {
+          "expert_precision_pct": 100.0
+        },
+        "v_avg_prob": {
+          "expert_precision_pct": 63.66666666666667
+        },
+        "v_default_region": {
+          "expert_precision_pct": 32.83333333333333
+        },
+        "v_default_region_shrink": {
+          "expert_precision_pct": 32.83333333333333
+        },
+        "v_min_support": {
+          "expert_precision_pct": 62.0
+        },
+        "v_shrink": {
+          "expert_precision_pct": 60.5
+        },
+        "v_top8": {
+          "expert_precision_pct": 60.5
+        },
+        "w_average_all": {
+          "expert_precision_pct": 60.5
+        },
+        "w_default_conflict": {
+          "expert_precision_pct": 60.5
+        },
+        "w_random_experts": {
+          "expert_precision_pct": 38.666666666666664
+        },
+        "w_top1": {
+          "expert_precision_pct": 60.5
+        }
+      }
+    }
+  }
+}

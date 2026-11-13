@@ -1,0 +1,55 @@
+[eval] scoring template_average
+[worker] core done in 44s
+[worker] low-data done in 192s
+[eval] template_average: {"ade20k_naclip_core": {"mIoU": 17.469166022251407}, "ade20k_naclip_low_data": {"mIoU": 17.139638777505343}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 39.35833333333333}}
+[eval] scoring sc_crash
+Traceback (most recent call last):
+  File "/home/user/eval/test/worker.py", line 152, in main
+    experts = _run(proc, 0, text, pool, np.arange(len(pool)), evals, np.arange(len(evals)),
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/worker.py", line 125, in _run
+    scores = _as_scores(proc.predict(state, feats), h, w, k)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/redteam/hardening/outputs/crash_only/sc_crash/procedure.py", line 10, in predict
+    raise RuntimeError("deliberate failure")
+RuntimeError: deliberate failure
+[eval] sc_crash: FAILED (worker exited with code 1); worst value in every metric
+[eval] sc_crash: {"ade20k_naclip_core": {"mIoU": 0.0}, "ade20k_naclip_low_data": {"mIoU": 0.0}, "ade20k_naclip_expert_quality": {"expert_precision_pct": 0.0}}
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "mIoU": 17.469166022251407
+        },
+        "sc_crash": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "mIoU": 17.139638777505343
+        },
+        "sc_crash": {
+          "mIoU": 0.0
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "expert_precision_pct": 39.35833333333333
+        },
+        "sc_crash": {
+          "expert_precision_pct": 0.0
+        }
+      }
+    }
+  }
+}
+exit=0

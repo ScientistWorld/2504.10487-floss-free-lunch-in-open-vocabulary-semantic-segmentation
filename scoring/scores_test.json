@@ -1,0 +1,37 @@
+{
+  "experiments": {
+    "ade20k_naclip_core": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "mIoU": 17.469166022251407
+        },
+        "floss": {
+          "mIoU": 18.580357872537967
+        }
+      }
+    },
+    "ade20k_naclip_low_data": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "mIoU": 17.139638777505343
+        },
+        "floss": {
+          "mIoU": 17.347819052043928
+        }
+      }
+    },
+    "ade20k_naclip_expert_quality": {
+      "slice": "test",
+      "results": {
+        "template_average": {
+          "expert_precision_pct": 39.35833333333333
+        },
+        "floss": {
+          "expert_precision_pct": 60.5
+        }
+      }
+    }
+  }
+}
