@@ -31,6 +31,10 @@ OVSS systems are attractive because class vocabularies can be changed at inferen
 
 A successful solution should raise semantic segmentation quality on held-out images, work across multiple CLIP-based OVSS backbones and datasets, avoid using ground-truth masks during adaptation, require no parameter training for the adaptation step, and keep preprocessing and evaluation consistent with the baseline model.
 
+## Scope of This Gym
+
+The gym instantiates the problem on one of the paper's own settings: a frozen NACLIP (CLIP ViT-B/16) model on ADE20K (150 classes), with CLIP's 80 ImageNet prompt templates as the only text-side material. A method receives unlabeled image features and the per-template class embeddings. It is judged on held-out validation images it never sees, through the procedure interface described in `briefing/evaluation.md`.
+
 ---
 
 # Paper's Method
@@ -57,30 +61,55 @@ Secondary claims: the selected experts generalize to related shifted domains, th
 
 # Evaluation
 
-## Metrics
+## Setting
 
-The primary task metric is mean Intersection over Union (mIoU) over the evaluated semantic classes; higher is better. Per-class IoU is useful for diagnosing whether gains are broad or concentrated in a few categories.
+The paper evaluates on Cityscapes, PASCAL VOC 20, PASCAL Context 59, ADE20K and COCO-Stuff with three frozen CLIP-based OVSS models (MaskCLIP, NACLIP, CLIP-DINOiser). This gym uses one of the paper's own settings: **NACLIP (CLIP ViT-B/16, no refinement) on ADE20K (150 classes)** with CLIP's 80 ImageNet prompt templates. The backbone is frozen and its outputs are precomputed:
 
-Constraint metrics should report whether the adaptation used ground-truth masks, whether model parameters were trained, the number of unlabeled images used for adaptation, and any model-independent resource budget the benchmark fixes. Diagnostic artifact-quality metrics may be reported when the benchmark defines hidden oracle artifacts, but those labels or oracle artifacts are for evaluation only and must not be used during adaptation.
+- **Visual features.** For each image, a grid of 512-d patch embeddings `[h, w, 512]` (float16). Images are resized to a short side of 336 and processed with 224x224 windows at stride 112 (long side rounded to 224 + 112j); each patch feature is the average of the L2-normalised window embeddings covering it. `features @ text_embedding` is the backbone's cosine logit for that class.
+- **Text embeddings.** `[80, 150, 512]`: one L2-normalised embedding per (template, class name). The baseline classifier averages the 80 templates per class and renormalises.
+- **Data.** Method-visible: 2000 unlabeled ADE20K training images (`data/downloads/naclip/adapt_*`) and 500 labeled ADE20K training images used as the dev set (`dev_*`). Hidden: a different set of 2000 unlabeled training images and the 2000 ADE20K validation images with labels; these exist only under `eval/test/` and are used by the hidden test.
 
-## Baselines and Targets
+## What a method provides
 
-Main reported baselines are MaskCLIP, NACLIP, and CLIP-DINOiser using their standard zero-shot text classifiers. The paper reports adapted versions of each baseline under the same validation protocol.
+A method is a directory `outputs/<name>/` containing `procedure.py` (plus any files it needs next to it). The evaluators import it in a separate process and call:
 
-Headline validation-set mIoU targets from the paper include:
+```python
+state  = adapt(features_list, text_embeddings)
+#   features_list: list of [h_i, w_i, 512] float16 arrays (unlabeled images)
+#   text_embeddings: [80, K, 512] float32
+scores = predict(state, features)          # features [h, w, 512] -> scores [h, w, K]
+ids    = experts(state)                    # optional: int array [K, 4]
+```
 
-- MaskCLIP baseline to adapted MaskCLIP average across Cityscapes, VOC20, PC59, ADE20K, and COCO-Stuff: 28.7 to 29.3.
-- NACLIP baseline to adapted NACLIP average across those datasets: 38.2 to 39.0.
-- CLIP-DINOiser baseline to adapted CLIP-DINOiser average across those datasets: 38.5 to 39.7.
-- On Cityscapes with CLIP-DINOiser, the main reported gain is 31.3 to 34.6 mIoU.
+- `adapt` receives only unlabeled features chosen by the evaluator. No labels exist at test time.
+- `predict` is called once per scored image and must return finite class scores on the feature grid. The evaluator upsamples them bilinearly to the label resolution (8 pixels per patch side) and takes the argmax.
+- `experts` names, for every class, the 4 templates (indices into the given template axis, distinct within a row) the method considers the most reliable for that class. It is used only by the expert-quality experiment.
+- **Template and class order are shuffled in every evaluator call.** Indices refer to the order passed to `adapt`; the evaluator maps them back. A method must not depend on the identity of a template or class index.
 
-Robustness targets include Cityscapes-selected adaptation evaluated on ACDC night/fog/rain/snow, BDD-100K, and Mapillary with the Cityscapes label set. Low-data targets vary the number of unlabeled selection images and evaluate on held-out validation images.
+`baseline/template_average.py` is a complete minimal example. The frozen model's default averaged-template classifier is built into both evaluators and scored as `template_average`.
 
-## Evaluation Protocol
+## Experiments and metrics
 
-Evaluate on the validation split of each dataset, using the class names and ignore-label handling expected by the OVSS benchmark. The main datasets are Cityscapes, PASCAL VOC 20, PASCAL Context 59, ADE20K, and COCO-Stuff. Domain-shift evaluation selects adaptation data from Cityscapes and tests on ACDC conditions, BDD-100K, and Mapillary with the shared semantic classes.
+| Experiment | What the evaluator does | Metric (higher is better) |
+|---|---|---|
+| `ade20k_naclip_core` | `adapt` on the full unlabeled pool (2000 images), `predict` every scored image | mIoU over 150 classes |
+| `ade20k_naclip_low_data` | 12 runs: `adapt` on 4, 16 or 64 pool images (4 seeds each), `predict` 500 fixed scored images | mean mIoU over the 12 runs |
+| `ade20k_naclip_expert_quality` | `experts(state)` after the core `adapt` | % of the reported experts that are true experts |
 
-For fair comparison, hold the base OVSS model, CLIP backbone, image resolution, sliding-window settings, and text class list fixed between the baseline and adapted system. The paper uses ViT-B/16 for the main MaskCLIP, NACLIP, and CLIP-DINOiser results, with additional ViT-L/14 checks for NACLIP. Any low-data evaluation should average over multiple random selections of adaptation images and keep validation labels unavailable to the adaptation procedure.
+- **mIoU.** For each class, IoU = intersection / union accumulated over all scored images. Pixels labelled "other" (ADE20K label 0) are ignored. Classes absent from both the labels and the predictions are skipped, and the 150-class mean is reported, as in the paper.
+- **True experts** (paper Eq. 4): template m is a true expert of class k when the single-template classifier of m alone reaches a higher IoU on class k than the averaged classifier, on the scored labels. Expert precision (paper Eq. 8) is 100 × |reported ∩ true| / 4, averaged over the classes that have at least one true expert. The `template_average` row reports the chance level of a uniformly random selection.
+
+## Train vs hidden test
+
+`scripts/evaluate_train.sh` runs the protocol on visible data: adaptation on the visible pool, scoring on the 500 dev images. It writes `scoring/scores_train.json`. `scripts/evaluate_test.sh` runs the same protocol on the hidden pool and the 2000 validation images, with different seeds and shuffles, and writes `scoring/scores_test.json`. Both take no arguments and score every directory under `outputs/`.
+
+## Failure rules
+
+A method whose directory has no `procedure.py`, whose procedure raises, times out (4 h per method), or returns scores of the wrong shape or with non-finite values is a **failed run**. It gets mIoU 0 and expert precision 0 in every experiment. An invalid or missing `experts()` output scores 0 in the expert-quality experiment only. The hidden test deletes the previous score file before it starts, and refuses to score (all methods failed) if the hidden labels no longer match their recorded hash.
+
+## Paper reference numbers
+
+NACLIP on ADE20K: 17.4 mIoU with the averaged classifier, 18.4 after adaptation. Expert quality is 57%. This gym is scaled relative to the paper: 2000 instead of 20,210 adaptation images, scoring at half of the 336-short-side resolution, and a patch grid shared across windows. So its absolute numbers are close to the paper's, but not identical.
 
 ---
 
