@@ -86,6 +86,11 @@ ids    = experts(state)                    # optional: int array [K, 4]
 - `experts` names, for every class, the 4 templates (indices into the given template axis, distinct within a row) the method considers the most reliable for that class. It is used only by the expert-quality experiment.
 - **Template and class order are shuffled in every evaluator call.** Indices refer to the order passed to `adapt`; the evaluator maps them back. A method must not depend on the identity of a template or class index.
 
+### Isolation of each run
+
+- **Every run is a fresh process.** The core run and each of the 12 low-data runs import `procedure.py` anew in their own worker process, so nothing computed in one run (module-level state, caches) is available in another.
+- **File access.** While a procedure runs, it may read files only inside its own `outputs/<name>/` directory (and Python source files). It may not read anything else under the workspace (`data/`, `eval/`, other method directories, ...), may not write files (except into the run's own scratch directory, which is deleted when the run ends), and may not start other processes. A blocked access raises `PermissionError`; if the procedure does not handle it, the run fails. On the hidden test the evaluation labels are additionally unreadable while any procedure runs.
+
 `baseline/template_average.py` is a complete minimal example. The frozen model's default averaged-template classifier is built into both evaluators and scored as `template_average`.
 
 ## Experiments and metrics
@@ -105,7 +110,7 @@ ids    = experts(state)                    # optional: int array [K, 4]
 
 ## Failure rules
 
-A method whose directory has no `procedure.py`, whose procedure raises, times out (4 h per method), or returns scores of the wrong shape or with non-finite values is a **failed run**. It gets mIoU 0 and expert precision 0 in every experiment. An invalid or missing `experts()` output scores 0 in the expert-quality experiment only. The hidden test deletes the previous score file before it starts, and refuses to score (all methods failed) if the hidden labels no longer match their recorded hash.
+A method whose directory has no `procedure.py`, whose procedure raises in any run (including on a blocked file access), times out (4 h per method over all of its runs), or returns scores of the wrong shape or with non-finite values is a **failed run**. A run that fails is retried once before the method is failed. It gets mIoU 0 and expert precision 0 in every experiment. An invalid or missing `experts()` output scores 0 in the expert-quality experiment only. The hidden test deletes the previous score file before it starts, and refuses to score (all methods failed) if the hidden labels no longer match their recorded hash.
 
 ## Paper reference numbers
 
@@ -400,6 +405,67 @@ NACLIP on ADE20K: 17.4 mIoU with the averaged classifier, 18.4 after adaptation.
 
 <details>
 <summary>Progress Log</summary>
+
+### [2026-06-12 08:22] - secondary_claims
+- Completed final verification after the scoring-key and script cleanup.
+- Re-ran `python3 validate.py --compare` and shell syntax checks; both pass.
+- Removed a stale ignored generated data artifact and confirmed `action.yaml` is being finalized with `secondary_claims`.
+
+### [2026-06-12 08:16] - secondary_claims
+- Made `scripts/reproduce.sh` call `scripts/evaluate.sh` explicitly at the end, so the top-level reproduction script always refreshes `scoring/scores.json`.
+- Ran lightweight local checks: shell syntax validation for all main scripts and `python3 validate.py --compare`, both passing.
+- Kept milestone at `secondary_claims`; real-dataset majority coverage remains blocked by gated or unavailable benchmark datasets.
+
+### [2026-06-12 08:16] - secondary_claims
+- Addressed read-only audit findings before final signoff: renamed scoring experiment keys to the paper targets they reference and documented the synthetic dense-feature substitute in the target descriptions.
+- Made `scripts/baseline.sh` and `scripts/method.sh` score their own outputs without depending on each other.
+- Submitted a CPU test job to verify the renamed scoring contract and standalone script changes in the managed container.
+
+### [2026-06-12 08:11] - secondary_claims
+- Completed final verification of workspace structure, scoring files, method/problem separation, and reusable evaluation scripts.
+- Refreshed `scoring/scores.json` from saved method outputs so the reproduced scores include all benefit and constraint metrics declared in `scoring/reference.json`.
+- Cleaned method-agnostic and high-level scoring documentation to avoid leaking solution-specific implementation details.
+
+### [2026-06-12 08:06] - secondary_claims
+- Audited the default evaluator against `scoring/reference.json`.
+- Added the full benefit and constraint metric set to `eval/segmentation_metrics.py` so `scoring/scores.json` includes mIoU, pixel accuracy, mean class accuracy, rare-class mIoU, boundary accuracy, and template-budget metrics.
+- Updated `scripts/run.sh` to regenerate baseline and FLOSS outputs with `scripts/reproduce.sh` before running validation and split scoring in the managed container.
+
+### [2026-06-12 07:42] - secondary_claims
+- Managed CPU test job `08371469-b67` completed with exit code 0 after the continuation-audit fixes.
+- The job regenerated split method-input and eval-label bundles, reran `scripts/reproduce.sh`, and passed `python validate.py --compare`.
+- Verified reproduced scores remained stable: template averaging 33.073 mIoU, FLOSS 37.596 mIoU, low-data FLOSS 38.249 mIoU, and expert precision 37.500% / 41.667%.
+- Restored `secondary_claims`; real-dataset majority coverage remains blocked by gated or unavailable benchmark datasets.
+
+### [2026-06-12 07:35] - core_claim_plus
+- Continued-agent audit reviewed the previous `secondary_claims` claim by checking `method/`, `eval/`, scripts, scoring files, and prior managed job logs.
+- Confirmed the committed method is not a surrogate: it implements FLOSS single-template predictions, entropy-based expert selection, top-4 class experts, and highest-confidence fusion.
+- Fixed audit issues before restoring `secondary_claims`: split method-visible inputs from eval-only labels/oracle experts and generalized `scripts/evaluate.sh` for arbitrary future method outputs.
+- Submitted those fixes from milestone `core_claim_plus` for managed-container verification before restoring `secondary_claims`.
+
+### [2026-06-12 07:29] - secondary_claims
+- Implemented the paper's FLOSS computation: averaged-template baseline, entropy-based top-4 class-expert selection from unlabeled features, and highest-confidence expert fusion with default fallback.
+- Verified the reusable environment in a managed container job. On the synthetic dense-feature OVSS benchmark, template averaging reached 33.073 mIoU and FLOSS reached 37.596 mIoU.
+- Verified the low-data variant using only 4 unlabeled selection images: FLOSS reached 38.249 mIoU.
+- Added expert-selection quality diagnostics: selected experts overlap nontrivially with oracle class experts without using labels during selection.
+
+</details>
+
+### Iteration 11: claude-opus-5-5 (hardener)
+- **Milestone**: `secondary_claims` | **Status**: done
+- **Working time**: 21m | **GPU**: 1.6h
+- **Jobs**: 8 total (8 completed, 0 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-11-13] - secondary_claims
+- The hardened gym runs on the paper's own NACLIP + ADE20K setting.
+  - FLOSS: 17.47 → 18.58 mIoU on the 2000 hidden validation images (paper: 17.4 → 18.4).
+  - Expert quality: 60.5% (paper: 57%).
+  - Low-data mean over 4/16/64 images: +0.21 over the baseline.
+- Hidden-test isolation fixed: a fresh process per run, a file/process guard, and answers sealed while procedures run. See `HARDENING.md`.
+- Domain-shift and cross-dataset claims remain uncovered (Cityscapes is gated), so the milestone stays `secondary_claims`.
 
 ### [2026-06-12 08:22] - secondary_claims
 - Completed final verification after the scoring-key and script cleanup.
